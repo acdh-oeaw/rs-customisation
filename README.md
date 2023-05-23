@@ -8,17 +8,18 @@ customisation of Researchspace for the purposes of Omnipot [#13886](https://redm
 2. `cd /apps/`
 3. `git clone --branch $PROJECTNAME --single-branch https://github.com/acdh-oeaw/rs-customisation.git $PROJECTNAME`
 4. `cd /apps/$PROJECTNAME`
-5. `mkdir -p config/services images assets lib`
-6. `chown -R 100:101 /apps`
-7. `vi /app/$PROJECTNAME/config/repositories` and add the username and the password for the triplestore database
-8. `vi /apps/$PROJECTNAME/plugin.properties`  
+5. `vi /app/$PROJECTNAME/.git/config`and replace https://github.com/acdh-oeaw/rs-customisation.git by git@github.com:acdh-oeaw/rs-customisation.git
+6. `mkdir -p config/services images assets lib`
+7. `chown -R 100:101 /apps`
+8. `vi /app/$PROJECTNAME/config/repositories` and add the username and the password for the triplestore database
+9. `vi /apps/$PROJECTNAME/plugin.properties`  
 Here is an example:
         plugin.id=$PROJECTNAME
         plugin.provider=ResearchSpace
         plugin.version=1.0.0
         #plugin.dependencies=other-app
-9. Go to Rancher researchspace workload for *$PROJECTNAME* and edit it by clicking on the three vertical dots on the right side and the label Edit Config.
-10. Click on the researchspace tab *(in the menu located on the left side, General should be selected)*, scrol down to Environment Variables section end edit **PLATFORM_OPTS** variable:
+10. Go to Rancher researchspace workload for *$PROJECTNAME* and edit it by clicking on the three vertical dots on the right side and the label Edit Config.
+11. Click on the researchspace tab *(in the menu located on the left side, General should be selected)*, scrol down to Environment Variables section end edit **PLATFORM_OPTS** variable:
 
 ```shell
 -DruntimeDirectory=/apps/$PROJECTNAME

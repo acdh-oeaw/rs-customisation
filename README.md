@@ -8,17 +8,21 @@ customisation of Researchspace for the purposes of Omnipot [#13886](https://redm
 2. `cd /apps/`
 3. `git clone --branch $PROJECTNAME --single-branch https://github.com/acdh-oeaw/rs-customisation.git $PROJECTNAME`
 4. `cd /apps/$PROJECTNAME`
-5. `mkdir -p config/services images assets lib`
-6. `chown -R 100:101 /apps`
-7. `vi /app/$PROJECTNAME/config/repositories` and add the username and the password for the triplestore database
-8. `vi /apps/$PROJECTNAME/plugin.properties`  
+5. `vi /app/$PROJECTNAME/.git/config`and replace https://github.com/acdh-oeaw/rs-customisation.git by git@github.com:acdh-oeaw/rs-customisation.git
+6. Go to Rancher in the project Researchspace, in the left menu click on Storage and under it in dropdown menu on Secrets
+7. Add ssh key that has enough rights over the rs-customisation repo
+8. Go to Rancher in the project Researchspace, in the namespace *$PROJECTNAME*, and edit researchspace workload. Mount your keys as /home/jetty/.ssh/ssh-privatekey and /home/jetty/.ssh/ssh-publickey. In the Rancher security context for the workload set group ID to 101 and the user ID to 100 and save.  
+9. `mkdir -p config/services images assets lib`
+10. `chown -R 100:101 /apps`
+11. `vi /app/$PROJECTNAME/config/repositories` and add the username and the password for the triplestore database
+12. `vi /apps/$PROJECTNAME/plugin.properties`  
 Here is an example:
         plugin.id=$PROJECTNAME
         plugin.provider=ResearchSpace
         plugin.version=1.0.0
         #plugin.dependencies=other-app
-9. Go to Rancher researchspace workload for *$PROJECTNAME* and edit it by clicking on the three vertical dots on the right side and the label Edit Config.
-10. Click on the researchspace tab *(in the menu located on the left side, General should be selected)*, scrol down to Environment Variables section end edit **PLATFORM_OPTS** variable:
+13. Go to Rancher researchspace workload for *$PROJECTNAME* and edit it by clicking on the three vertical dots on the right side and the label Edit Config.
+14. Click on the researchspace tab *(in the menu located on the left side, General should be selected)*, scrol down to Environment Variables section end edit **PLATFORM_OPTS** variable:
 
 ```shell
 -DruntimeDirectory=/apps/$PROJECTNAME

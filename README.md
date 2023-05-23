@@ -66,9 +66,7 @@ To use Java ShenandoahGC add following configuration to the **JAVA_OPTS** variab
 
 **NOTE:**
 
-On the first run you need to import set of default ontologies and knowledge patterns for CIDOC-CRM, see [instance](https://github.com/researchspace/researchspace-instance-configurations "instance") configuration repository
-
-You need to go to settings, LDP , An then ontology container and import.
+On the first run you need to import set of default ontologies and knowledge patterns for CIDOC-CRM, see [instance](https://github.com/researchspace/researchspace-instance-configurations "instance") configuration repository. 
 
 ##### References:
 - https://documentation.researchspace.org/resource/Help:Apps

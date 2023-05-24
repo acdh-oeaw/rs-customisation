@@ -62,7 +62,6 @@ To use Java ShenandoahGC add following configuration to the **JAVA_OPTS** variab
 ```shell
 -XX:+UnlockExperimentalVMOptions
 -XX:+UseContainerSupport 
--XX:MaxRAMFraction=1 
 -XX:+UseShenandoahGC 
 -XX:ShenandoahGCHeuristics=compact 
 -XX:+UseStringDeduplication 

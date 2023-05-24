@@ -43,7 +43,6 @@ Here is an example:
 For using GIT as runtime storage, the following PLATFORM_OPTS Rancher ENV variable can be used: 
 
 ```
--DruntimeDirectory=/apps/$PROJECTNAME
 -Dconfig.storage.runtime.type=git  
 -Dconfig.storage.runtime.mutable=true  
 -Dconfig.storage.runtime.localPath=/apps/$PROJECTNAME

@@ -18,10 +18,13 @@ customisation of Researchspace for the purposes of Omnipot [#13886](https://redm
 12. `vi /apps/$PROJECTNAME/plugin.properties`  
 
 Here is an example:
+
+```shell
         plugin.id=$PROJECTNAME
         plugin.provider=ResearchSpace
         plugin.version=1.0.0
         #plugin.dependencies=other-app
+```
 
 13. Go to Rancher researchspace workload for *$PROJECTNAME* and edit it by clicking on the three vertical dots on the right side and the label Edit Config.
 14. Click on the researchspace tab *(in the menu located on the left side, General should be selected)*, scroll down to Environment Variables section end edit **PLATFORM_OPTS** variable:

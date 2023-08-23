@@ -2,63 +2,37 @@
 
 customisation of Researchspace for the purposes of Omnipot [#13886](https://redmine.acdh.oeaw.ac.at/issues/13886 "#13886") and other ResearchSpace based projects.
 
-### How to use this Researchspace app
+## How to install Researchspace in ACDH-CH K8S environment
 
-1. Go to Rancher in the project Researchspace and enter container named docker-git-alpine located in the namespace of your *$PROJECTNAME* by clicking on Execute Shell that can be found right from the workload name under three vertical dots. 
-2. `cd /apps/`
-3. `git clone --branch $PROJECTNAME --single-branch https://github.com/acdh-oeaw/rs-customisation.git $PROJECTNAME`
-4. `cd /apps/$PROJECTNAME`
-5. `vi /app/$PROJECTNAME/.git/config`and replace https://github.com/acdh-oeaw/rs-customisation.git by git@github.com:acdh-oeaw/rs-customisation.git
-6. `mkdir -p config/services images assets lib`
-7. `chown -R 100:101 /apps`
-8. `vi /app/$PROJECTNAME/config/repositories` and add the username and the password for the triplestore database
-9. `vi /apps/$PROJECTNAME/plugin.properties`  
+1. Create new namespace for the $PROJECTNAME
+2. Create workflow named researchspace by using Docker image researchspace/platform-ci:latest with persistent volumes mounted as /images and /tmp-data. Add secret for shiro.ini and mount it under /srv/shiro.ini 
+3. Create service named $PROJECTNAME for the worload researchspace that should have Listening and Target port set to 8080.
+4. Create Ingress for the service $PROJECTNAME with the desired domain.
+5. Create workflow named digilib by using Docker image robcast/digilib:latest and mount PVC named images, created in previous step, with the Mount Point "/var/lib/images" and Sub Path in Volume "file" 
+6. Create service for the workload named digilib. Ingress ins not needed.
+7. Create backup cronjob that should backup /images, /tmp-data and /srv from the researchspace workload.
+8. Go to Rancher researchspace workload for *$PROJECTNAME* and edit it by clicking on the three vertical dots on the right side and the label Edit Config.
+9. Click on the researchspace tab *(in the menu located on the left side, General should be selected)*, scroll down to Environment Variables section end edit **PLATFORM_OPTS** variable:
 
-Here is an example:
-
-```shell
-        plugin.id=$PROJECTNAME
-        plugin.provider=ResearchSpace
-        plugin.version=1.0.0
-        #plugin.dependencies=other-app
-```
-
-10. Go to Rancher in the project Researchspace, in the left menu click on Storage and under it in dropdown menu on Secrets
-11. Add ssh key that has enough rights over the rs-customisation repo
-12. Go to Rancher in the project Researchspace, in the namespace *$PROJECTNAME*, and edit researchspace workload. Mount your keys as /var/lib/jetty/.ssh/ssh-privatekey and /var/lib/jetty/.ssh/ssh-publickey. In the Rancher security context for the workload set group ID to 101 and the user ID to 100 and save.  
-13. Go to Rancher researchspace workload for *$PROJECTNAME* and edit it by clicking on the three vertical dots on the right side and the label Edit Config.
-14. Click on the researchspace tab *(in the menu located on the left side, General should be selected)*, scroll down to Environment Variables section end edit **PLATFORM_OPTS** variable:
-
-```shell
--DruntimeDirectory=/apps/$PROJECTNAME
--Dconfig.storage.runtime.type=nonVersionedFile 
--Dconfig.storage.runtime.mutable=true
--Dconfig.storage.runtime.root=/apps/$PROJECTNAME
--Dconfig.storage.images.type=nonVersionedFile
--Dconfig.storage.images.mutable=true
--Dconfig.storage.images.root=/images
--Dconfig.storage.tmp.type=nonVersionedFile
--Dconfig.storage.tmp.mutable=true
--Dconfig.storage.tmp.root=/tmp-data
--Dconfig.environment.shiroConfig=/apps/$PROJECTNAME/config/shiro.ini
--Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000 
-```
 For using GIT as runtime storage, the following PLATFORM_OPTS Rancher ENV variable can be used: 
 
 ```
--Dconfig.storage.runtime.type=git  
--Dconfig.storage.runtime.mutable=true  
--Dconfig.storage.runtime.localPath=/apps/$PROJECTNAME
--Dconfig.storage.runtime.branch=$PROJECTNAME 
--Dconfig.storage.runtime.remoteUrl=git@github.com:acdh-oeaw/rs-customisation.git 
--Dconfig.storage.images.type=nonVersionedFile  
--Dconfig.storage.images.mutable=true  
--Dconfig.storage.images.root=/images  
--Dconfig.environment.shiroConfig=/apps/$PROJECTNAME/config/shiro.ini  
--Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000 
+-Dconfig.storage.runtime.type=git
+-Dconfig.storage.runtime.mutable=true
+-Dconfig.storage.runtime.branch=$PROJECTNAME
+-Dconfig.storage.runtime.localPath=/apps
+-Dconfig.storage.runtime.subroot=$PROJECTNAME
+-Dconfig.storage.runtime.remoteUrl=https://acdh-ch:$GITHUB-CREDENTIALS@github.com/acdh-oeaw/rs-customisation.git
+-Dconfig.environment.sparqlEndpoint=http://$DB_USER:$DB_CREDENTIALS@$TRIPLESTORE:8080/$DB_NAME/sparql
+-Dconfig.storage.images.type=nonVersionedFile   
+-Dconfig.storage.images.mutable=true   
+-Dconfig.storage.images.root=/images   
+-Dconfig.storage.tmp.type=nonVersionedFile  
+-Dconfig.storage.tmp.mutable=true   
+-Dconfig.storage.tmp.root=/tmp-data   
+-Dconfig.environment.shiroConfig=/srv/shiro.ini   
+-Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000
 ```
-Due to specific ssh related configuration required by GIT runtime storage implementation, the following custom Researchspace Docker image should be used: 
-`acdhch/researchspace-platform-ci`
 
 To use Java ShenandoahGC add following configuration to the **JAVA_OPTS** variable:
 
@@ -70,6 +44,22 @@ To use Java ShenandoahGC add following configuration to the **JAVA_OPTS** variab
 -XX:+UseStringDeduplication 
 -XX:+ExitOnOutOfMemoryError
 ```
+
+## How to use this repo as GIT runtime storage for Researchspaced based projects
+
+1. Create new branch named $PROJECTNAME from the main branch. 
+2. `edit $PROJECTNAME/plugin.properties`  
+
+Here is an example:
+
+```shell
+        plugin.id=$PROJECTNAME
+        plugin.provider=ResearchSpace
+        plugin.version=1.0.0
+        #plugin.dependencies=other-app
+```
+
+3. edit templates over the Rancher GUI. All changes will be commited to the branch $PROJECTNAME
 
 **NOTE:**
 

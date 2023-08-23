@@ -1,0 +1,61 @@
+<!-- template copied from X1_Corpus in CLScor
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+2023-04-21
+--> 
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri='[[this]]'></mp-label>
+  </li>
+</ol>
+
+<style>
+  #tabs .tab-ontodia {
+    margin: 0px;
+    padding: 2px 0px 0px;
+    width: 100%;
+    height: calc(100vh - 300px);
+  }
+</style>
+
+<div class="page">
+	
+    <div class='page__header-navtabs'>
+      [[> Platform:DefaultResourceHeader]]
+    </div>
+  	
+    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+      
+      <!-- TIME LINE -->
+      
+      <semantic-timeline query="
+                                prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?subject ?start ?end 
+where 	{
+  graph ?graph {
+    ?event crm:P4_has_time-span ?timeSpan ;
+           rdfs:label ?subject .                     
+    ?timeSpan crm:P82b_end_of_the_end ?end ;
+              crm:P82a_begin_of_the_begin ?start .
+  }
+}
+                                "
+                         tuple-template="{{> template}}"
+                         tuple-template-height="42">
+            <template id="template">
+                  <b>{{subject.value}}</b>
+                <div>{{start.value}} - {{end.value}}</div>
+            </template>
+          </semantic-timeline>
+      
+    
+    </bs-tabs>
+  
+  
+</div>

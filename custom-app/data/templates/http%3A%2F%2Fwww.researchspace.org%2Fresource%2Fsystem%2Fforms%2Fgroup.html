@@ -1,0 +1,43 @@
+<semantic-form [[> rsp:FormDefaults]]
+           	persistence='{"type": "sparql", "targetInsertGraphIri": "{{scheme}}"}'
+           	new-subject-template='{{scheme}}/{{{{raw}}}}{{UUID}}{{{{/raw}}}}'
+          	 
+           	fields='[[
+            	fieldDefinitions
+              	inScheme="http://www.cidoc-crm.org/cidoc-crm/P71i_is_listed_in"
+              	appellation="http://www.researchspace.org/pattern/vocabulary_manager/crm:P1_is_identified_by"
+                classtype="http://www.w3.org/1999/02/22-rdf-syntax-ns#type" 
+                entity_type="http://www.researchspace.org/cidoc-crm/authority/P2_has_type"
+                
+                 			
+              	              	]]'
+>
+
+  <div class="form-scroll-area">
+    
+	<semantic-form-hidden-input for="classtype" default-values='["http://www.cidoc-crm.org/cidoc-crm/E74_Group"]'></semantic-form-hidden-input>
+	<semantic-form-hidden-input for="inScheme" default-value="{{scheme}}" force-defaults="true"> </semantic-form-hidden-input>  
+    	<semantic-form-hidden-input for="entity_type" default-value="http://collection.klassik-stiftung.de/resource/vocab/entities/group" force-defaults="true"> </semantic-form-hidden-input>  
+   	 
+	<semantic-form-composite-input for="appellation"
+                               	label="Known As"
+                               	new-subject-template="/E41_Appellation/{{{{raw}}}}{{UUID}}{{{{/raw}}}}"  
+                               	fields='[[
+                                	fieldDefinitions
+                                  	classtype="http://www.w3.org/1999/02/22-rdf-syntax-ns#type"
+                                  	SymLabel="http://www.researchspace.org/pattern/crm:P190_has_symbolic_content"
+                                	]]'>
+  	<semantic-form-hidden-input for="classtype" default-value='http://www.cidoc-crm.org/cidoc-crm/E41_Appellation'> </semantic-form-hidden-input>
+  	<semantic-form-text-input render-header=false for="SymLabel"> </semantic-form-text-input>
+	</semantic-form-composite-input>
+    
+    
+    
+    
+        
+    <semantic-form-errors></semantic-form-errors>
+    <!-- save and reset button for form -->
+  </div>
+
+  [[> rsp:FormDefaultActions]]
+</semantic-form>

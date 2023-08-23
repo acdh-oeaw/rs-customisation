@@ -1,0 +1,42 @@
+{{#if node}}
+  [[!-- Existing user --]]
+  <semantic-query 
+                  query='SELECT DISTINCT ?userTypeLabel WHERE { 
+                          <{{node}}> crm:P2_has_type ?userType .
+                          ?userType crm:P71i_is_listed_in <http://ccd-tna.kartography.cloud/resource/vocab/tna_organisation_actor_type> .
+                          ?userType skos:prefLabel ?userTypeLabel .
+                        } limit 1'>
+    <template id='template'>
+      {{> forms:user_partial user_type=bindings.0.userTypeLabel.value}}
+    [[!--  <semantic-if query='ASK {
+                            { <{{node}}> crm:P02i_is_range_of ?PC144_joined_with .
+                            ?PC144_joined_with a crm:PC144_joined_with .
+                            ?PC144_joined_with crm:P01_has_domain ?joiningOrganisation .
+                            
+                            ?joiningOrganisation a crm:E85_Joining .
+                            ?joiningOrganisation crm:P2_has_type <http://www.researchspace.org/resource/vocab/conservation_entities/joining_organisation> .
+                            ?joiningOrganisation crm:P143_joined ?organisation .     
+                            FILTER(?organisation = <http://www.researchspace.org/resource/vocab/tna_organisation/167> )
+                            } UNION {
+                              <{{node}}> crm:P71i_is_listed_in <http://ccd-tna.kartography.cloud/resource/vocab/tna_organisational_structure> .
+                            }
+                          }' 
+                    then='{{> then}}'
+                    else='{{> else}}'>  
+        
+        <template id='then'>
+          {{> forms:user_partial user_type=bindings.0.userTypeLabel.value tna_user='true'}}
+        </template>
+
+        <template id='else'>
+          {{> forms:user_partial user_type=bindings.0.userTypeLabel.value tna_user='false'}}
+        </template>
+
+      </semantic-if>
+      --]]
+
+    </template>
+  </semantic-query>
+{{else}}
+  {{> forms:user_partial}}
+{{/if}}

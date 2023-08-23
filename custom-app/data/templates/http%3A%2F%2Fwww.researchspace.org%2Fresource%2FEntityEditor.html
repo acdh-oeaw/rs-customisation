@@ -35,12 +35,13 @@
                                     ?config <http://www.researchspace.org/resource/system/authority_manager/membership_property> ?membershipProperty .
                                   }
                                 }
+                                FILTER EXISTS {?config <http://www.researchspace.org/resource/system/authority_manager/for_P2_has_type> ?atype .}
                               }
                             '
         >
           <template id='template'>
             {{#ifCond bindings.length "==" "0"}}
-              <p>There is no form configuration for the given entity. See "Entity Manager"..</p>
+              <p>There is no form configuration for the given entity. See "Entity Manager".</p>
             {{/ifCond}}
 
             {{#ifCond bindings.length ">" "0"}}
@@ -113,19 +114,19 @@
         </semantic-query>
       {{else}}
         {{#if data.entityTypeConfig}}
-        {{#if data.mode}}
-          {{#if data.additional_data}}
-            {{> rsp:CollectionBrowserContent frameId=frameId  configOrScheme=data.entityTypeConfig mode=data.mode}}
-          {{else}}
-            {{> rsp:CollectionBrowserContent frameId=frameId  configOrScheme=data.entityTypeConfig mode=data.mode}}
-          {{/if}}
+      		{{#if data.mode}}
+      			{{#if data.additional_data}}
+          		{{> rsp:CollectionBrowserContent frameId=frameId  configOrScheme=data.entityTypeConfig mode=data.mode}}
+      			{{else}}
+      				{{> rsp:CollectionBrowserContent frameId=frameId  configOrScheme=data.entityTypeConfig mode=data.mode}}
+      			{{/if}}
+      		{{else}}
+      			{{> rsp:CollectionBrowserContent frameId=frameId  configOrScheme=data.entityTypeConfig }}
+      		{{/if}}
         {{else}}
-          {{> rsp:CollectionBrowserContent frameId=frameId  configOrScheme=data.entityTypeConfig }}
+          {{> rsp:EntityManagerContent}}
         {{/if}}
-      {{else}}
-        {{> rsp:EntityManagerContent}}
       {{/if}}
-    {{/if}}
     </template>
   </mp-event-target-template-render>  
 {{/bind}}

@@ -7,7 +7,7 @@ uses client-side templates:
 <> a <http://www.ics.forth.gr/isl/CRMdig/D1_Digital_Object> ; 
        <http://www.cidoc-crm.org/cidoc-crm/P2_has_type> <http://www.researchspace.org/ontology/Knowledge_Map> .
   '
-  image-iris='["http://www.researchspace.org/ontology/PX_has_main_representation"]'
+  image-iris='["http://www.researchspace.org/ontology/PX_has_main_representation","http://www.cidoc-crm.org/cidoc-crm/P138i_has_representation"]'
   save-diagram-label="Save Knowledge Map" settings=nostats post-saving=none add-to-default-set=true
   collapse-navigator=true
   request-links-on-init='{{#if miradorVariable}}true{{else}}{{#if diagram}}false{{else}}true{{/if}}{{/if}}'
@@ -74,7 +74,24 @@ uses client-side templates:
                             force-datatype-fields='["http://www.researchspace.org/ontology/PX_has_video"]'
 >
 
-    <rs-ontodia-metadata-from-fields></rs-ontodia-metadata-from-fields>
+     <rs-ontodia-metadata-from-fields
+  fields-query='PREFIX field: <http://www.researchspace.org/resource/system/fields/>
+    SELECT DISTINCT ?field WHERE { { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field  <http://www.researchspace.org/resource/system/fields/category> ?category . 
+      FILTER (?category in (<http://www.researchspace.org/category/knowledge_map>))}
+      UNION {
+        VALUES (?value){(<http://www.cidoc-crm.org/cidoc-crm/P138i_has_representation>)
+                        (<http://www.w3.org/2000/01/rdf-schema#label>)
+                  (<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
+                  (<http://www.researchspace.org/ontology/PX_has_main_representation>)
+                }
+        BIND(?value as ?field)
+      } 
+    }
+ '>
+  
+       
+  
+  </rs-ontodia-metadata-from-fields>
     
     <ontodia-field-input-override for-field="http://www.researchspace.org/ontology/PX_has_main_representation">
       <semantic-form-autocomplete-input for='http://www.researchspace.org/ontology/PX_has_main_representation'>
@@ -115,7 +132,7 @@ uses client-side templates:
                           <semantic-form-text-input for='label'></semantic-form-text-input>
                           <semantic-form-text-input for='P3_has_note' multiline=true></semantic-form-text-input>
 
-                          <button name="submit" class="btn btn-sm btn-success pull-right">Save</button>
+                          <button name="submit" class="btn btn-sm btn-action pull-right">Save</button>
                           <button name="reset" class="btn btn-sm btn-default pull-right">Reset</button>
                           <div style="clear: both;"></div>
           </semantic-form>

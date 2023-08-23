@@ -38,7 +38,10 @@
                               {"variableName":"author", "displayName":"Author", "cellTemplate":"{{> author}}"},
                               {"variableName":"modified", "displayName":"Last Update", "cellTemplate": "{{> modifiedAt}}" }
                               [[#if (hasPermission "api:ldp:container:<http://www.researchspace.org/resource/system/ontodiaDiagramContainer>:delete:any")]]
-                                ,{"displayName":"Actions", "cellTemplate": "{{> actions}}"}
+                                ,{"displayName":"Actions", "cellTemplate": "<mp-ldp-remove-from-container-action iri=\"{{diagram.value}}\" 
+                                                data-container=\"http://www.researchspace.org/resource/system/ontodiaDiagramContainer\">
+                                                <button class=\"btn-grey\">Delete</button>
+                              </mp-ldp-remove-from-container-action>" }
                               [[/if]]
                          ]'
          >
@@ -61,12 +64,6 @@
             </template>
             <template id='modifiedAt'>
               {{dateTimeFormat modified.value "LLL"}}
-            </template>
-            <template id='actions'>
-              <mp-ldp-remove-from-container-action iri="{{diagram.value}}" 
-                                data-container="http://www.researchspace.org/resource/system/ontodiaDiagramContainer">
-                                <button class="btn-grey">Delete</button>
-              </mp-ldp-remove-from-container-action>
             </template>
       </semantic-table>
     </div>

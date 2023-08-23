@@ -48,7 +48,7 @@
   
     <bs-tabs class="details-tabs">
     [[#if withSummary]]
-        <bs-tab title='Summary' event-key='summary' mount-on-enter=true>
+        <bs-tab title='Summary' event-key='summary' mount-on-enter=true class="rawdata-tab">
             <div class="rs-summary-table table-responsive">
                 <table class="table table-hover">
                 [[#block "summary"]]
@@ -339,27 +339,22 @@
                                         <bs-col xs=11 sm=10 md=10 lg=8 class="rs-summary-table">
 
                                             <div class="table-responsive rs-table">
-                                                <table class="table table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col" style="width: 30%">Field</th>
-                                                            <th scope="col">Value</th>
-                                                        </tr>
-                                                    </thead>
-                                                    [[#block "summary"]]
-                                                    <tbody>
-                                                        <tr>
-                                                            <td>No further data available</td>
-                                                            <td></td>
-                                                        </tr>
-                                                    </tbody>
+                                                     [[#block "summary"]]
+                                                    <table class="table table-hover">
+                                                      <tbody>
+                                                          <tr>
+                                                              <td>No further data available</td>
+                                                              <td></td>
+                                                          </tr>
+                                                      </tbody>
+                                                      </table>
                                                     [[/block]]
-                                                </table>
+                                                
                                             </div>
 
                                         </bs-col>
                                     </bs-row>
-                                </div>
+                                 </div>
 
                                 [[#if (hasPermission "forms:ldp:*")]]
                                 <div class="container-fluid rs-resource-summary-section rs-background-p10">
@@ -369,7 +364,7 @@
                                             <span class="rs-h1 rs-resource-section--header">Public Discussion</span>
                                             <span class="rs-body-xs-I rs-resource-section--header">Documents the ongoing discussion
                                                 about findings.
-                                                <a class="text-underline" style="padding-left:5px;">Read more</a>
+                                                <a style="padding-left:5px; text-decoration: underline;">Read more</a>
                                             </span>
                                         </bs-col>
                                         <bs-col xs=3 md=3 lg=2>

@@ -71,8 +71,11 @@
 
     {{#if (hasKey allTypes "http://www.researchspace.org/ontology/EX_Digital_Image_Region")}}
         <rs-iiif-image-thumbnail height='480' width='640' style='height: 100%; width: 100%;'
-          image-or-region='{{iri}}'      
-          [[> rsp:IIIFConfig]]
+          image-or-region='{{iri}}'    
+          [[!--workaround for thumbnails with cantaloupe, in mirador we use v2 but for thumbnails we use v1 --]]
+          image-id-pattern='OPTIONAL { ?imageIRI crm:P1_is_identified_by/rso:PX_has_file_name ?carrierImageID. } BIND(COALESCE(?carrierImageID, REPLACE(STR(?imageIRI), "^.*/(.*)$", "$1")) AS ?imageID) .'
+          iiif-server-url='/proxy/iiif-server/iiif/2'
+
         >
         </rs-iiif-image-thumbnail>
 
@@ -95,34 +98,20 @@
   [[/if]]
 
     <div class="rs-default-card__hover-options">
-  [[!--      <mp-draggable iri='{{iri}}'>
-            <div class="rs-default-card__hover-icon">
-                <button type="button" class="rs-button" title="Drag and drop the Item">
-                  <i class="rs-icon rs-icon-drag_arrow"></i>
-                </button>
-            </div>
-        </mp-draggable> --]]
 
-        <div class="rs-default-card__hover-icon">
-            <mp-event-trigger id='details-view-trigger' type='Component.TemplateUpdate'
-                data='{"iri": "{{iri}}"}' targets='["details-view", "open-details-sidebar"]'>
-                <button type="button" class="rs-button" title="Resource Details">
-                  <i class="iconmoon iconmoon-info"></i>
-                </button>
-            </mp-event-trigger>
-        </div>
-
-        [[!--       <div class="rs-default-card__hover-icon">
-            <semantic-link-container uri="{{iri}}">
+      [[!--  <div class="rs-default-card__hover-icon">
+            <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
+                                                        urlqueryparam-view='resource' urlqueryparam-resource='{{iri}}'>
                 <button type="button" class="rs-button" title="Explore Resource">
                   <i class="iconmoon iconmoon-file-empty"></i>
                 </button>
-            </semantic-link-container> 
-        </div> --]]
+            </semantic-link-container>
+        </div>  --]]
 
         <div class="rs-default-card__hover-icon">
           <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
-                                                        urlqueryparam-view='entity-editor' urlqueryparam-resource='{{iri}}'>
+                                   urlqueryparam-view='entity-editor' 
+                                   urlqueryparam-resource='{{iri}}'>
               <button type="button" class="rs-button" title="Author Resource in Form">
                   <i class="rs-icon rs-icon-form_edit"></i>
               </button>
@@ -149,22 +138,6 @@
                 </button>
             </mp-event-trigger>
         </div>
-
-        {{#if (hasKey allTypes "http://www.cidoc-crm.org/cidoc-crm/E53_Place")}}
-        <semantic-if query='ASK { <{{iri}}> <http://www.cidoc-crm.org/cidoc-crm/P168_place_is_defined_by> ?value . }'>
-            <template id='then'>
-              <div class="rs-default-card__hover-icon">
-                <semantic-link-container uri='[[resolvePrefix "rsp:ThinkingFrames"]]'
-                                          urlqueryparam-view='map' 
-                                          urlqueryparam-resource='{{iri}}'>
-                    <button type="button" class="rs-button" title="Visualise on map">
-                        <i class="iconmoon iconmoon-location"></i>
-                    </button>
-                </semantic-link-container>
-              </div>
-            </template>
-          </semantic-if>
-        {{/if}}
 
         {{#if (hasKey allTypes "http://www.researchspace.org/ontology/EX_Digital_Image_Region")}}
           [[!-- don't show resource media icon for image regions --]]
@@ -240,11 +213,15 @@
             {{else}}
 
             <semantic-if query='
-                                  ASK { 
+                                  ASK { { 
                                     <{{iri}}> a/rdfs:subClassOf* crm:E18_Physical_Thing . 
                                     <{{iri}}> crm:P138i_has_representation|rso:PX_has_main_representation ?image . 
                                     ?image a rso:EX_Digital_Image .
-                                  }
+                                  } UNION {
+                                     <{{iri}}> a/rdfs:subClassOf* crm:E18_Physical_Thing . 
+                                    <{{iri}}> crm:P138i_has_representation|rso:PX_has_main_representation ?image . 
+                                    ?image a rso:EX_Digital_Image_Region .
+                                  } }
                                '>
               <template id='then'>
                   [[!-- is shown only when we are not in the frames view, hidden by css --]]

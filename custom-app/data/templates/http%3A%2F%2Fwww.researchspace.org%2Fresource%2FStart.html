@@ -1,1 +1,121 @@
-[[> rsp:ThinkingFrames]]
+<div class="homepage-project-header">
+  <div class="homepage-project-header__welcome" style="padding:20px">
+    <h4>Hi there!</h4>
+    [[> userNameLink]]
+
+
+[[#*inline "userNameLink"]]
+  <semantic-query query='SELECT DISTINCT ?__useruri__ ?actor ?userName ?fullName ?scheme WHERE { 
+                          BIND(REPLACE(REPLACE(STR(?__useruri__), STR(User:), ""), "%40", "@") as ?userName) 
+                          OPTIONAL {
+                            ?actor crm:P1_is_identified_by ?email .
+                            ?email a crm:E42_Identifier .
+                            ?email crm:P190_has_symbolic_content ?userName .
+                            ?email crm:P2_has_type <http://www.researchspace.org/resource/vocab/identifier/email> .
+
+                            ?actor crm:P1_is_identified_by ?fullNameUri .
+                            ?fullNameUri a crm:E41_Appellation .
+                            ?fullNameUri crm:P190_has_symbolic_content ?fullName .
+                            ?fullNameUri crm:P2_has_type <http://www.researchspace.org/resource/vocab/identifier/full_name> .
+
+                            OPTIONAL { ?actor crm:P71i_is_listed_in ?scheme . }
+                          }
+                        } LIMIT 1'
+    template='{{> template}}'>
+
+    <template id='template'>
+      {{#if bindings.0.fullName.value}}
+        <mp-event-trigger id='{{frameId}}-entity-type-edit-trigger--edit-user' 
+                    type='Dashboard.AddFrame'
+                    targets='["{{frameId}}-entity-editor-frame"]'
+                    data='{"viewId":"entity-editor", 
+                          "entityTypeConfig": "http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/User_list", 
+                          "resourceIri": "{{bindings.0.actor.value}}",
+                          "additional_data":{"scheme":"{{bindings.0.scheme.value}}"}, 
+                          "editable": true,
+                          "mode": "edit"
+                          }'
+                      >
+            <span class="text-link">{{bindings.0.fullName.value}}</span>
+        </mp-event-trigger>
+        {{else}}
+          <mp-event-trigger id='{{frameId}}-entity-type-edit-trigger--new-user' 
+                      type='Dashboard.AddFrame'
+                      targets='["{{frameId}}-entity-editor-frame"]'
+                      data='{"viewId":"entity-editor", 
+                            "entityTypeConfig": "http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/User_list", 
+                            "additional_data":{"email":"{{bindings.0.userName.value}}"}, 
+                            "editable": true,
+                            "entityEditorLabel": "New User",
+                            "mode":"new"}'
+                        >
+              <span>
+                <span class="text-link">{{bindings.0.userName.value}}</span>
+                <i style="color: var(--color-secondary);">&nbsp;(not registred user)</i>
+              </span>
+          </mp-event-trigger>
+        {{/if}}
+    </template>
+  </semantic-query>
+[[/inline]]
+
+[[#*inline "researcherTemplate"]]
+<template id='researcher'>
+  <semantic-query query='SELECT DISTINCT ?user ?userName WHERE {
+                          <{{project.value}}> crm:P01i_is_domain_of ?activityDomain . 
+                          ?activityDomain a crm:PC14_carried_out_by .
+                          ?activityDomain crm:P02_has_range ?user .
+                              
+                          ?user a crm:E39_Actor .
+                          ?user crm:P71i_is_listed_in <http://ccd-tna.kartography.cloud/resource/vocab/tna_organisational_structure> .
+
+                          ?user crm:P1_is_identified_by ?identifier .
+                          ?identifier a crm:E41_Appellation .
+                          ?identifier crm:P190_has_symbolic_content ?userName .
+                          ?identifier crm:P2_has_type <http://www.researchspace.org/resource/vocab/identifier/full_name> .
+                          
+                        } ORDER BY ASC(?userName)'
+                  >
+    <template id='template'>
+      <mp-popover class="table-researcher-popover">
+        <mp-popover-trigger placement="bottom" trigger='["click", "focus"]' root-close='true' >
+          <div style="width: fit-content;">
+            <div class="badge badge--default">
+              <i class="fa fa-user" style="width: min-content;"></i>
+            </div>
+            {{#if bindings.1.user.value}}
+              <div class="badge badge--default" style="margin: 0 -3px;">
+                <i class="fa fa-user" style="width: min-content;"></i>
+              </div>
+            {{/if}}
+            {{#if bindings.2.user.value}}
+              <div class="badge badge--default">
+                <i class="fa fa-user" style="width: min-content;"></i>
+              </div>
+            {{/if}}
+          </div>
+        </mp-popover-trigger>
+        
+        <mp-popover-content>
+          {{#each bindings}}
+            <div>
+              <mp-event-trigger id='{{frameId}}-entity-type-edit-trigger--view-user' 
+                                type='Dashboard.AddFrame'
+                                targets='["{{frameId}}-entity-editor-frame"]'
+                                data='{"viewId":"entity-editor", 
+                                      "entityTypeConfig": "http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/User_list", 
+                                      "resourceIri": "{{user.value}}",
+                                      "editable": true,
+                                      "mode": "edit"
+                                      }'
+                                  >
+                        <span class="text-link">{{userName.value}}</span>
+              </mp-event-trigger>
+            </div>
+          {{/each}}
+        </mp-popover-content>
+      </mp-popover>
+    </template>
+  </semantic-query>
+</template>
+[[/inline]]

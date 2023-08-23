@@ -1,0 +1,14 @@
+<semantic-search-result id='semantic-search-result-{{order}}'>
+  <semantic-timeline id='events' query='
+    SELECT ?start ?type ?subject WHERE {
+      ?subject crm:P4_has_time-span ?timeSpan .
+      ?timeSpan crm:P82_at_some_time_within ?start .
+      BIND("point" as ?type) .
+  }
+  ' tuple-template="{{> template}}" tuple-template-height="42">
+              <template id="template">
+                  <mp-label iri='{{subject.value}}'></mp-label>
+                  <div>{{start.value}}</div>
+              </template>
+  </semantic-timeline>
+</semantic-search-result>

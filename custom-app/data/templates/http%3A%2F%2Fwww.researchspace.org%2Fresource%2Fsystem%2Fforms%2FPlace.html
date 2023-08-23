@@ -1,7 +1,5 @@
-<two-side-panel id='{{viewId}}-new-place-holder' front='{{> front}}' back='{{> back}}'>
-  <template id='back'>
-
-
+{{#switch mode}}
+  {{#case "new" break=true}}
 <p>Search for place on OpenStreetMap.</p>
 <div style='flex: 1; overflow: hidden;' class='form-search-area'>
   <style>
@@ -30,7 +28,7 @@
   </style>
   <semantic-search>
      <semantic-search-query-keyword 
-        domain='<http://www.cidoc-crm.org/cidoc-crm/E53_Place>'
+        domain='<http://www.cidoc-crm.org/cidoc-crm/E21_Person>'
         tokenize-lucene-query=false
         escape-lucene-syntax=false
         debounce=1000
@@ -117,7 +115,7 @@
                     </mp-overlay-dialog-trigger>
                     <mp-overlay-dialog-content>
                       <div>
-                        {{> forms:PlaceForm nested=nested scheme=scheme  mode=mode broader=broader geotext=geoText.value modal=true label=label.value }}
+                        {{> forms:PlaceForm nested=nested scheme=scheme  mode=mode broader=broader geotext=geoText.value}}
                       </div>
                     </mp-overlay-dialog-content>
         </mp-overlay-dialog>
@@ -130,25 +128,9 @@
     </div>
     </semantic-search>
 </div>
-  
-    
-
-  </template>
-  <template id="front">
-    {{#if node}}
-    {{else}}
-      {{#if nested}}
-      {{else}}
-        <mp-event-trigger id='{{viewId}}-search-osm-api-trigger' 
-                          type='TwoSidePanel.ShowBack' 
-                          targets='["{{viewId}}-new-place-holder"]'
-        >
-          <button class="btn btn-primary" 
-                  style="margin: 15px 0px; font-size: 15px; padding: 10px;">Search Open Street Map
-          </button>
-        </mp-event-trigger>
-      {{/if}}
-    {{/if}}
+  {{/case}}
+  {{#default}}
     {{> forms:PlaceForm nested=nested scheme=scheme  mode=mode broader=broader}}
-  </template>
-</two-side-panel>
+{{/default}}
+{{/switch}}
+

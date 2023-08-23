@@ -1,0 +1,443 @@
+<!-- template copied from X1_Corpus in CLScor
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+2023-04-21
+--> 
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri='[[this]]'></mp-label>
+  </li>
+</ol>
+
+<style>
+  #tabs .tab-ontodia {
+    margin: 0px;
+    padding: 2px 0px 0px;
+    width: 100%;
+    height: calc(100vh - 300px);
+  }
+</style>
+
+<div class="page">
+	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
+    <div class='page__header-navtabs'>
+      [[> Platform:DefaultResourceHeader]]
+    </div>
+  	
+    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+      
+      
+      <!-- Overview -->
+      <bs-tab event-key="0" class="tab-overview" title="(Deprecate?) Overview">
+        <mp-field-visualization
+                  subject='[[this]]'
+                  fields='[[fieldDefinitions
+                              born_on="http://sk-app.acdh.oeaw.ac.at/fieldDefinition/born_on"
+                              birth_place="https://sk-app.acdh.oeaw.ac.at/fieldDefinition/birth_place"
+                              died_on="http://sk-app.acdh.oeaw.ac.at/fieldDefinition/died_on"                             
+                              death_place="https://sk-app.acdh.oeaw.ac.at/fieldDefinition/death_place"
+                              life_events="https://sk-app.acdh.oeaw.ac.at/fieldDefinition/life_events"
+                               ]]'
+             template='{{> rsp:ResourceFieldBasedVisualization subject="[[this]]" [[#if asserted]]guess="true"[[/if]]}}'
+          ></mp-field-visualization>
+           
+      </bs-tab>
+     
+      <!-- Biographical Info -->
+  <bs-tab title="Biographical Information" event-key="9">
+    
+    <h3>Biographical Events</h3>
+    <semantic-table
+                    
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+      
+select ?person ?event ?eventLabel ?personLabel ?eventDate ?eventPlace ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person rdfs:label ?personLabel;
+            (crm:P98i_was_born | crm:P100i_died_in) ?event .
+    ?event rdfs:label ?eventLabel .
+    optional {
+      #date
+      ?event crm:P4_has_time-span/rdfs:label ?eventDate .
+        }
+    optional {
+      #place
+      ?event crm:P7_took_place_at/rdfs:label ?eventPlace .
+    }    
+  }
+}
+         "
+  column-configuration='[
+    {"variableName": "eventLabel", "displayName": "Event"}, 
+    {"variableName": "eventDate", "displayName": "Date"}, 
+    {"variableName": "eventPlace", "displayName": "Place"},  
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+></semantic-table>
+            <h3>Professional Occupation</h3>
+    <semantic-table
+                    query="
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+      
+select ?person ?occupation ?time ?employer ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P14i_performed ?occupation .
+    ?occupation rdf:type frbroo:F51_Pursuit .
+    OPTIONAL
+    {
+      ?occupation crm:P10_falls_within ?employer .
+    }
+    OPTIONAL
+    {
+    ?occupation crm:P4_has_time-span/rdfs:label ?time .
+    }
+    
+  }
+}
+                           "
+                    column-configuration='[
+    {"variableName": "occupation", "displayName": "Occupation"},
+		{"variableName": "time", "displayName": "Time-Span"},
+		{"variableName": "employer", "displayName": "Institution"}, 
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+></semantic-table>
+    
+    
+            <h3>Party Membership</h3>
+    <semantic-table
+                    query="
+                           prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+      
+
+select ?person ?party ?from ?to ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P143i_was_joined_by / crm:P144_joined_with ?party .
+
+    OPTIONAL
+    {
+      ?person crm:P143i_was_joined_by ?joining .
+      ?joining crm:P4_has_time-span ?from .
+    }
+    OPTIONAL
+    {
+      ?person crm:P145i_left_by ?leaving .
+      ?leaving crm:P4_has_time-span ?to .
+    }
+    
+  }
+}
+                           "
+    column-configuration='[
+    {"variableName": "party", "displayName": "Political Party"}, 
+		{"variableName": "from", "displayName": "Joining"}, 
+		{"variableName": "to", "displayName": "Leaving"}, 
+		{"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+></semantic-table>
+    
+    <!-- legal cases -->
+        <h3>Legal Involvement</h3>
+    <semantic-table
+                    
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+      
+select ?person ?legalAct ?legalCase ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person rdfs:label ?personLabel;
+            crm:P14i_performed ?legalAct .
+    ?legalAct crm:P10_falls_within ?legalCase .
+         ?legalCase rdf:type crm:E5_Event .
+    
+  }
+}
+         "
+  column-configuration='[
+    {"variableName": "legalCase", "displayName": "Legal Case"}, 
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+></semantic-table>
+    
+
+    
+    </bs-tab>
+        
+      
+      <!-- Works -->
+      <bs-tab event-key="17" title="Authorship">
+        
+        <h3>Authored Texts</h3>
+        <semantic-table
+                        query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+         
+         select distinct  ?text ?publIssue ?creationTimespan ?publicationTimespan ?performanceTimespan ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+     ?person ^crm:P14_carried_out_by ?textCreation .
+    ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+
+    
+    # creation
+    optional {
+      ?textCreation crm:P4_has_time-span ?creationTimespan .
+    }
+    # publication
+     optional {
+      
+      ?text crm:P165i_is_incorporated_in* ?publIssue .
+      ?publIssue rdf:type frbroo:F24_Publication_Expression ;
+              crm:P165_incorporates/rdf:type frbroo:F22_Self-Contained_Expression ;
+              ^frbroo:R24_created/crm:P4_has_time-span ?publicationTimespan .
+    }
+    # performance
+    optional {
+      ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span ?performanceTimespan .
+    }
+  }
+}
+                               
+                               "
+                        column-configuration=
+                        
+                        '[
+    {"variableName": "text", "displayName": "Text"}, 
+    {"variableName": "publIssue", "displayName": "Published in"},
+    {"variableName": "creationTimespan", "displayName": "Creation"},
+    {"variableName": "publicationTimespan", "displayName": "Publication"},
+    {"variableName": "performanceTimespan", "displayName": "Performance/Recitation"},
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+                        ></semantic-table>
+        <h3>Referred-to Persons</h3>
+        
+        <semantic-table
+                        query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>
+         
+         select distinct ?text ?mentionWording ?refPerson ?source ?graph
+where {
+  graph ?graph {
+    # text
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person ^crm:P14_carried_out_by / (crm:P94_has_created | frbroo:R17_created) ?text .
+
+    # mentionWording
+    
+   ?text (intro:R10_has_Text_Passage | 
+      ^intro:R10_has_Text_Passage ) ?passage .
+    ?passage intro:R44_has_wording ?mentionWording .
+          
+    # refPerson
+    
+   ?passage ^intro:R18_actualization_found_on / 
+             intro:R17_actualizes_feature ?reference .
+   ?reference <http://www.w3.org/ns/prov#wasDerivedFrom> ?source ;
+               <http://www.cidoc-crm.org/cidoc-crm/P67_refers_to> ?refPerson .
+   
+}
+}                             
+                               "
+                        column-configuration=
+                        
+                        '[
+    {"variableName": "refPerson", "displayName": "Person"}, 
+    {"variableName": "mentionWording", "displayName": "Wording"},
+    {"variableName": "text", "displayName": "Text"},
+    {"variableName": "source", "displayName": "Source"},
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+                        ></semantic-table>
+        
+				<h3>Referred-to Texts</h3>
+        <semantic-table
+                        query="
+                               prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>
+                               
+         select distinct ?text ?passage ?reference ?refEntity ?refText ?source ?graph
+where {
+  graph ?graph {
+    # text
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person ^crm:P14_carried_out_by / (crm:P94_has_created | frbroo:R17_created) ?text .
+
+    # reference
+    
+   ?text (intro:R10_has_Text_Passage | 
+      ^intro:R10_has_Text_Passage )* ?refEntity .
+   ?refEntity ^intro:R13_has_referring_entity ?reference .
+    
+    # wording
+    optional {
+    ?refEntity intro:R44_has_wording ?passage .
+    }
+    
+    # referenced text
+      ?reference intro:R12_has_referred_to_entity ?refText .
+    
+}
+}
+                                    "
+                        column-configuration=
+                        
+                        '[
+    {"variableName": "text", "displayName": "Text"}, 
+    {"variableName": "passage", "displayName": "Wording"},
+    {"variableName": "refText", "displayName": "Referenced Text or Passage"},
+    {"variableName": "source", "displayName": "Source"},
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+                        ></semantic-table>
+        
+        </bs-tab>
+      
+      <!-- Mentions: -->
+      <bs-tab event-key="3" title="Mentions">
+      
+        <semantic-table
+                        query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>                               
+                               
+SELECT ?person ?reference ?refWording ?refSource ?graph ?passage ?text ?periodical
+WHERE {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person ^crm:P67_refers_to ?reference.
+    
+    ?actualization intro:R17_actualizes_feature ?reference ;
+					intro:R18_actualization_found_on ?passage .
+    
+    ?passage intro:R44_has_wording ?refWording ;
+             ^intro:R10_has_Text_Passage ?text .
+    OPTIONAL
+    {
+    ?text crm:P165i_is_incorporated_in ?periodical .
+    }
+    OPTIONAL
+    {
+    ?reference <http://www.w3.org/ns/prov#wasDerivedFrom> ?refSource .
+    }
+    
+    
+    }
+  }
+                               "
+                        column-configuration=
+                        
+                        '[
+    {"variableName": "refWording", "displayName": "Mention Wording"}, 
+    {"variableName": "text", "displayName": "Text"},
+    {"variableName": "periodical", "displayName": "Optional: Text Source"},
+    {"variableName": "refSource", "displayName": "Provenance"},  
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+                        
+                        ></semantic-table>
+        
+      </bs-tab>
+  
+      
+  <!-- IDs, Links - Table -->
+  <bs-tab title="Entity IDs" event-key="10">
+        <semantic-table 
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+         select ?person ?id ?idValue ?idType ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P1_is_identified_by ?id .
+    ?id rdf:value ?idValue .
+    ?id rdf:type crm:E42_Identifier .
+    optional {
+      #type
+      ?id crm:P2_has_type ?idType .
+        }
+    }    
+}
+         
+         "
+  column-configuration='[
+    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"variableName": "idValue", "displayName": "ID Value"},
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+></semantic-table>
+  </bs-tab>
+  
+      <!-- Source -->
+      <bs-tab event-key="6" title="Source">
+        [[> Platform:SourceStatements]]
+      </bs-tab>
+      
+      <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
+        <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
+      </bs-tab>
+      
+    
+    </bs-tabs>
+  
+  [[else]]
+  <div class='page__body'>
+    <p>
+      It seems that no entity with IRI <code>"[[this]]"</code> in any subject, predicate or object position is known in the knowledge graph. Also no static application page with this identifier can be found.
+    </p>
+    <p>
+      Click on the edit button (<i class="fa fa-pencil"></i>) in the top right of this page (<i>only visibile if the respective ACL permissions are being granted to you</i>) to create a new, static application page with this identifier.
+    </p>
+  </div>
+  [[/if]]
+</div>

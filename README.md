@@ -21,7 +21,7 @@ For using GIT as runtime storage, the following PLATFORM_OPTS Rancher ENV variab
 -Dconfig.storage.runtime.mutable=true
 -Dconfig.storage.runtime.branch=$PROJECTNAME
 -Dconfig.storage.runtime.localPath=/apps
--Dconfig.storage.runtime.subroot=$PROJECTNAME
+-Dconfig.storage.runtime.subroot=custom-app
 -Dconfig.storage.runtime.remoteUrl=https://acdh-ch:$GITHUB-CREDENTIALS@github.com/acdh-oeaw/rs-customisation.git
 -Dconfig.environment.sparqlEndpoint=http://$DB_USER:$DB_CREDENTIALS@$TRIPLESTORE:8080/$DB_NAME/sparql
 -Dconfig.storage.images.type=nonVersionedFile   
@@ -48,7 +48,7 @@ To use Java ShenandoahGC add following configuration to the **JAVA_OPTS** variab
 ## How to use this repo as GIT runtime storage for Researchspaced based projects
 
 1. Create new branch named $PROJECTNAME from the main branch. 
-2. `edit $PROJECTNAME/plugin.properties`  
+2. `edit custom-app/plugin.properties`  
 
 Here is an example:
 

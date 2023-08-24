@@ -27,7 +27,8 @@ bds=http://www.bigdata.com/rdf/search#
 
 prov = http://www.w3.org/ns/prov#
 
-Default = http://sk-kraus.kartography.net/resource/
+Default = https://sk.acdh.oeaw.ac.at
+
 User = http://www.researchspace.org/resource/user/
 forms = http://www.researchspace.org/resource/system/forms/
 crminf = http://www.ics.forth.gr/isl/CRMinf/

@@ -18,7 +18,6 @@ crmba = http://www.cidoc-crm.org/cidoc-crm/CRMba/
 crmdig = http://www.ics.forth.gr/isl/CRMdig/
 crmgeo = http://www.ics.forth.gr/isl/CRMgeo/
 crminfluence = http://www.cidoc-crm.org/cidoc-crm/influence/
-crmsci = http://www.ics.forth.gr/isl/CRMsci/
 
 frbroo = http://iflastandards.info/ns/fr/frbr/frbroo/
 
@@ -28,9 +27,9 @@ bds=http://www.bigdata.com/rdf/search#
 
 prov = http://www.w3.org/ns/prov#
 
-forms = http://www.researchspace.org/resource/system/forms/
-
-
-Default = https://yourapp.acdh.oeaw.ac.at/resource/
+Default = http://sk-kraus.kartography.net/resource/
 User = http://www.researchspace.org/resource/user/
-app = https://yourapp.acdh.oeaw.ac.at/
+forms = http://www.researchspace.org/resource/system/forms/
+crminf = http://www.ics.forth.gr/isl/CRMinf/
+app = https://sk-app.acdh.oeaw.ac.at/
+sk = https://sk.acdh.oeaw.ac.at/%     

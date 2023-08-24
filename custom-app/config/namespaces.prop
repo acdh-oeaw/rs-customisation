@@ -27,8 +27,6 @@ bds=http://www.bigdata.com/rdf/search#
 
 prov = http://www.w3.org/ns/prov#
 
-Default = https://sk.acdh-dev.oeaw.ac.at/resource/app:
-
 User = http://www.researchspace.org/resource/user/
 forms = http://www.researchspace.org/resource/system/forms/
 crminf = http://www.ics.forth.gr/isl/CRMinf/

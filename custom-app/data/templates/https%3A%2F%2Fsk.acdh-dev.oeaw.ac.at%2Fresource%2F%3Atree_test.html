@@ -31,8 +31,8 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 
 select ?node ?parent
 where {
-  graph ?graph {    
-   ?parent crm:P165_incorporates+ ?node .
+  graph ?graph {
+	?parent frbroo:R5_has_component|crm:P165_incorporates+ ?node .
   }
 }
 

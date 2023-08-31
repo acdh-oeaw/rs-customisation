@@ -33,7 +33,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 select distinct ?node ?parent
 where {
   graph ?graph {
-    ?parent crm:P165_incorporates* ?node .
+    ?parent crm:P165_incorporates/crm:P165_incorporates ?node .
     ?node <https://w3id.org/lso/intro/beta202304#R10_has_Text_Passage> ?passage .
 
      

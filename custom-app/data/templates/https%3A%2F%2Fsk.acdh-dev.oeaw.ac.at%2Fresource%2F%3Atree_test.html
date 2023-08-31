@@ -19,7 +19,7 @@
 <semantic-tree query="select ?expression ?other_expression
 where {
   graph ?graph {
-    select distinct ?expression 
+    select distinct ?expression ?other_expression
     where {
       ?expression crm:P165_incorporates*/^crm:P165_incorporates* ?other_expression .
       ?expression a ?type .

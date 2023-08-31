@@ -32,10 +32,8 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 select ?node ?parent
 where {
   graph ?graph {
-    ?_parent a ?type ;
-             rdfs:label ?parent ;
-            crm:P165_incorporates+ ?_node .
-    ?_node rdfs:label ?node .
+    ?parent a ?type ;
+            crm:P165_incorporates+ ?node .
     filter (?type in (
         frbroo:F22_Self-Contained_Expression, 
         frbroo:F24_Publication_Expression

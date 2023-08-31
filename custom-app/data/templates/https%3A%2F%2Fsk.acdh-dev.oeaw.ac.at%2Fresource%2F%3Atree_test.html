@@ -37,3 +37,28 @@ where {
 }
 
 "></semantic-tree>
+
+<br/>
+
+<semantic-tree query="prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix sesame: <http://www.openrdf.org/schema/sesame#> 
+prefix owl: <http://www.w3.org/2002/07/owl#> 
+prefix xsd: <http://www.w3.org/2001/XMLSchema#> 
+prefix fn: <http://www.w3.org/2005/xpath-functions#> 
+prefix dw: <https://sk.acdh.oeaw.ac.at/project/dw> 
+prefix lk: <https://sk.acdh.oeaw.ac.at/project/lk> 
+prefix general: <https://sk.acdh.oeaw.ac.at/project/general> 
+prefix dcterms: <http://purl.org/dc/terms/> 
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+
+select ?node ?parent
+where {
+  graph ?graph {
+	?parent frbroo:R5_has_component|crm:P165_incorporates+ ?node .
+  }
+}
+
+" provider='d3-dendrogram'></semantic-tree>
+

@@ -29,9 +29,10 @@ prefix dcterms: <http://purl.org/dc/terms/>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 
-select distinct ?node ?parent
+                      select distinct ?node2 ?node1 ?parent
 where {
   graph ?graph {
-    ?parent crm:P165_incorporates* ?node .
+    ?parent crm:P165_incorporates ?node1 .
+    ?node1 crm:P165_incorporates ?node2 .
   }
 }"></semantic-tree>

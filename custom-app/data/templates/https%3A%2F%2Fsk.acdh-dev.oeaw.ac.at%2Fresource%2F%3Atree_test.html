@@ -33,11 +33,5 @@ select distinct ?node ?parent
 where {
   graph ?graph {
     ?parent crm:P165_incorporates* ?node .
-    ?node <https://w3id.org/lso/intro/beta202304#R10_has_Text_Passage> ?passage .
-
-     
-    ?passage ^<https://w3id.org/lso/intro/beta202304#R18_actualization_found_on> / 
-             <https://w3id.org/lso/intro/beta202304#R17_actualizes_feature> / 
-             crm:P67_refers_to ?refernce .
   }
-}"></semantic-tree>
+}}"></semantic-tree>

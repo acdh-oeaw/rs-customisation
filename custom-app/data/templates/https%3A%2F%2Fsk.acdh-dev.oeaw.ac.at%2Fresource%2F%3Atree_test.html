@@ -33,10 +33,7 @@ select ?node ?parent
 where {
   graph ?graph {
     ?parent a ?type ;
-                <https://w3id.org/lso/intro/beta202304#R10_has_Text_Passage> ?node .
-    ?node ^<https://w3id.org/lso/intro/beta202304#R18_actualization_found_on> / 
-             <https://w3id.org/lso/intro/beta202304#R17_actualizes_feature> / 
-             crm:P67_refers_to ?refernce .
+            crm:P165_incorporates+ ?node .
     filter (?type in (
         frbroo:F22_Self-Contained_Expression, 
         frbroo:F24_Publication_Expression

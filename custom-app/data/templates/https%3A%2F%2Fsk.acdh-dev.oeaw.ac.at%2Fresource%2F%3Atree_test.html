@@ -16,4 +16,15 @@
 
 <br/>
 
-<semantic-tree query=""></semantic-tree>
+<semantic-tree query="select ?other_expression ?expression
+where {
+  graph ?graph {
+    ?expression a ?type ;
+                crm:P165_incorporates ?other_expression .
+    filter (?type in (
+        frbroo:F22_Self-Contained_Expression, 
+        frbroo:F24_Publication_Expression
+      )
+    )
+  }
+}"></semantic-tree>

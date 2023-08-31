@@ -29,11 +29,11 @@ prefix dcterms: <http://purl.org/dc/terms/>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 
-select ?other_expression ?expression
+select ?node ?parent
 where {
   graph ?graph {
-    ?expression a ?type ;
-                crm:P165_incorporates ?other_expression .
+    ?parent a ?type ;
+                crm:P165_incorporates ?node .
     filter (?type in (
         frbroo:F22_Self-Contained_Expression, 
         frbroo:F24_Publication_Expression

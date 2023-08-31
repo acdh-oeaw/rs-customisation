@@ -32,7 +32,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
                       select distinct ?node2 ?node1 ?parent
 where {
   graph ?graph {
-    ?parent crm:P165_incorporates ?node1 .
-    ?node1 crm:P165_incorporates ?node2 .
+    ?parent crm:P165_incorporates ?node .
+    ?node crm:P165_incorporates ?node .
   }
 }"></semantic-tree>

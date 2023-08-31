@@ -29,10 +29,19 @@ prefix dcterms: <http://purl.org/dc/terms/>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 
-                      select distinct ?node2 ?node1 ?parent
+select ?node ?parent
 where {
   graph ?graph {
-    ?parent crm:P165_incorporates ?node .
-    ?node crm:P165_incorporates ?node .
+    ?parent a ?type ;
+                <https://w3id.org/lso/intro/beta202304#R10_has_Text_Passage> ?node .
+    ?node ^<https://w3id.org/lso/intro/beta202304#R18_actualization_found_on> / 
+             <https://w3id.org/lso/intro/beta202304#R17_actualizes_feature> / 
+             crm:P67_refers_to ?refernce .
+    filter (?type in (
+        frbroo:F22_Self-Contained_Expression, 
+        frbroo:F24_Publication_Expression
+      )
+    )
   }
-}"></semantic-tree>
+}
+"></semantic-tree>

@@ -32,13 +32,8 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 select ?node ?parent
 where {
   graph ?graph {
-    ?parent a ?type ;
-            crm:P165_incorporates+ ?node .
-    filter (?type in (
-        frbroo:F22_Self-Contained_Expression, 
-        frbroo:F24_Publication_Expression
-      )
-    )
+   ?parent crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/text/periodical>;
+           frbroo:R5_has_component ?node .
   }
 }
 "></semantic-tree>

@@ -16,18 +16,4 @@
 
 <br/>
 
-<semantic-tree query="select ?other_expression ?expression
-where {
-  graph ?graph {
-    select distinct ?expression ?other_expression
-    where {
-      ?expression crm:P165_incorporates*/^crm:P165_incorporates* ?other_expression .
-      ?expression a ?type .
-      filter (?type in (
-          frbroo:F22_Self-Contained_Expression, 
-          frbroo:F24_Publication_Expression 
-        )
-      )
-    }
-  }
-}"></semantic-tree>
+<semantic-tree query=""></semantic-tree>

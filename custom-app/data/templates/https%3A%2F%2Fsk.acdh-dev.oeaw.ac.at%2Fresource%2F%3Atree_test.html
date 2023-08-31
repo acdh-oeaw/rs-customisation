@@ -16,8 +16,7 @@
 
 <br/>
 
-<semantic-tree query="
-                      prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+<semantic-tree query="prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
 prefix sesame: <http://www.openrdf.org/schema/sesame#> 
 prefix owl: <http://www.w3.org/2002/07/owl#> 
@@ -33,7 +32,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 select distinct ?node ?parent
 where {
   graph ?graph {
-    ?parent crm:P165_incorporates*|^crm:P165_incorporates* ?node .
+    ?parent crm:P165_incorporates* ?node .
     ?node <https://w3id.org/lso/intro/beta202304#R10_has_Text_Passage> ?passage .
 
      
@@ -41,6 +40,4 @@ where {
              <https://w3id.org/lso/intro/beta202304#R17_actualizes_feature> / 
              crm:P67_refers_to ?refernce .
   }
-}
-
-                      "></semantic-tree>
+}"></semantic-tree>

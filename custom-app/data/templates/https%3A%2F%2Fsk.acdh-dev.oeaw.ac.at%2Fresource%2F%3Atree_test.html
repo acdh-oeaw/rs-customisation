@@ -32,9 +32,9 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 select ?node ?parent
 where {
   graph ?graph {
-   ?parent 
-      #crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/text/periodical>;
+   ?parent a frbroo:F24_Publication_Expression ;
            frbroo:R5_has_component?/crm:P165_incorporates ?node .
   }
 }
+
 "></semantic-tree>

@@ -59,6 +59,9 @@
             PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 						PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 						PREFIX bds: <http://www.bigdata.com/rdf/search#>
+						PREFIX frbr: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+						PREFIX intro: <https://w3id.org/lso/intro/beta202304#>
+
             SELECT ?subject WHERE {
               [[#if searchPattern]]
                 [[searchPattern]]
@@ -68,16 +71,10 @@
                 ?subject a ?type .
                 # filter for E21, E33, E35, E41, E42, E52, E73, E90; F22
                 filter (?type in (
-                  crm:E21_Person, 
-                  crm:E33_Linguistic_Object,
-                  crm:E35_Title,
-                  crm:E41_Appellation,
-                  crm:E42_Identifier,
-                  crm:E52_Time-Span,
+                  crm:E21_Person,
                   crm:E53_Place,
-                  crm:E73_Information_Object,
-                  crm:E90_Symbolic_Object,
-                  crm:F22_Self-Contained_Expression
+                  frbr:F22_Self-Contained_Expression,
+                  frbr:F24_Publication_Expression
                 ))
                 ?label bds:search ?__token__ ;
                   bds:minRelevance "0.5" ;

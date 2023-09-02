@@ -251,6 +251,51 @@ where {
   ]'
                         >
           </semantic-table>
+        
+                <h3>Intertextual Relations (incoming)</h3>
+        <semantic-table
+                        query="prefix prov: <http://www.w3.org/ns/prov#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix schema: <https://schema.org/>
+prefix prov: <http://www.w3.org/ns/prov#>
+                               
+select distinct ?text ?quotedPassage ?relation ?quotingPassage ?quotingText ?quotingPubl ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+    {?text intro:R10_has_Text_Passage ?quotedPassage .
+      ?quotedPassage intro:R12_is_referred_to_entity ?relation .}
+    union
+    {?text intro:R12_is_referred_to_entity ?relation .
+      FILTER NOT EXISTS { ?text a intro:INT1_TextPassage . }
+    }
+    
+    {?relation intro:R13_has_referring_entity ?quotingPassage .
+      ?quotingPassage ^intro:R10_has_Text_Passage ?quotingText . 
+      optional {?quotingPassage ^intro:R16_incorporates/intro:R25_is_segment_of ?quotingPubl .}
+    }
+    union
+    {?relation intro:R13_has_referring_entity ?quotingText .
+            FILTER NOT EXISTS { ?quotingText a intro:INT1_TextPassage . }}
+                               
+  }
+}          
+                               "
+                        
+                        column-configuration='[
+    {"variableName": "quotedPassage", "displayName": "Quoted Passage"},
+    {"variableName": "quotingPassage", "displayName": "Quoted in Passage"},
+    {"variableName": "quotingText", "displayName": "Quoted by Text"},
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+                        >
+          </semantic-table>
+        
         </bs-tab>
   
       <!-- Source -->

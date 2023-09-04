@@ -384,6 +384,52 @@ WHERE {
                         
                         ></semantic-table>
         
+        
+        <!-- MENTION CHART 
+        <semantic-chart
+            type='line'
+            query='
+              PREFIX person: <http://example.com/person/>
+              PREFIX org: <http://example.com/org/>
+              SELECT ?one (COUNT(distinct ?someone) as ?renown) (COUNT(distinct ?org) as ?memberships) WHERE {
+                {
+                    SELECT * WHERE {
+                      VALUES (?someone ?one)
+                      {
+                        (person:alice person:bob)
+                        (person:alice person:carol)
+                        (person:carol person:bob)
+                        (person:carol person:mike)
+                        (person:mike person:carol)
+                        (person:mike person:alice)
+                        (person:bob person:carol)
+                        (person:bob person:mike)
+                      }
+                  }
+                }
+                {
+                  SELECT * WHERE {
+                    VALUES (?one ?org)
+                    {
+                        (person:alice org:W3C)
+                        (person:alice org:IEEE)
+                        (person:alice org:IETF)
+                        (person:carol org:W3C)
+                        (person:mike org:IEEE)
+                        (person:mike org:IETF)
+                    }
+                  }
+                }
+            }
+              GROUP BY ?one
+              ORDER BY ?one
+          ' sets='[
+            {"dataSetName": "Renown", "category": "one", "value": "renown"},
+            {"dataSetName": "Memberships", "category": "one", "value": "memberships"}
+          ]'>
+          </semantic-chart>-->
+        
+        
       </bs-tab>
   
       

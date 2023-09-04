@@ -69,6 +69,26 @@ where {
                         
                         >
           </semantic-table>
+        
+        <h3>Publication Tree</h3>
+        <semantic-tree query="
+                              prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>
+
+select distinct ?node ?parent
+where {
+  ?parent frbroo:R5_has_component*|intro:R25_has_segmemt*|crm:P165_incorporates*|(crm:P165_incorporates/intro:R10_has_Text_Passage)* ?node .
+  
+  {?? frbroo:R5_has_component*|intro:R25_has_segmemt*|crm:P165_incorporates*|(crm:P165_incorporates/intro:R10_has_Text_Passage)* ?node . }
+  UNION
+  {
+  ?parent frbroo:R5_has_component*|intro:R25_has_segmemt*|crm:P165_incorporates*|(crm:P165_incorporates/intro:R10_has_Text_Passage)* ?? .
+  }
+}
+                              "
       </bs-tab>
   
       <!-- Source -->

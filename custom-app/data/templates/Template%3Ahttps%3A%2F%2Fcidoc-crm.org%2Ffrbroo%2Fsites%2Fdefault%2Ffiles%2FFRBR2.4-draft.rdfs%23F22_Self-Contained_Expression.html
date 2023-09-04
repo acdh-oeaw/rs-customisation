@@ -108,11 +108,11 @@ where {
     # publication date                          
       ?publText ^frbroo:R24_created/crm:P4_has_time-span ?publDate .
     }                 
-    optional {                           
-    # publication title
-    ?publText crm:P1_is_identified_by ?appellation .
-    ?appellation a crm:E33_E41_Linguistic_Appellation .
-    }
+    # optional {                           
+    # # publication title
+    # ?publText crm:P1_is_identified_by ?appellation .
+    # ?appellation a crm:E33_E41_Linguistic_Appellation .
+    # }
     optional {
     # pagination
     ?text ^intro:R16_incorporates ?segment .
@@ -123,7 +123,7 @@ where {
 }       
                                "
                         column-configuration='[
-    {"variableName": "appellation", "displayName": "Published in"},
+    {"variableName": "publText", "displayName": "Published in"},
     {"variableName": "pagination", "displayName": "Pagination"},
     {"variableName": "publDate", "displayName": "Publication Date"},
     {"variableName": "graph", "displayName": "Source Graph"}

@@ -96,7 +96,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
          
-         select distinct  ?appellation ?publDate ?graph ?pagination
+         select distinct  ?publText ?publDate ?graph ?pagination
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .

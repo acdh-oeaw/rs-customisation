@@ -395,12 +395,13 @@ prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
 
 SELECT distinct ?year ?mention
 WHERE {
   graph ?graph {
-    ?subj a crm:E21_Person ;
-          (owl:sameAs | ^owl:sameAs)* ?person .
+    
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person ^crm:P67_refers_to ?mention .
       
     # publYear of F24

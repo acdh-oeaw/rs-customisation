@@ -397,7 +397,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
-SELECT distinct ?year ?mention
+SELECT distinct ?year (COUNT(distinct ?mention) as ?mentionSum)
 WHERE {
   graph ?graph {
     
@@ -424,7 +424,7 @@ WHERE {
               GROUP BY ?year
               ORDER BY ?year
           ' sets='[
-            {"dataSetName": "Mention Frequency", "category": "year", "value": "mention"}
+            {"dataSetName": "Mention Frequency", "category": "year", "value": "mentionSum"}
           ]'>
           </semantic-chart>
         

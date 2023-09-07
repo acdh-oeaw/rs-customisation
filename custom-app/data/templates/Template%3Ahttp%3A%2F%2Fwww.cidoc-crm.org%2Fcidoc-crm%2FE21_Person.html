@@ -171,21 +171,23 @@ prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
          
       
-select ?person ?legalAct ?legalCase ?graph
+select ?legalCase ?legalActType ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     
     ?legalAct crm:P14_carried_out_by ?person ;
     	crm:P10_falls_within ?legalCase .
-         ?legalCase rdf:type crm:E5_Event .
+         ?legalCase rdf:type crm:E5_Event ;
+         ?legalCase crm:P2_has_type ?legalActType ;
     
   }
 }
          "
   column-configuration='[
-    {"variableName": "legalCase"}, 
-    {"variableName": "graph"}
+    {"variableName": "legalCase", "displayName": "Legal Case"},
+    {"variableName": "legalActType", "displayName": "Involved As"},
+    {"variableName": "graph", "displayName": "Source Graph"}
   ]'
 ></semantic-table>
     

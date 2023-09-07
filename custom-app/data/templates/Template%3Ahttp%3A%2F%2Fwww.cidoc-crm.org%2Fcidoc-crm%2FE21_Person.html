@@ -211,8 +211,8 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
-     ?person ^crm:P14_carried_out_by ?textCreation .
-    ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+     ?textCreation crm:P14_carried_out_by ?person ;
+        (crm:P94_has_created | frbroo:R17_created) ?text .
 
     
     # creation

@@ -296,33 +296,32 @@ where {
         <semantic-table
                         query="
                                prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix prov: <http://www.w3.org/ns/prov#>
                                
-         select distinct ?text ?passage ?reference ?refEntity ?refText ?source ?graph
+         select distinct ?text ?refWording ?refText ?source ?graph
 where {
   graph ?graph {
     # text
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person ^crm:P14_carried_out_by / (crm:P94_has_created | frbroo:R17_created) ?text .
-
+    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
+    ?textCreation crm:P14_carried_out_by  ?person ;
+    (crm:P94_has_created | frbroo:R17_created) ?text.
+    
     # reference
+    ?text intro:R10_has_Text_Passage*/^intro:R13_has_referring_entity ?reference .
     
-   ?text (intro:R10_has_Text_Passage | 
-      ^intro:R10_has_Text_Passage )* ?refEntity .
-   ?refEntity ^intro:R13_has_referring_entity ?reference .
-    
+    OPTIONAL {
     # wording
-    optional {
-    ?refEntity intro:R44_has_wording ?passage .
+    ?reference intro:R13_has_referring_entity/intro:R44_has_wording ?refWording .
     }
     
     # referenced text
       ?reference intro:R12_has_referred_to_entity ?refText .
-    
+
+    OPTIONAL {?reference prov:wasDerivedFrom ?source .}
 }
 }
                                     "
@@ -330,7 +329,7 @@ where {
                         
                         '[
     {"variableName": "text", "displayName": "Text"}, 
-    {"variableName": "passage", "displayName": "Wording"},
+    {"variableName": "refWording", "displayName": "Wording"},
     {"variableName": "refText", "displayName": "Referenced Text or Passage"},
     {"variableName": "source", "displayName": "Source"},
     {"variableName": "graph", "displayName": "Source Graph"}

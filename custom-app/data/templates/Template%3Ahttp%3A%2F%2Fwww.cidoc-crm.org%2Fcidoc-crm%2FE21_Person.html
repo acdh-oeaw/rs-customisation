@@ -175,17 +175,17 @@ select ?person ?legalAct ?legalCase ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person rdfs:label ?personLabel;
-            crm:P14i_performed ?legalAct .
-    ?legalAct crm:P10_falls_within ?legalCase .
+    
+    ?legalAct crm:P14_carried_out_by ?person ;
+    	crm:P10_falls_within ?legalCase .
          ?legalCase rdf:type crm:E5_Event .
     
   }
 }
          "
   column-configuration='[
-    {"variableName": "legalCase", "displayName": "Legal Case"}, 
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"variableName": "legalCase"}, 
+    {"variableName": "graph"}
   ]'
 ></semantic-table>
     

@@ -174,12 +174,12 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 select ?legalCase ?legalActType ?graph
 where {
   graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
     
     ?legalAct crm:P14_carried_out_by ?person ;
-    	crm:P10_falls_within ?legalCase .
-         ?legalCase rdf:type crm:E5_Event ;
-         ?legalCase crm:P2_has_type ?legalActType ;
+    	crm:P10_falls_within ?legalCase ;
+        crm:P2_has_type ?legalActType .
+    ?legalCase rdf:type crm:E5_Event .
     
   }
 }

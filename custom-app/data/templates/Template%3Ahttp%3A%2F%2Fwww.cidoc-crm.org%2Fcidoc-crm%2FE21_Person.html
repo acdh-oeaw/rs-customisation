@@ -256,29 +256,30 @@ prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix prov: <http://www.w3.org/ns/prov#>
          
-         select distinct ?text ?mentionWording ?refPerson ?source ?graph
+         select distinct ?textCreation ?text ?mentionWording ?passage ?refPerson ?source ?graph
 where {
   graph ?graph {
     # text
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person ^crm:P14_carried_out_by / (crm:P94_has_created | frbroo:R17_created) ?text .
+    ?textCreation crm:P14_carried_out_by  ?person ;
+    (crm:P94_has_created | frbroo:R17_created) ?text.
 
     # mentionWording
     
-   ?text (intro:R10_has_Text_Passage | 
-      ^intro:R10_has_Text_Passage ) ?passage .
+   ?text intro:R10_has_Text_Passage ?passage .
     ?passage intro:R44_has_wording ?mentionWording .
           
     # refPerson
     
-   ?passage ^intro:R18_actualization_found_on / 
-             intro:R17_actualizes_feature ?reference .
-   ?reference <http://www.w3.org/ns/prov#wasDerivedFrom> ?source ;
-               <http://www.cidoc-crm.org/cidoc-crm/P67_refers_to> ?refPerson .
-   
+   ?passage intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference .
+   ?reference crm:P67_refers_to ?refPerson .
+    
+    OPTIONAL {?reference prov:wasDerivedFrom ?source .}
+    
 }
-}                             
+}
                                "
                         column-configuration=
                         

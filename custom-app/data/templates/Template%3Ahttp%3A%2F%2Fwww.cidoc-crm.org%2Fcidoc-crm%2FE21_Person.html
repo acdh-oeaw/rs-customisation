@@ -306,7 +306,7 @@ prefix prov: <http://www.w3.org/ns/prov#>
 where {
   graph ?graph {
     # text
-    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?textCreation crm:P14_carried_out_by  ?person ;
     (crm:P94_has_created | frbroo:R17_created) ?text.
     

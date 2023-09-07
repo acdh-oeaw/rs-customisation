@@ -59,12 +59,11 @@ prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
          
       
-select ?person ?event ?eventLabel ?personLabel ?eventDate ?eventPlace ?graph
+select ?eventLabel ?eventDate ?eventPlace ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person rdfs:label ?personLabel;
-            (crm:P98i_was_born | crm:P100i_died_in) ?event .
+    ?person (crm:P98i_was_born | crm:P100i_died_in) ?event .
     ?event rdfs:label ?eventLabel .
     optional {
       #date

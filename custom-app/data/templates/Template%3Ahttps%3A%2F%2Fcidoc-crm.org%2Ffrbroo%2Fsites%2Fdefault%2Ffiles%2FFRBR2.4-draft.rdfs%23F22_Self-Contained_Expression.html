@@ -42,7 +42,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
-     OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text . }
+     ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
      OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . }
     
     # text title(s)

@@ -206,19 +206,30 @@ where {
     </bs-tab>
       
       <bs-tab event-key="19" title="Timeline">
-<semantic-timeline query="SELECT ?subject ?start ?end
+<semantic-timeline query="prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?subject ?start ?end
 WHERE {
   GRAPH ?g {
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
     
-    {?subject (crm:P14_carried_out_by | crm:P100_was_death_of | crm:P98_brought_into_life ) ?person .}
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+   
+    {
+      ?subject (crm:P14_carried_out_by | crm:P100_was_death_of | crm:P98_brought_into_life ) ?person .
+    }
     UNION
-    {?subject frbroo:R24_created ?publication .
-        ?publication crm:P165_incorporates* ?text .
-        ?text frbroo:R17i_was_created_by ?creation .
-      ?creation crm:P14_carried_out_by ?person .
-      MINUS { ?creation crm:P4_has_time-span ?creationTime}
-  }
+    {
+      ?subject frbroo:R24_created /
+               crm:P165_incorporates* /
+               frbroo:R17i_was_created_by /
+               crm:P14_carried_out_by ?person .
+      
+    }
     ?subject  crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start , ?end . 
   }
 }

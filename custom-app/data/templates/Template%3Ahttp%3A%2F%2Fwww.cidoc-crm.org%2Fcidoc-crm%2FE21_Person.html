@@ -454,28 +454,30 @@ WHERE {
   graph ?graph {
     
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person ^crm:P67_refers_to ?mention .
-      
+    ?mention crm:P67_refers_to ?person .
+    
+    ?mention intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of* ?text .
+    
     # publYear of F24
-    { ?mention ^intro:R17_actualizes_feature / intro:R18_actualization_found_on / ^intro:R10_has_Text_Passage* / crm:P165i_is_incorporated_in* / frbroo:R24i_was_created_through / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?dateP .
-    OPTIONAL {
-        ?mention ^intro:R17_actualizes_feature / intro:R18_actualization_found_on / ^intro:R10_has_Text_Passage* / crm:P165i_is_incorporated_in* / ^frbroo:R17_created / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?dateC .
-      }
-      BIND ( IF (BOUND(?dateC), ?dateC, ?dateP) AS ?date )
+    { ?text crm:P165i_is_incorporated_in* / frbroo:R24i_was_created_through / crm:P4_has_time-span ?timeP .
+    # creationYear of F22
+    OPTIONAL { ?text crm:P165i_is_incorporated_in* / frbroo:R17i_was_created_by / crm:P4_has_time-span ?timeC . }
+    BIND ( IF (BOUND(?timeC), ?timeC, ?timeP) AS ?timeSpan )
     }
     UNION
     # creationYear of E73
     {
-    ?mention ^intro:R17_actualizes_feature / intro:R18_actualization_found_on / ^intro:R10_has_Text_Passage* ?legalDoc .
-      ?legalDoc a crm:E73_Information_Object ;
-                crm:P94i_was_created_by / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
+    ?text a crm:E73_Information_Object ;
+                crm:P94i_was_created_by / crm:P4_has_time-span ?timeSpan .
     }
+    
+    ?timeSpan crm:P82a_begin_of_the_begin ?date .
+    
     BIND ( YEAR(?date) AS ?year )
   }
 }
               GROUP BY ?year
-              ORDER BY ?year
-          ' sets='[
+              ORDER BY ?year' sets='[
             {"dataSetName": "Mention Frequency", "category": "year", "value": "mentionSum"}
           ]'>
           </semantic-chart>

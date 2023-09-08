@@ -5,7 +5,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
-SELECT DISTINCT ?case (MIN(?fileDate) AS ?start) (MAX(?fileDate) AS ?end)
+SELECT ?case (MIN(?fileDate) AS ?start) (MAX(?fileDate) AS ?end)
 WHERE {
   GRAPH ?g {
     ?case crm:P12_occurred_in_the_presence_of ?file .    
@@ -13,8 +13,8 @@ WHERE {
     FILTER ( DATATYPE(?fileDate) = <http://www.w3.org/2001/XMLSchema#date> )
     }
   }
-GROUP BY ?case 
-' tuple-template="{{> template}}" tuple-template-height="42">
+' 
+                   tuple-template="{{> template}}" tuple-template-height="42">
             <template id="template">
                 <b>{{case.value}}</b>
                 <div>{{caseFrom.value}} - {{caseTo.value}}</div>

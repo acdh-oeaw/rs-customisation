@@ -202,23 +202,26 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
-SELECT DISTINCT ?subject ?start ?end
+SELECT ?subject ?start ?end
 WHERE {
   GRAPH ?g {
-    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
     
-    {?subject (crm:P14_carried_out_by | crm:P100_was_death_of | crm:P98_brought_into_life ) ?person .}
-    UNION
-    {?subject frbroo:R24_created ?publication .
-        ?publication crm:P165_incorporates* ?text .
-        ?text frbroo:R17i_was_created_by ?creation .
-      ?creation crm:P14_carried_out_by ?person .
-      FILTER NOT EXISTS { ?creation crm:P4_has_time-span ?creationTime}
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+   
+    {
+      ?subject (crm:P14_carried_out_by | crm:P100_was_death_of | crm:P98_brought_into_life ) ?person .
     }
-    
-	?subject  crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start , ?end . 
+    UNION
+    {
+      ?subject frbroo:R24_created /
+               crm:P165_incorporates* /
+               frbroo:R17i_was_created_by /
+               crm:P14_carried_out_by ?person .
+      
+    }
+    ?subject  crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start , ?end . 
   }
-  }
+}
 
 "
                    tuple-template="{{> template}}" 

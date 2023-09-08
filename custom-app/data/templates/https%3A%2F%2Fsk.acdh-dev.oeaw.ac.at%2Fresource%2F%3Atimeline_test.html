@@ -16,7 +16,7 @@ GROUP BY ?subject
 ' 
                    tuple-template="{{> template}}" tuple-template-height="42">
             <template id="template">
-                <b>{{case.value}}</b>
-                <div>{{caseFrom.value}} - {{caseTo.value}}</div>
+                <b>{{subject.value}}</b>
+                <div>{{start.value}} - {{end.value}}</div>
             </template>
           </semantic-timeline>

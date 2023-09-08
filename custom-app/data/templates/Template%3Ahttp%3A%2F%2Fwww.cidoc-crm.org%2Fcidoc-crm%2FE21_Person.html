@@ -193,6 +193,31 @@ where {
 
     
     </bs-tab>
+      
+      <bs-tab event-key="19" title="Timeline">
+<semantic-timeline query="prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?subject ?start ?end
+WHERE {
+  GRAPH ?g {
+    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
+    ?subject (crm:P14_carried_out_by | crm:P100_was_death_of | crm:P98_brought_into_life ) ?person ;
+              crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start , ?end . 
+  }
+  }
+"
+                   tuple-template="{{> template}}" 
+                   tuple-template-height="42">
+            <template id="template">
+                <b>{{subject.value}}</b>
+                <div>{{start.value}} - {{end.value}}</div>
+            </template>
+          </semantic-timeline>
+
+      </bs-tab>
         
       
       <!-- Works -->

@@ -453,7 +453,7 @@ SELECT distinct ?year (COUNT(distinct ?mention) as ?mentionSum)
 WHERE {
   graph ?graph {
     
-    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person ^crm:P67_refers_to ?mention .
       
     # publYear of F24

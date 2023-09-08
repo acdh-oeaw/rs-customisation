@@ -28,28 +28,39 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     </div>
   	
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      
-      
-      <!-- Overview 
-      <bs-tab event-key="0" class="tab-overview" title="(Deprecate?) Overview">
-        <mp-field-visualization
-                  subject='[[this]]'
-                  fields='[[fieldDefinitions
-                              born_on="http://sk-app.acdh.oeaw.ac.at/fieldDefinition/born_on"
-                              birth_place="https://sk-app.acdh.oeaw.ac.at/fieldDefinition/birth_place"
-                              died_on="http://sk-app.acdh.oeaw.ac.at/fieldDefinition/died_on"                             
-                              death_place="https://sk-app.acdh.oeaw.ac.at/fieldDefinition/death_place"
-                              life_events="https://sk-app.acdh.oeaw.ac.at/fieldDefinition/life_events"
-                               ]]'
-             template='{{> rsp:ResourceFieldBasedVisualization subject="[[this]]" [[#if asserted]]guess="true"[[/if]]}}'
-          ></mp-field-visualization>
-           
-      </bs-tab>-->
      
       <!-- Biographical Info -->
   <bs-tab title="Biographical Information" event-key="9">
+    <!-- Names -->
+    <semantic-table
+                    
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?name ?type
+WHERE {
+  GRAPH ?g {
+    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P1_is_identified_by ?appellation .
+    ?appellation a crm:E33_E41_Linguistic_Appellation ;
+                 rdf:value ?name ;
+                 crm:P2_has_type ?type .
+    FILTER ( ?type NOT IN ( <https://sk.acdh.oeaw.ac.at/types/person/persName/male>, <https://sk.acdh.oeaw.ac.at/types/person/persName/female> ))
+  }
+  }
+         "
+  column-configuration='[
+    {"variableName": "name"}, 
+    {"variableName": "type"}
+  ]'
+></semantic-table>
     
-    <h3>Biographical Events</h3>
+    <!-- Biographical Events -->
     <semantic-table
                     
   query="

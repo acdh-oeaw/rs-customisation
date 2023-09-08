@@ -282,14 +282,14 @@ prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix schema: <https://schema.org/>
 prefix prov: <http://www.w3.org/ns/prov#>
                                
-select distinct ?text ?quotedPassage ?relation ?quotingPassage ?quotingText ?quotingPubl ?graph
+select distinct ?quotedPassage ?quotingPassage ?quotingText ?graph
 where {
   graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    {?text intro:R10_has_Text_Passage ?quotedPassage .
-      ?quotedPassage intro:R12_is_referred_to_entity ?relation .}
+    <https://sk.acdh.oeaw.ac.at/pmb61389> (owl:sameAs | ^owl:sameAs)* ?text .
+    {?quotedPassage intro:R10_is_Text_Passage_of ?text ;
+       intro:R12_is_referred_to_entity ?relation . }
     union
-    {?text intro:R12_is_referred_to_entity ?relation .
+    {?relation intro:R12_has_referred_to_entity ?text .
       FILTER NOT EXISTS { ?text a intro:INT1_TextPassage . }
     }
     

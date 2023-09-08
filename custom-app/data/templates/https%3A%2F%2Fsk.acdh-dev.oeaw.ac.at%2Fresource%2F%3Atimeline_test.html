@@ -15,7 +15,8 @@ WHERE {
 GROUP BY ?subject
 "
                    tuple-template="{{> template}}" 
-                   tuple-template-height="42">
+                   tuple-template-height="42"
+                   groups="subject">
             <template id="template">
                 <b>{{subject.value}}</b>
                 <div>{{start.value}} - {{end.value}}</div>

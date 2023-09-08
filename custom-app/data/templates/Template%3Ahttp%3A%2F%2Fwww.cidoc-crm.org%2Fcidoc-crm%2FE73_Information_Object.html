@@ -30,7 +30,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
       
     <!-- Bibliographical Data --> 
       <bs-tab event-key="0" class="tab-overview" title="Bibliographical Data">
-        <h3>Creation</h3>
+
         <semantic-table
                         query="
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -43,8 +43,8 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
-     ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
-     ?author ^crm:P14_carried_out_by ?textCreation .
+    ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+    OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . }
     
     # text title(s)
     ?text crm:P102_has_title ?title .

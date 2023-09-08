@@ -12,6 +12,7 @@ WHERE {
     FILTER ( DATATYPE(?fileDate) = <http://www.w3.org/2001/XMLSchema#date> )
     }
   }
+GROUP BY ?subject
 ' 
                    tuple-template="{{> template}}" tuple-template-height="42">
             <template id="template">

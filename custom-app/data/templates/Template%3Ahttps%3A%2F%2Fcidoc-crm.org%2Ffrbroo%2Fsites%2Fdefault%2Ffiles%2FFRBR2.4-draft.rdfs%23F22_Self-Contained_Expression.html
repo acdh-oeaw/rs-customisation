@@ -41,9 +41,10 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
          select distinct  ?author ?titleValue ?subtitleValue ?creationDate ?graph
 where {
   graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-     ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
-     OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . }
+   ?? (owl:sameAs | ^owl:sameAs)* ?text .
+     OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+      OPTIONAL { ?textCreation  crm:P4_has_time-span ?creationDate . }
+      OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . } }
     
     # text title(s)
     ?text crm:P102_has_title ?title .
@@ -62,12 +63,6 @@ where {
     ?subtitle crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/sub> ;
         rdf:value ?subtitleValue .
     }
-    
-    # creation date
-    optional {
-      ?textCreation crm:P4_has_time-span ?creationDate .
-    }
-    
   }
 }
                                
@@ -284,7 +279,7 @@ prefix prov: <http://www.w3.org/ns/prov#>
 select distinct ?quotedPassage ?quotingPassage ?quotingText ?graph
 where {
   graph ?graph {
-    <https://sk.acdh.oeaw.ac.at/pmb61389> (owl:sameAs | ^owl:sameAs)* ?text .
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
     {?quotedPassage intro:R10_is_Text_Passage_of ?text ;
        intro:R12_is_referred_to_entity ?relation . }
     union

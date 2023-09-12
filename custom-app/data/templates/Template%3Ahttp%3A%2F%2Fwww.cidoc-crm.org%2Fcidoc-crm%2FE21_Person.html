@@ -213,7 +213,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
-SELECT ?subject ?start ?end
+SELECT ?subject ?start
 WHERE {
   GRAPH ?g {
     
@@ -239,7 +239,7 @@ WHERE {
                    tuple-template-height="42">
             <template id="template">
                 <b>{{subject.value}}</b>
-                <div>{{start.value}} - {{end.value}}</div>
+                <div>{{start.value}}</div>
             </template>
           </semantic-timeline>
 

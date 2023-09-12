@@ -5,7 +5,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
-SELECT  (MAX(?fileDate) AS ?start) ?subject
+SELECT (MIN(?fileDate) AS ?start) (MAX(?fileDate) AS ?end) ?subject
 WHERE {
   GRAPH ?g {
     ?subject crm:P12_occurred_in_the_presence_of / crm:P94i_was_created_by / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?fileDate .

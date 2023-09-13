@@ -78,7 +78,7 @@ uses client-side templates:
      <rs-ontodia-metadata-from-fields
   fields-query='PREFIX field: <http://www.researchspace.org/resource/system/fields/>
     SELECT DISTINCT ?field WHERE { { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field  <http://www.researchspace.org/resource/system/fields/category> ?category . 
-      FILTER (?category in (<http://www.researchspace.org/category/knowledge_map>))}
+      FILTER (?category in (<http://www.researchspace.org/category/sk_knowledge_map_01>))}
       UNION {
         VALUES (?value){(<http://www.cidoc-crm.org/cidoc-crm/P138i_has_representation>)
                         (<http://www.w3.org/2000/01/rdf-schema#label>)

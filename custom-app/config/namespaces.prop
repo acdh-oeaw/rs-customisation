@@ -19,8 +19,6 @@ crmdig = http://www.ics.forth.gr/isl/CRMdig/
 crmgeo = http://www.ics.forth.gr/isl/CRMgeo/
 crminfluence = http://www.cidoc-crm.org/cidoc-crm/influence/
 
-frbroo = http://iflastandards.info/ns/fr/frbr/frbroo/
-
 ontodia = http://ontodia.org/schema/v1#
 
 bds=http://www.bigdata.com/rdf/search#
@@ -31,4 +29,4 @@ User = http://www.researchspace.org/resource/user/
 forms = http://www.researchspace.org/resource/system/forms/
 crminf = http://www.ics.forth.gr/isl/CRMinf/
 app = https://sk-app.acdh.oeaw.ac.at/
-sk = https://sk.acdh.oeaw.ac.at/%     
+sk = https://sk.acdh.oeaw.ac.at/%

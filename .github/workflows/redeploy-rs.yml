@@ -1,0 +1,24 @@
+name: Redeploy after commit
+
+on:
+  push: {}
+
+jobs:
+  rancher:
+    name: Redeploy RS
+    runs-on: ubuntu-latest
+    outputs:
+      environment: ${{ steps.get_environment_from_git_ref.outputs.environment }}
+      environment_short: ${{ steps.get_environment_from_git_ref.outputs.environment_short }}
+    steps:
+    - name: Rancher Deploy Action
+      run: |
+        echo "Running on branch ${{ github.ref_name }}"
+        if [ "${{ github.ref }}" = "refs/heads/main" ]; then
+          echo "environment=boilerplate"
+          echo "This branch will not trigger redeploy."
+        else
+          echo "environment=${{ github.ref_name }}"
+          curl -i -X POST -H "Authorization: Bearer ${{ secrets.RANCHER_BARER_TOKEN }}" "${{ secrets.RANCHERURL }}:${{ github.ref_name }}:researchspace?action=redeploy" 
+          echo "Check your researchpsace instance."
+        fi        

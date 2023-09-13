@@ -19,6 +19,6 @@ jobs:
           echo "This branch will not trigger redeploy."
         else
           echo "environment=${{ github.ref_name }}"
-          curl -i -X POST "${{ secrets.RANCHERURL }}:${{ github.ref_name }}:researchspace?action=redeploy" -H "Authorization: Bearer ${{ secrets.RANCHER_BARER_TOKEN }}"
-           echo "Check your researchpsace instance."
+          curl -i -X POST -H "Authorization: Bearer ${{ secrets.RANCHER_BARER_TOKEN }}" "${{ secrets.RANCHERURL }}:${{ github.ref_name }}:researchspace?action=redeploy" 
+          echo "Check your researchpsace instance."
         fi        

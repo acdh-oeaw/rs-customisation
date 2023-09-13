@@ -30,3 +30,4 @@ forms = http://www.researchspace.org/resource/system/forms/
 crminf = http://www.ics.forth.gr/isl/CRMinf/
 app = https://sk-app.acdh.oeaw.ac.at/
 sk = https://sk.acdh.oeaw.ac.at/%
+frbroo = https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#

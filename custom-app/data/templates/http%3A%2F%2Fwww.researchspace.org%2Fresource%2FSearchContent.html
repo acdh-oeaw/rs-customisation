@@ -39,7 +39,9 @@
                       bds:minRelevance \"0.3\" ;
                       bds:matchAllTerms \"true\"  .
           }
-          ?suggestion (rs:displayLabel|rdfs:label|skos:prefLabel|crm:P3_has_note) ?label .
+          ?suggestion crm:P1_is_identified_by ?app .
+          ?app a crm:E33_E41_Linguistic_Appellation ; 
+               rdf:value $label.
           FILTER(EXISTS {
             { FILTER(?__relationPattern__) }
           })

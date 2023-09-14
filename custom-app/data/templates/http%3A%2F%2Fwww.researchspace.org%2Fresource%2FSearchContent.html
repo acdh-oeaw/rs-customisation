@@ -7,7 +7,7 @@
           SELECT ?subject WHERE { 
              ?subject a ?type .
              
-             FILTER (?type IN ( <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#F22_Self-Contained_Expression>, <http://www.cidoc-crm.org/cidoc-crm/E21_Person>, <http://www.cidoc-crm.org/cidoc-crm/E73_Symbolic_Object> ))
+             FILTER (?type IN ( <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#F22_Self-Contained_Expression>, <http://www.cidoc-crm.org/cidoc-crm/E21_Person>, <http://www.cidoc-crm.org/cidoc-crm/E73_Information_Object> ))
                           
              ?subject rdfs:label ?label .
              SERVICE <http://www.bigdata.com/rdf/search#search> {
@@ -20,7 +20,7 @@
         default-query='
             SELECT ?subject WHERE { 
              ?subject a ?type .
-             FILTER (?type IN ( <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#F22_Self-Contained_Expression>, <http://www.cidoc-crm.org/cidoc-crm/E21_Person>, <http://www.cidoc-crm.org/cidoc-crm/E73_Symbolic_Object> ))
+             FILTER (?type IN ( <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#F22_Self-Contained_Expression>, <http://www.cidoc-crm.org/cidoc-crm/E21_Person>, <http://www.cidoc-crm.org/cidoc-crm/E73_Information_Object> ))
             }         
         '
         debounce=500

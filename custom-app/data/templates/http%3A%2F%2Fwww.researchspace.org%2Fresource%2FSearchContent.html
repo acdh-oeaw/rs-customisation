@@ -1,6 +1,6 @@
 <bs-tabs id='semantic-search' mount-on-enter=true>
   <bs-tab event-key='text search' title='Text Search' class="basicSearch">
-  <semantic-search config='[[searchConfigForFieldsFromQuery "SELECT DISTINCT ?field WHERE { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field  <http://www.researchspace.org/resource/system/fields/category> <http://www.researchspace.org/category/sk_person> . }"]]'>
+  <semantic-search config='[[searchConfigForFieldsFromQuery "SELECT DISTINCT ?field WHERE { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field  <http://www.researchspace.org/resource/system/fields/category> <http://www.researchspace.org/category/sk_semantic_search_01 . }"]]'>
      <semantic-search-query-keyword 
         domain='<http://www.cidoc-crm.org/cidoc-crm/E1_CRM_Entity>'
         query='
@@ -27,7 +27,7 @@
     </semantic-search>
   </bs-tab>
   <bs-tab event-key='structured-search' title='Structured Search' class="structuredSearch">
-      <semantic-search config='[[searchConfigForFieldsFromQuery "SELECT DISTINCT ?field WHERE { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field  <http://www.researchspace.org/resource/system/fields/category> <http://www.researchspace.org/category/sk_person> . }"]]'>
+      <semantic-search config='[[searchConfigForFieldsFromQuery "SELECT DISTINCT ?field WHERE { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field  <http://www.researchspace.org/resource/system/fields/category> <http://www.researchspace.org/category/sk_semantic_search_01> . }"]]'>
       <semantic-search-query-builder></semantic-search-query-builder>
       [[> rsp:SearchResults]]
     </semantic-search>

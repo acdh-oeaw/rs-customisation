@@ -30,7 +30,22 @@
   </bs-tab>
   <bs-tab event-key='structured-search' title='Structured Search' class="structuredSearch">
       <semantic-search config='[[searchConfigForFieldsFromQuery "SELECT DISTINCT ?field WHERE { ?field a <http://www.researchspace.org/resource/system/fields/Field> . ?field  <http://www.researchspace.org/resource/system/fields/category> <http://www.researchspace.org/category/sk_semantic_search_01> . }"]]'>
-      <semantic-search-query-builder></semantic-search-query-builder>
+      <semantic-search-query-builder resource-selector='{
+        "suggestionTupleTemplate": "<span title=\"{{label.value}}\">{{label.value}}</span>",
+        "query": "prefix bds: <http://www.bigdata.com/rdf/search#>
+        SELECT DISTINCT ?suggestion ?label WHERE {
+          SERVICE <http://www.bigdata.com/rdf/search#search> {
+            ?label bds:search ?__token__ ;
+                      bds:minRelevance \"0.3\" ;
+                      bds:matchAllTerms \"true\"  .
+          }
+          ?suggestion (rs:displayLabel|rdfs:label|skos:prefLabel|crm:P3_has_note) ?label .
+          FILTER(EXISTS {
+            { FILTER(?__relationPattern__) }
+          })
+        } ORDER BY DESC(?score)  LIMIT 30
+      "
+      }' class='rs-results-area'></semantic-search-query-builder>
       [[> rsp:SearchResults]]
     </semantic-search>
   </bs-tab>

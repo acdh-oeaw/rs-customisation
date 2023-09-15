@@ -56,14 +56,15 @@ WHERE {
   }
   }
          "
-         options='
-         {"showFilter": false}, 
-         {"showTableHeading": false}'
+         
   column-configuration='[
     {"variableName": "name"}, 
     {"variableName": "type"},
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
+  options='
+         {"showFilter": false}, 
+         {"showTableHeading": false}'
 ></semantic-table>
     
     <!-- Biographical Events -->
@@ -94,15 +95,16 @@ where {
   }
 }
          "
-         options='
-         {"showFilter": false}, 
-         {"showTableHeading": false}'
+         
   column-configuration='[
     {"variableName": "eventLabel"}, 
     {"variableName": "eventDate"}, 
     {"variableName": "eventPlace"},  
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
+  options='
+         {"showFilter": false}, 
+         {"showTableHeading": false}'
 ></semantic-table>
             <h4>Professional Occupation</h4>
     <semantic-table
@@ -132,15 +134,16 @@ where {
   }
 }
                            "
-                           options='
-         {"showFilter": false}, 
-         {"showTableHeading": false}'
+                           
                     column-configuration='[
     {"variableName": "occupation", "displayName": "Occupation"},
 		{"variableName": "time"},
 		{"cellTemplate": "<div>Employed by: {{employer.value}}</div>"}, 
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
+  options='
+         {"showFilter": false}, 
+         {"showTableHeading": false}'
 ></semantic-table>
     
 [[#if (ask "ASK { {SELECT * WHERE {?? crm:P143i_was_joined_by ?party} LIMIT 1}}")]]    
@@ -175,15 +178,16 @@ where {
   }
 }
                            "
-                           options='
-         {"showFilter": false}, 
-         {"showTableHeading": false}'
+                           
     column-configuration='[
     {"variableName": "party"}, 
 		{"cellTemplate": "<div>from {{from.value}}</div>"}, 
 		{"cellTemplate": "<div>to {{to.value}}</div>"}, 
 		{"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
+  options='
+         {"showFilter": false}, 
+         {"showTableHeading": false}'
 ></semantic-table>
 [[else]]
 [[/if]]

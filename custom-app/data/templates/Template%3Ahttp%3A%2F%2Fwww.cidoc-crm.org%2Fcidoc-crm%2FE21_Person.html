@@ -136,14 +136,14 @@ where {
          {"showFilter": false}, 
          {"showTableHeading": false}'
                     column-configuration='[
-    {"variableName": "occupation"},
+    {"variableName": "occupation", "displayName": "Occupation"},
 		{"variableName": "time"},
 		{"cellTemplate": "<div>Employed by: {{employer.value}}</div>"}, 
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
 ></semantic-table>
     
-    
+[[#if (ask "ASK { {SELECT * WHERE {?? crm:P143i_was_joined_by ?party} LIMIT 1}}")]]    
             <h4>Party Membership</h4>
     <semantic-table
                     query="
@@ -185,7 +185,9 @@ where {
 		{"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
 ></semantic-table>
-    
+[[else]]
+[[/if]]
+[[#if (ask "ASK { {SELECT * WHERE {?legalAct crm:P14_carried_out_by ??; crm:P10_falls_within ?legalCase . ?legalCase rdf:type crm:E5_Event .} LIMIT 1}}")]]  
     <!-- legal cases -->
         <h4>Legal Involvement</h4>
     <semantic-table
@@ -200,7 +202,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 select ?legalCase ?legalActType ?graph
 where {
   graph ?graph {
-    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
     
     ?legalAct crm:P14_carried_out_by ?person ;
     	crm:P10_falls_within ?legalCase ;
@@ -216,7 +218,8 @@ where {
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
 ></semantic-table>
-    
+[[else]]
+[[/if]]
 
     
     </bs-tab>

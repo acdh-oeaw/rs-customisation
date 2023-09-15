@@ -62,8 +62,7 @@ WHERE {
     {"variableName": "type"},
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
-  options='
-         {"showFilter": false}'
+  options='{"showFilter": false}'
 ></semantic-table>
     
     <!-- Biographical Events -->
@@ -137,7 +136,7 @@ where {
                     column-configuration='[
     {"variableName": "occupation", "displayName": "Occupation"},
 		{"variableName": "time"},
-		{"cellTemplate": "<div>[[#if (ask "ASK { BOUND(?employer)})]]Employed by: {{employer.value}}[[else]][[/if]]</div>"}, 
+		{"cellTemplate": "<div>[[#if (ask "ASK { BOUND(?employer)}")]]Employed by: {{employer.value}}[[else]][[/if]]</div>"}, 
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
   options='

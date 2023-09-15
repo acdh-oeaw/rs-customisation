@@ -39,15 +39,19 @@
                       bds:minRelevance \"0.3\" ;
                       bds:matchAllTerms \"true\"  .
           }
+          OPTIONAL { ?suggestion rdfs:label ?label1 . }
           ?suggestion crm:P1_is_identified_by ?app .
-          ?app a crm:E33_E41_Linguistic_Appellation ; 
-               rdf:value $label.
+          ?app crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/person/persName/pref>; rdf:value ?label2 .
+    
+          BIND ( IF (BOUND(?label1), ?label1, ?label2) AS ?label )
+
           FILTER(EXISTS {
             { FILTER(?__relationPattern__) }
           })
         } ORDER BY DESC(?score)  LIMIT 30
       "
       }' class='rs-results-area'></semantic-search-query-builder>
+      <!-- Caution, label-selection right now works only for persons; either fix rdfs:label (doesnt work right now) or add union clauses-->
       [[> rsp:SearchResults]]
     </semantic-search>
   </bs-tab>

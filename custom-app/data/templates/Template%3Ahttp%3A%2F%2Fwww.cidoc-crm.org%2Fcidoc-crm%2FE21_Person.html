@@ -332,25 +332,17 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix prov: <http://www.w3.org/ns/prov#>
          
-         select distinct ?text ?mentionWording ?refPerson ?source ?graph
+         select distinct ?person ?text ?refPerson ?source ?graph
 where {
   graph ?graph {
     # text
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?textCreation crm:P14_carried_out_by  ?person ;
-    (crm:P94_has_created | frbroo:R17_created) ?text.
-
-    # mentionWording
-    
-   ?text intro:R10_has_Text_Passage ?passage .
-    ?passage intro:R44_has_wording ?mentionWording .
-          
-    # refPerson
-    
-   ?passage intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference .
-   ?reference crm:P67_refers_to ?refPerson .
-    
-    OPTIONAL {?reference prov:wasDerivedFrom ?source .}
+    (crm:P94_has_created | frbroo:R17_created) / 
+    intro:R10_has_Text_Passage /
+    intro:R18_shows_actualization / 
+    intro:R17_actualizes_feature / 
+    crm:P67_refers_to ?refPerson .
     
 }
 }
@@ -359,12 +351,61 @@ where {
                         
                         '[
     {"variableName": "refPerson", "displayName": "Person"}, 
-    {"variableName": "mentionWording", "displayName": "Wording"},
-    {"variableName": "text", "displayName": "Text"},
-    {"variableName": "source", "displayName": "Source"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"displayName": "Text", "cellTemplate": "{{> refText}}"}
   ]'
                         ></semantic-table>
+                        <template id="refText">
+                          <semantic-table
+                          query="SELECT DISTINCT ?text ?passage ?reference WHERE {
+                            ?textCreation crm:P14_carried_out_by  <{{person.value}}> ;
+                            (crm:P94_has_created | frbroo:R17_created) ?text.
+                        
+                            # passage
+                            
+                           ?text intro:R10_has_Text_Passage ?passage .
+                            
+                                  
+                            # refPerson
+                            
+                           ?passage intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference .
+                           ?reference crm:P67_refers_to <{{refPerson.value}}> .
+                            
+                          }
+
+                          "
+                          column-configuration='[
+    {"variableName": "text", "displayName": "Text"}, 
+    {"displayName": "Text Passage", "cellTemplate": "{{> passage}}"}
+  ]'
+                          ></semantic-table>
+                        </template>
+                        <template id="passage">
+                          <semantic-query
+                          query="SELECT DISTINCT ?wording ?location ?publYear ?source WHERE {
+                            OPTIONAL {<{{passage.value}}> intro:R44_has_wording ?wording . }
+                            OPTIONAL {{<{{passage.value}}> intro:R41_has_location ?location . } UNION {<{{passage.value}}> intro:R16_is_incorporated_in/intro:R41_has_location ?location . }
+                            OPTIONAL {<{{passage.value}}> intro:R10_is_Text_Passage_of/crm:P165i_is_incorporated_in+/frbroo:R24i_was_created_through/crm:P4_has_time-span/rdfs:label ?publYear . }
+                            OPTIONAL {<{{reference.value}}> prov:wasDerivedFrom ?source. ?source rdfs:label ?sourceLabel .}
+                          }
+                          ">
+                        <template id="template">
+                          <div>
+                            {{#each bindings}}
+                              <div>
+                                <semantic-link iri='{{passage.value}}'>
+                                  {{#if wording}}"{{wording.value}}"{{/if}}
+                                  {{#if location}} – {{location.value}} 
+                                    {{#if publYear}}(Publ. {{publYear.value}}){{/if}}
+                                    {{else}} – 
+                                    {{#if publYear}}(Publ. {{publYear.value}}){{/if}}
+                                  {{/if}}
+                                </semantic-link>
+                                <semantic-link iri='{{source.value}}' title="{{source.value}}"></semantic-link>
+                              </div>
+                            {{/each}}
+                          </div>
+                        </template></semantic-query>
+                        </template>
         
 				<h3>Referred-to Texts</h3>
         <semantic-table

@@ -106,7 +106,7 @@ where {
 ></semantic-table>
             <h4>Professional Occupation</h4>
     <semantic-table
-                    query="
+                    query='
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -114,7 +114,7 @@ prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
          
       
-select ?person ?occupation ?time ?employer ?graph
+select ?person ?occupation ?time ?employer ?employerPeriod ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
@@ -122,21 +122,23 @@ where {
     ?occupation rdf:type frbroo:F51_Pursuit .
     OPTIONAL
     {
-      ?occupation crm:P10_falls_within ?employer .
+      ?occupation crm:P10_falls_within ?employerPeriod .
+      ?employerPeriod rdfs:label ?employerLabel .
     }
     OPTIONAL
     {
     ?occupation crm:P4_has_time-span/rdfs:label ?time .
     }
+    BIND ( IF (BOUND(?employerPeriod), CONCAT("Employer: ", STR(?employerLabel)), "" ) AS ?employer ).
     
   }
 }
-                           "
+                          '
                            
                     column-configuration='[
     {"variableName": "occupation", "displayName": "Occupation"},
 		{"variableName": "time"},
-		{"cellTemplate": "<div>[[#if (ask "ASK { BOUND(?employer)}")]]Employed by: {{employer.value}}[[else]][[/if]]</div>"}, 
+		{"cellTemplate": "<div><a href="{{employerPeriod.value}}">{{employer.value}}</a></div>"}, 
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
   options='

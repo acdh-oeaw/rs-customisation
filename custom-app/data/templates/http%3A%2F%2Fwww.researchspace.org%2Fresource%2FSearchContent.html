@@ -39,11 +39,7 @@
                       bds:minRelevance \"0.3\" ;
                       bds:matchAllTerms \"true\"  .
           }
-          OPTIONAL { ?suggestion rdfs:label ?label1 . }
-          OPTIONAL {?suggestion crm:P1_is_identified_by ?app .
-          ?app crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/person/persName/pref>; rdf:value ?label2 .}
-    
-          BIND ( IF (BOUND(?label1), ?label1, ?label2) AS ?label )
+          ?suggestion rdfs:label ?label .
 
           FILTER(EXISTS {
             { FILTER(?__relationPattern__) }
@@ -51,7 +47,6 @@
         } ORDER BY DESC(?score)  LIMIT 30
       "
       }' class='rs-results-area'></semantic-search-query-builder>
-      <!-- Caution, label-selection onlytemporary, should be reduced to rdfs:labels only soon -->
       [[> rsp:SearchResults]]
     </semantic-search>
   </bs-tab>

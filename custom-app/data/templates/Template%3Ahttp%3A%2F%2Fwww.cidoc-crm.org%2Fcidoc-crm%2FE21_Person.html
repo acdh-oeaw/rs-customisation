@@ -137,7 +137,7 @@ where {
                     column-configuration='[
     {"variableName": "occupation", "displayName": "Occupation"},
 		{"variableName": "time"},
-		{"cellTemplate": "<div>[[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person. ?person crm:P14i_performed ?occupation . ?occupation rdf:type frbroo:F51_Pursuit . ?occupation crm:P10_falls_within ?employer .} LIMIT 1}}")]]Employed by: {{employer.value}}[[else]][[/if]]</div>"}, 
+		{"cellTemplate": "<div>[[#if (ask "ASK { BOUND(?employer)})]]Employed by: {{employer.value}}[[else]][[/if]]</div>"}, 
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
   options='

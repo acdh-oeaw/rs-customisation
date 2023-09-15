@@ -31,7 +31,9 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
      
       <!-- Biographical Info -->
   <bs-tab title="Biographical Information" event-key="9">
-    <!-- Names -->
+    <!-- Names
+    CAUTION: persName - Type-Typo in query -->
+    <h4>Names</h4>
     <semantic-table
                     
   query="
@@ -42,9 +44,9 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
-SELECT ?name ?type
+SELECT ?name ?type ?graph
 WHERE {
-  GRAPH ?g {
+  GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person crm:P1_is_identified_by ?appellation .
     ?appellation a crm:E33_E41_Linguistic_Appellation ;
@@ -54,14 +56,18 @@ WHERE {
   }
   }
          "
-         options='{"showFilter": false}'
+         options='
+         {"showFilter": false}, 
+         {"showTableHeading": false}'
   column-configuration='[
     {"variableName": "name"}, 
-    {"variableName": "type"}
+    {"variableName": "type"},
+    {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
 ></semantic-table>
     
     <!-- Biographical Events -->
+    <h4>Biographical Events</h4>
     <semantic-table
                     
   query="
@@ -88,14 +94,17 @@ where {
   }
 }
          "
+         options='
+         {"showFilter": false}, 
+         {"showTableHeading": false}'
   column-configuration='[
-    {"variableName": "eventLabel", "displayName": "Event"}, 
-    {"variableName": "eventDate", "displayName": "Date"}, 
-    {"variableName": "eventPlace", "displayName": "Place"},  
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"variableName": "eventLabel"}, 
+    {"variableName": "eventDate"}, 
+    {"variableName": "eventPlace"},  
+    {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
 ></semantic-table>
-            <h3>Professional Occupation</h3>
+            <h4>Professional Occupation</h4>
     <semantic-table
                     query="
 prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
@@ -123,16 +132,19 @@ where {
   }
 }
                            "
+                           options='
+         {"showFilter": false}, 
+         {"showTableHeading": false}'
                     column-configuration='[
-    {"variableName": "occupation", "displayName": "Occupation"},
-		{"variableName": "time", "displayName": "Time-Span"},
-		{"variableName": "employer", "displayName": "Institution"}, 
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"variableName": "occupation"},
+		{"variableName": "time"},
+		{"cellTemplate": "<div>Employed by: {{employer.value}}</div>"}, 
+    {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
 ></semantic-table>
     
     
-            <h3>Party Membership</h3>
+            <h4>Party Membership</h4>
     <semantic-table
                     query="
                            prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
@@ -163,16 +175,19 @@ where {
   }
 }
                            "
+                           options='
+         {"showFilter": false}, 
+         {"showTableHeading": false}'
     column-configuration='[
-    {"variableName": "party", "displayName": "Political Party"}, 
-		{"variableName": "from", "displayName": "Joining"}, 
-		{"variableName": "to", "displayName": "Leaving"}, 
-		{"variableName": "graph", "displayName": "Source Graph"}
+    {"variableName": "party"}, 
+		{"cellTemplate": "<div>from {{from.value}}</div>"}, 
+		{"cellTemplate": "<div>to {{to.value}}</div>"}, 
+		{"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
 ></semantic-table>
     
     <!-- legal cases -->
-        <h3>Legal Involvement</h3>
+        <h4>Legal Involvement</h4>
     <semantic-table
                     
   query="
@@ -196,9 +211,9 @@ where {
 }
          "
   column-configuration='[
-    {"variableName": "legalCase", "displayName": "Legal Case"},
-    {"variableName": "legalActType", "displayName": "Involved As"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"variableName": "legalCase"},
+    {"cellTemplate": "<div>Involved as: {{legalActType.value}}</div>"},
+    {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
 ></semantic-table>
     

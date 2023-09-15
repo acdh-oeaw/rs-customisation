@@ -31,7 +31,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
      
       <!-- Biographical Info -->
   <bs-tab title="Biographical Information" event-key="9">
-    <!-- Names -->
+    <!-- Person Names -->
     <semantic-table
                     
   query="
@@ -58,6 +58,7 @@ WHERE {
     {"variableName": "name"}, 
     {"variableName": "type"}
   ]'
+                    show-filter="false"
 ></semantic-table>
     
     <!-- Biographical Events -->
@@ -510,11 +511,13 @@ where {
 }
          
          "
+                        options='{"showFilter": false}'
   column-configuration='[
     {"variableName": "idType", "displayName": "ID Type"}, 
     {"variableName": "idValue", "displayName": "ID Value"},
     {"variableName": "graph", "displayName": "Source Graph"}
   ]'
+                        
 ></semantic-table>
   </bs-tab>
   

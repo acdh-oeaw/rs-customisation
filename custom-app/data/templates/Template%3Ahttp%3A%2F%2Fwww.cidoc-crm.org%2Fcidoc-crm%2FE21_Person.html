@@ -100,9 +100,7 @@ where {
     {"variableName": "eventPlace"},  
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
-  options='
-         {"showFilter": false}, 
-         {"showTableHeading": false}'
+  options='{"showFilter": false}'
 ></semantic-table>
             <h4>Professional Occupation</h4>
     <semantic-table
@@ -136,14 +134,12 @@ where {
                           '
                            
                     column-configuration='[
-    {"variableName": "occupation", "displayName": "Occupation"},
+    {"variableName": "occupation"},
 		{"variableName": "time"},
-		{"cellTemplate": "<div><semantic-link iri={{employerPeriod.value}}>{{employer.value}}</semantic-link></div>"}, 
+		{"variableName": "employer"}, 
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
-  options='
-         {"showFilter": false}, 
-         {"showTableHeading": false}'
+  options='{"showFilter": false}'
 ></semantic-table>
     
 [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P143i_was_joined_by ?joining} LIMIT 1}}")]]    
@@ -185,9 +181,7 @@ where {
 		{"cellTemplate": "<div>to {{to.value}}</div>"}, 
 		{"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
-  options='
-         {"showFilter": false}, 
-         {"showTableHeading": false}'
+  options='{"showFilter": false}'
 ></semantic-table>
 [[else]]
 [[/if]]
@@ -230,38 +224,44 @@ where {
       
       <bs-tab event-key="19" title="Timeline">
 <semantic-timeline query="prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-
-SELECT ?subject ?start
-WHERE {
-  GRAPH ?g {
-    
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
-   
-    {
-      ?subject (crm:P14_carried_out_by | crm:P100_was_death_of | crm:P98_brought_into_life ) ?person .
-    }
-    UNION
-    {
-      ?subject frbroo:R24_created /
-               crm:P165_incorporates* /
-               frbroo:R17i_was_created_by /
-               crm:P14_carried_out_by ?person .
+  prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+  prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+  prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+  prefix intro: <https://w3id.org/lso/intro/beta202304#>
+  prefix owl: <http://www.w3.org/2002/07/owl#>
+  
+  SELECT DISTINCT ?event ?subject ?start
+  WHERE {
+    GRAPH ?g {
       
+      ?? (owl:sameAs | ^owl:sameAs)* ?person .
+     
+      {
+        ?event ( crm:P100_was_death_of | crm:P98_brought_into_life ) ?person ;
+        rdfs:label ?subject .
+      }
+      UNION
+      { ?event crm:P14_carried_out_by ?person ;
+        rdfs:label ?subject .
+      }
+      UNION
+      {
+        ?event frbroo:R24_created /
+                 crm:P165_incorporates* /
+                 frbroo:R17i_was_created_by /
+                 crm:P14_carried_out_by ?person ;
+                 rdfs:label ?subject .
+      }
+      
+      ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start . 
     }
-    ?subject  crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start , ?end . 
   }
-}
 
 "
                    tuple-template="{{> template}}" 
                    tuple-template-height="42">
             <template id="template">
-                <b>{{subject.value}}</b>
+                <semantic-link iri={{event.value}}><b>{{subject.value}}</b></semantic-link>
                 <div>{{start.value}}</div>
             </template>
           </semantic-timeline>

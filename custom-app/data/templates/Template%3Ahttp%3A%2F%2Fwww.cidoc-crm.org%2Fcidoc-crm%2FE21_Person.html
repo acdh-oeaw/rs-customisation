@@ -375,11 +375,11 @@ where {
                           "
                           column-configuration='[
     {"variableName": "text", "displayName": "Text"}, 
-    {"displayName": "Text Passage", "cellTemplate": "{{> passage}}"}
+    {"displayName": "Text Passage", "cellTemplate": "{{> passages}}"}
   ]'
                           ></semantic-table>
                         </template>
-                        <template id="passage">
+                        <template id="passages">
                           <semantic-query
                           query="SELECT DISTINCT ?wording ?location ?publYear ?source WHERE {
                             OPTIONAL {<{{passage.value}}> intro:R44_has_wording ?wording . }

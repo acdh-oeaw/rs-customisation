@@ -63,7 +63,7 @@ WHERE {
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
   options='
-         {"showFilter": false; "showTableHeading": false}'
+         {"showFilter": false}'
 ></semantic-table>
     
     <!-- Biographical Events -->
@@ -137,7 +137,7 @@ where {
                     column-configuration='[
     {"variableName": "occupation", "displayName": "Occupation"},
 		{"variableName": "time"},
-		{"cellTemplate": "<div>Employed by: {{employer.value}}</div>"}, 
+		{"cellTemplate": "<div>[[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person. ?person crm:P14i_performed ?occupation . ?occupation rdf:type frbroo:F51_Pursuit . ?occupation crm:P10_falls_within ?employer .} LIMIT 1}}")]]Employed by: {{employer.value}}[[else]][[/if]]</div>"}, 
     {"cellTemplate": "<div>(from graph: {{graph.value}})</div>"}
   ]'
   options='
@@ -145,7 +145,7 @@ where {
          {"showTableHeading": false}'
 ></semantic-table>
     
-[[#if (ask "ASK { {SELECT * WHERE {?? crm:P143i_was_joined_by ?party} LIMIT 1}}")]]    
+[[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P143i_was_joined_by ?joining} LIMIT 1}}")]]    
             <h4>Party Membership</h4>
     <semantic-table
                     query="
@@ -190,7 +190,7 @@ where {
 ></semantic-table>
 [[else]]
 [[/if]]
-[[#if (ask "ASK { {SELECT * WHERE {?legalAct crm:P14_carried_out_by ??; crm:P10_falls_within ?legalCase . ?legalCase rdf:type crm:E5_Event .} LIMIT 1}}")]]  
+[[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person. ?legalAct crm:P14_carried_out_by ?person; crm:P10_falls_within ?legalCase . ?legalCase rdf:type crm:E5_Event .} LIMIT 1}}")]]  
     <!-- legal cases -->
         <h4>Legal Involvement</h4>
     <semantic-table

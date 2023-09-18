@@ -332,7 +332,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix prov: <http://www.w3.org/ns/prov#>
          
-         select distinct ?person ?text ?refPerson ?source ?graph ?reference
+         select distinct ?person ?text ?refPerson
 where {
   graph ?graph {
     # text
@@ -376,7 +376,7 @@ where {
                           <template id="passages">
                             <semantic-query
                             query="SELECT DISTINCT ?passage ?wording ?location ?publYear ?source ?graph WHERE { GRAPH ?graph {
-                              ?passage intro:R18_shows_actualization / intro:R17_actualizes_feature <{{reference.value}}> .
+                              ?passage intro:R18_shows_actualization / intro:R17_actualizes_feature / crm:P67_refers_to <{{refPerson.value}}> .
                               OPTIONAL { ?passage intro:R44_has_wording ?wording . }
                               OPTIONAL { { ?passage intro:R41_has_location ?location . } UNION { ?passage intro:R16_is_incorporated_in/intro:R41_has_location ?location . } FILTER (!CONTAINS(STR(?location), 'http'))}
                               OPTIONAL { ?passage intro:R10_is_Text_Passage_of/crm:P165i_is_incorporated_in+/frbroo:R24i_was_created_through/crm:P4_has_time-span/rdfs:label ?publYear . }
@@ -389,7 +389,7 @@ where {
                                 <div>
                                   {{#each bindings}}
                                     <div>
-                                      <semantic-link iri='https://sk.acdh-dev.oeaw.ac.at/resource' urlqueryparam-resource-iri='{{passage.value}}'>
+                                      <semantic-link uri="{{passage.value}}">
                                         {{#if wording}}"{{wording.value}}"{{/if}}
                                         {{#if location}} – {{location.value}} 
                                           {{#if publYear}}(Publ. {{publYear.value}}){{/if}}
@@ -397,8 +397,8 @@ where {
                                           {{#if publYear}}(Publ. {{publYear.value}}){{/if}}
                                         {{/if}}
                                       </semantic-link>
-                                      {{#if source}}<semantic-link iri='https://sk.acdh-dev.oeaw.ac.at/resource' urlqueryparam-resource-iri='{{source.value}}' title="{{source.value}}"></semantic-link>{{/if}}
-                                      {{#if graph}}<semantic-link iri='https://sk.acdh-dev.oeaw.ac.at/resource' urlqueryparam-resource-iri='{{graph.value}}' title="{{graph.value}}"></semantic-link>{{/if}}
+                                      {{#if source}}<semantic-link uri="{{source.value}}" title="{{source.value}}"></semantic-link>{{/if}}
+                                      {{#if graph}}<semantic-link uri="{{graph.value}}" title="{{graph.value}}"></semantic-link>{{/if}}
                                     </div>
                                   {{/each}}
                                 </div>

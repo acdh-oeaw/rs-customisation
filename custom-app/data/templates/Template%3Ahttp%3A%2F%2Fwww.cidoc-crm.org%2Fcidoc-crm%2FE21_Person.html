@@ -387,20 +387,23 @@ where {
                               OPTIONAL { <{{passage.value}}> intro:R10_is_Text_Passage_of/crm:P165i_is_incorporated_in+/frbroo:R24i_was_created_through/crm:P4_has_time-span/rdfs:label ?publYear . }
                               OPTIONAL { <{{reference.value}}> prov:wasDerivedFrom ?source. ?source rdfs:label ?sourceLabel .}
                             }
-                            ">
-                            <template id="template">
+                            "
+                            template='{{> refTemplate1}}'>
+                            <template id="refTemplate1">
                             <div>
                               {{#each bindings}}
                                 <div>
-                                  <semantic-link uri='{{passage.value}}'>
+                                  <!--<semantic-link iri='{{passage.value}}'>-->
+                                  <div>
                                     {{#if wording}}"{{wording.value}}"{{/if}}
                                     {{#if location}} – {{location.value}} 
                                       {{#if publYear}}(Publ. {{publYear.value}}){{/if}}
                                       {{else}} – 
                                       {{#if publYear}}(Publ. {{publYear.value}}){{/if}}
                                     {{/if}}
-                                  </semantic-link>
-                                  <semantic-link uri='{{source.value}}' title="{{source.value}}"></semantic-link>
+                                  </div>  
+                                  <!-- </semantic-link> -->
+                                  <div>{{source.value}}</div><!--<semantic-link iri='{{source.value}}' title="{{source.value}}"></semantic-link>-->
                                 </div>
                               {{/each}}
                             </div>

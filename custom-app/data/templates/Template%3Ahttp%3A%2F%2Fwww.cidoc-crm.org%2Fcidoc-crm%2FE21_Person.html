@@ -548,15 +548,15 @@ WHERE {
     }
          "
   column-configuration='[
+    {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
     {"variableName": "idType", "displayName": "ID Type"}, 
-    {"variableName": "idValue", "cellTemplate": "{{> idValue}}"},
     {"variableName": "graph", "displayName": "Source Graph"}
   ]'
 >
 
 <template id="idValue">
   {{#if idURL}}
-  <semantic-link uri="{{idURL.value}}">{{idValue.value}}</semantic-link>
+  <a href="{{idURL.value}}">{{idValue.value}}</a>
   {{else}}
   <div>{{idValue.value}}</div>
   {{/if}}

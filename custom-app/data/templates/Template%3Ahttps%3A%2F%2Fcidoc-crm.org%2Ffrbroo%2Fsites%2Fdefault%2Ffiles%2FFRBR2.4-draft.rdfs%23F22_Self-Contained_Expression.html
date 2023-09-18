@@ -94,8 +94,8 @@ where {
 
       ?text crm:P165i_is_incorporated_in* ?publText .
       ?publText rdf:type frbroo:F22_Self-Contained_Expression ;
-              crm:P165i_is_incorporated_in ?publF24 ;
-              ?publF24 frbroo:R5i_is_component_of ?periodical .
+              crm:P165i_is_incorporated_in ?publF24 .
+      ?publF24 frbroo:R5i_is_component_of ?periodical .
     optional {
     # publication date                          
       ?publText ^frbroo:R24_created/crm:P4_has_time-span ?publDate .

@@ -392,7 +392,7 @@ where {
                             <div>
                               {{#each bindings}}
                                 <div>
-                                  <semantic-link iri='{{passage.value}}'>
+                                  <semantic-link uri='{{passage.value}}'>
                                     {{#if wording}}"{{wording.value}}"{{/if}}
                                     {{#if location}} – {{location.value}} 
                                       {{#if publYear}}(Publ. {{publYear.value}}){{/if}}
@@ -400,7 +400,7 @@ where {
                                       {{#if publYear}}(Publ. {{publYear.value}}){{/if}}
                                     {{/if}}
                                   </semantic-link>
-                                  <semantic-link iri='{{source.value}}' title="{{source.value}}"></semantic-link>
+                                  <semantic-link uri='{{source.value}}' title="{{source.value}}"></semantic-link>
                                 </div>
                               {{/each}}
                             </div>

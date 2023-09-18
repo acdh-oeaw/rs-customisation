@@ -332,7 +332,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix prov: <http://www.w3.org/ns/prov#>
          
-         select distinct ?person ?text ?refPerson ?source ?graph
+         select distinct ?person ?text ?refPerson ?source ?graph ?reference
 where {
   graph ?graph {
     # text

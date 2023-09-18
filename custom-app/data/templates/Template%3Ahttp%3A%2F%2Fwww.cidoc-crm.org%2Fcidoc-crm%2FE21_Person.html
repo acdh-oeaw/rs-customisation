@@ -341,8 +341,8 @@ where {
     (crm:P94_has_created | frbroo:R17_created) / 
     intro:R10_has_Text_Passage /
     intro:R18_shows_actualization / 
-    intro:R17_actualizes_feature / 
-    crm:P67_refers_to ?refPerson .
+    intro:R17_actualizes_feature ?reference . 
+    ?reference crm:P67_refers_to ?refPerson .
     
 }
 }
@@ -356,13 +356,13 @@ where {
                         >
                         <template id="refText">
                           <semantic-table
-                          query="SELECT DISTINCT ?text ?reference WHERE {
+                          query="SELECT DISTINCT ?text WHERE {
                             ?textCreation crm:P14_carried_out_by  <{{person.value}}> ;
                             (crm:P94_has_created | frbroo:R17_created) ?text.
                         
                             # passage
                             
-                           ?text intro:R10_has_Text_Passage / intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference .
+                           ?text intro:R10_has_Text_Passage / intro:R18_shows_actualization / intro:R17_actualizes_feature /
                            ?reference crm:P67_refers_to <{{refPerson.value}}> .
                             
                           }
@@ -375,12 +375,13 @@ where {
                           >
                           <template id="passages">
                             <semantic-query
-                            query="SELECT DISTINCT ?passage ?wording ?location ?publYear ?source WHERE {
+                            query="SELECT DISTINCT ?passage ?wording ?location ?publYear ?source ?graph WHERE { GRAPH ?graph {
                               ?passage intro:R18_shows_actualization / intro:R17_actualizes_feature <{{reference.value}}> .
                               OPTIONAL { ?passage intro:R44_has_wording ?wording . }
                               OPTIONAL { { ?passage intro:R41_has_location ?location . } UNION { ?passage intro:R16_is_incorporated_in/intro:R41_has_location ?location . } }
                               OPTIONAL { ?passage intro:R10_is_Text_Passage_of/crm:P165i_is_incorporated_in+/frbroo:R24i_was_created_through/crm:P4_has_time-span/rdfs:label ?publYear . }
                               OPTIONAL { ?passage prov:wasDerivedFrom ?source. ?source rdfs:label ?sourceLabel .}
+                            }
                             }
                             "
                             template='{{> refTemplate1}}'>
@@ -398,7 +399,8 @@ where {
                                     {{/if}}
                                   </div>  
                                   <!-- </semantic-link> -->
-                                  <div>{{source.value}}</div><!--<semantic-link iri='{{source.value}}' title="{{source.value}}"></semantic-link>-->
+                                  {{#if source}}<div>{{source.value}}</div>{{/if}}<!--<semantic-link iri='{{source.value}}' title="{{source.value}}"></semantic-link>-->
+                                  {{#if graph}}<div>{{graph.value}}</div>{{/if}}
                                 </div>
                               {{/each}}
                             </div>

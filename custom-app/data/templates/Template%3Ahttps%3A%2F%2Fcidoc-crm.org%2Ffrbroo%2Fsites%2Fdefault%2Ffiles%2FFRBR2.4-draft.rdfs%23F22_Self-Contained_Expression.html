@@ -30,39 +30,35 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
       
     <!-- Bibliographical Data --> 
       <bs-tab event-key="0" class="tab-overview" title="Bibliographical Data">
+
         <semantic-table
                         query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-         
-         select distinct  ?author ?titleValue ?subtitleValue ?creationDate ?graph
-where {
-  graph ?graph {
+SELECT DISTINCT  ?author ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate
+WHERE {
+  GRAPH ?graph {
    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-     OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+      OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
       OPTIONAL { ?textCreation  crm:P4_has_time-span ?creationDate . }
       OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . } }
-    
+      OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span ?performanceDate .}
     # text title(s)
     ?text crm:P102_has_title ?title .
     {                               
     ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/main> .
     }
-    union
+    UNION
     {                               
     ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/prov> .
     }
     
     ?title rdf:value ?titleValue .
     
-    optional {
+    OPTIONAL {
     ?text crm:P102_has_title ?subtitle .
     ?subtitle crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/sub> ;
         rdf:value ?subtitleValue .
     }
+    
   }
 }
                                
@@ -71,15 +67,16 @@ where {
     {"variableName": "author", "displayName": "Author"}, 
     {"variableName": "titleValue", "displayName": "Title"}, 
     {"variableName": "subtitleValue", "displayName": "Subtitle"},  
-    {"variableName": "creationDate", "displayName": "Creation Date"},
+    {"variableName": "creationDate", "displayName": "Created"},
+    {"variableName": "performanceDate", "displayName": "First Performed"},
     {"variableName": "graph", "displayName": "Source Graph"}
     
   ]'
-                        
+  options='{"showFilter": false}'
                         >
           </semantic-table>
         
-        <h3>Publication</h3>
+        <h4>Publication</h4>
         <!-- CAUTION: This will have to be refined - esp. the appellation display - with the original data -->
         <semantic-table
                         query="
@@ -123,7 +120,7 @@ where {
     {"variableName": "graph", "displayName": "Source Graph"}
     
   ]'
-                        
+  options='{"showFilter": false}'
                         >
           </semantic-table>
         

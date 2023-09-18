@@ -380,7 +380,7 @@ where {
                           >
                           <template id="passages">
                             <semantic-query
-                            query="SELECT DISTINCT ?wording ?location ?publYear ?source WHERE {
+                            query="SELECT DISTINCT ?passage ?wording ?location ?publYear ?source WHERE {
                               <{{passage.value}}> a intro:INT1_TextPassage .
                               OPTIONAL { <{{passage.value}}> intro:R44_has_wording ?wording . }
                               OPTIONAL { { <{{passage.value}}> intro:R41_has_location ?location . } UNION { <{{passage.value}}> intro:R16_is_incorporated_in/intro:R41_has_location ?location . }}

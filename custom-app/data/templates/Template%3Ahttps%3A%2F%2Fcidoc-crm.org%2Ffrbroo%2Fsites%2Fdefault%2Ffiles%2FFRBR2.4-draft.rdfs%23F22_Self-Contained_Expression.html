@@ -93,17 +93,14 @@ where {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
 
       ?text crm:P165i_is_incorporated_in* ?publText .
-      ?publText rdf:type frbroo:F24_Publication_Expression ;
-              crm:P165_incorporates/rdf:type frbroo:F22_Self-Contained_Expression .                               
+      ?publText rdf:type frbroo:F22_Self-Contained_Expression ;
+              crm:P165i_is_incorporated_in ?publF24 ;
+              ?publF24 frbroo:R5i_is_component_of ?periodical .
     optional {
     # publication date                          
       ?publText ^frbroo:R24_created/crm:P4_has_time-span ?publDate .
     }                 
-    # optional {                           
-    # # publication title
-    # ?publText crm:P1_is_identified_by ?appellation .
-    # ?appellation a crm:E33_E41_Linguistic_Appellation .
-    # }
+    
     optional {
     # pagination
     ?text ^intro:R16_incorporates ?segment .

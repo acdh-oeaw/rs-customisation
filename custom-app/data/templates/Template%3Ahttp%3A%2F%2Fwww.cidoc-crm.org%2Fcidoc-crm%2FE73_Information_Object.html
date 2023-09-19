@@ -79,107 +79,55 @@ where {
                         >
           </semantic-table>
 
-                <semantic-query 
-  query='
-    prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-
-select ?case ?label
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?file .
-    ?file crm:P12i_was_present_at ?case .
-    ?case rdfs:label ?label .
-  }
-}
-  ' 
-  template='{{> cases}}'
-  style='display: inline;'
->
-  <template id='cases'>
-    <div>
-      <h3>Occurs in: {{#each bindings}}
-        {{#if @first}} {{else}} {{#if @last}} and {{else}}, {{/if}} {{/if}}
-        <semantic-link title="{{case.value}}" iri="{{case.value}}">
-          {{label.value}}
-        </semantic-link>
-        
-      {{/each}}</h3>
-    </div>
-  </template>
-</semantic-query>
-        
-        <semantic-query 
-  query='
-    prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-
-select ?case ?person ?name ?graph
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?file .
-    ?file crm:P12i_was_present_at/crm:P10i_contains/crm:P14_carried_out_by ?person .
-    ?person rdfs:label ?name .
-  }
-}
-  ' 
-  template='{{> participants}}'
-  style='display: inline;'
->
-  <template id='participants'>
-    <div>
-      <h4>Participants:</h4> {{#each bindings}}
-        {{#if @first}} {{else}} {{#if @last}} and {{else}}, {{/if}} {{/if}}
-        <semantic-link title="{{name.value}}" iri="{{person.value}}">
-          {{name.value}}
-        </semantic-link>
-        
-      {{/each}}
-    </div>
-  </template>
-</semantic-query>
-        <semantic-query 
-  query='
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-
-select ?otherFile ?fileTitle
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?file .
-    ?file crm:P12i_was_present_at ?case .
-    ?case crm:P12_occurred_in_the_presence_of ?otherFile .
-    ?otherFile a crm:E73_Information_Object;
-                 crm:P102_has_title/rdf:value ?fileTitle.
-  }
-}
-  ' 
-  template='{{> otherFiles}}'
-  style='display: inline;'
->
-        <template id="otherFiles">
-        <div>
-     <h4>Files involved:</h4>
-      
-      {{#each bindings}}
-        {{#if @first}} {{else}} {{#if @last}} and {{else}}, {{/if}} {{/if}}
-        
-          <semantic-link title="{{otherFile.value}}" iri="{{otherFile.value}}">
-          {{fileTitle.value}}
-          </semantic-link>
-        
-            {{/each}}
-      
-    </div>
+				<semantic-table 
+          query='
+        select ?case
+        where {
+          graph ?graph {
+            ?? (owl:sameAs | ^owl:sameAs)* ?file .
+            ?file crm:P12i_was_present_at ?case .
+          }
+        }
+          ' 
+          column-configuration='[
+            {"displayName": "Legal Case", "cellTemplate": "{{> case}}"}, 
+            {"displayName": "Files", "cellTemplate": "{{> files}}"}
+          ]'
+        >
+          <template id='case'>
+            <semantic-query
+            query='
+            SELECT ?participant WHERE {
+              <{{case.value}}> crm:P10i_contains/crm:P14_carried_out_by ?participant .
+            }
+            '>
+          		<template id="template">
+            		<div>
+                  <h5>{{case.value}}</h5>
+                  {{#if participant}}
+                  <h6>Participants:</h6>
+                  {{#each bindings}}
+                  {{participant.value}}<br/>
+                  {{/each}}
+                  {{/if}}
+            		</div>
+          		</template>
+            </semantic-query>
           </template>
-        </semantic-query>
-        </bs-tab>
+          <template id="files">
+            <semantic-table
+            query='
+						SELECT ?file WHERE {
+            ?file crm:P12i_was_present_at <{{case.value}}>.
+            }
+						'
+            column-configuration='[
+              {"variableName": "file"}
+            ]'               
+            ></semantic-table>
+          </template>
+				</semantic-table>
+    </bs-tab>
       
       <bs-tab event-key="2" title="References, Relations">
         <h3>Person Mentions</h3>
@@ -274,17 +222,8 @@ where {
         
         <h3>Intertextual Relations (incoming)</h3>
         <semantic-table
-                        query="prefix prov: <http://www.w3.org/ns/prov#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-prefix schema: <https://schema.org/>
-prefix prov: <http://www.w3.org/ns/prov#>
-                               
-select distinct ?text ?quotedPassage ?relation ?quotingPassage ?quotingText ?quotingPubl ?graph
+                        query="
+select distinct ?text ?quotedPassage ?relation ?quotingPassage ?quotingText ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
@@ -296,9 +235,7 @@ where {
     }
     
     {?relation intro:R13_has_referring_entity ?quotingPassage .
-      ?quotingPassage ^intro:R10_has_Text_Passage ?quotingText . 
-      optional {?quotingPassage ^intro:R16_incorporates/intro:R25_is_segment_of ?quotingPubl .}
-    }
+      ?quotingPassage ^intro:R10_has_Text_Passage ?quotingText . }
     union
     {?relation intro:R13_has_referring_entity ?quotingText .
             FILTER NOT EXISTS { ?quotingText a intro:INT1_TextPassage . }}

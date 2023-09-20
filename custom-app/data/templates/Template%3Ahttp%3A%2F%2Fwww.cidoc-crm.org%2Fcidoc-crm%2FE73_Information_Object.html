@@ -103,12 +103,13 @@ where {
             '>
           		<template id="template">
             		<div>
-                  <h5>{{case.value}}</h5>
+                  <semantic-link iri='{{case.value}}'>{{case.value}}</h5>
                   {{#if participant}}
                   <h6>Participants:</h6>
                   {{#each bindings}}
                   {{participant.value}}<br/>
                   {{/each}}
+                  {{else}}
                   {{/if}}
             		</div>
           		</template>

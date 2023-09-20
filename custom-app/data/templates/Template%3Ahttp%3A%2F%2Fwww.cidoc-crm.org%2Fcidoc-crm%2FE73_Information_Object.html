@@ -113,7 +113,7 @@ where {
                   {{/if}}
             		</div>
           		</template>
-            </semantic-query> 
+            </semantic-query>
           </template>
           <template id="files">
             <semantic-table
@@ -130,33 +130,34 @@ where {
 				</semantic-table>
     </bs-tab>
       
-      <bs-tab event-key="2" title="References, Relations">
+      <bs-tab event-key="2" title="Person Mentions">
         <h3>Person Mentions</h3>
         <semantic-table
                         query="
-select ?mentioned ?mention ?mentionPosition ?mentionSource ?graph
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    ?text intro:R10_has_Text_Passage*/^intro:R18_actualization_found_on ?actualization.
-    ?actualization intro:R17_actualizes_feature/crm:P67_refers_to ?mentioned.
-    
-    # mention
-    optional { 
-    ?actualization intro:R18_actualization_found_on ?mention .
-    ?mention rdf:type intro:INT1_TextPassage . 
-    
-    # mentionPosition
-    optional {?mention ^intro:R16_incorporates ?segment .
-      			?segment rdf:type intro:INT16_Segment ;
-               	schema:pagination ?mentionPosition . }
-    
-    # mentionSource
-    optional { ?mention intro:R17_actualizes_feature/prov:wasDerivedFrom ?mentionSource . } }
-    
+        select ?mentioned ?passage ?passagePosition ?reference ?mentionSource ?graph
+        where {
+          graph ?graph {
+            <https://sk.acdh.oeaw.ac.at/D_000068-062-000> (owl:sameAs | ^owl:sameAs)* ?text .
+            {?text intro:R10_has_Text_Passage ?passage .
+            ?passage ^intro:R18_actualization_found_on ?actualization. }
+                UNION 
+            {?text ^intro:R18_actualization_found_on ?actualization. }
+
+            ?actualization intro:R17_actualizes_feature ?reference .
+            ?reference crm:P67_refers_to ?mentioned.
+
+
+            # mentionPosition
+            optional {?passage ^intro:R16_incorporates ?segment .
+                    ?segment rdf:type intro:INT16_Segment ;
+                        schema:pagination ?passagePosition . }
+
+            # mentionSource
+            optional { ?reference prov:wasDerivedFrom ?mentionSource . }
+
     
   }
-}         
+}        
                                "
                         column-configuration='[
     {"variableName": "mentioned", "displayName": "Mentioned Person"}, 
@@ -167,57 +168,66 @@ where {
   ]'
                         >
           </semantic-table>
+        </bs-tab>
+      <bs-tab event-key="17" title="Intertextual Relations">
 <!-- pick up here -->
-        <h3>Intertextual Relations (outgoing)</h3>
+        <h3>Outgoing</h3>
         <semantic-table
-                        query="prefix prov: <http://www.w3.org/ns/prov#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-prefix schema: <https://schema.org/>
-prefix prov: <http://www.w3.org/ns/prov#>
-                               
-select distinct ?text ?refPassage ?relation ?targetPassage ?targetText ?targetPubl ?graph
-where {
-  graph ?graph {
+                        query="
+SELECT ?targetText
+WHERE {
+  GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    {?text intro:R10_has_Text_Passage ?refPassage .
-      ?refPassage intro:R13_is_referring_entity ?relation .}
-    union
-    {?text intro:R13_is_referring_entity ?relation .}
+    ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
     
-    {?relation intro:R12_has_referred_to_entity ?targetPassage .
-      ?targetPassage ^intro:R10_has_Text_Passage ?targetText . 
-      optional {?targetPassage ^intro:R16_incorporates/intro:R25_is_segment_of ?targetPubl .}
-    }
-    union
-    {?relation intro:R12_has_referred_to_entity ?targetText .
-    ?targetText crm:P102_has_title ?title .}
-                               
+    ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* ?targetText .
+    FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }                           
   }
 }          
                                "
                         
                         column-configuration='[
-    {"variableName": "refPassage", "displayName": "Text Passage"},
-    {"variableName": "targetText", "displayName": "Referred-to Text"},
-    {"variableName": "targetPassage", "displayName": "Referred-to Passage"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"variableName": "targetText", "displayName": "Text"},
+    {"displayName": "Relations","cellTemplate": "{{> relations}}"}
   ]'
                         >
+           <template id="relations">
+            <semantic-table
+                            query="
+                                   SELECT ?refPassage ?refPosition ?targetPassage ?targetPosition ?refSource ?graph
+                                   WHERE { GRAPH ?graph {
+                                   ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* <{{targetText.value}}> .
+                                   ?relation a intro:INT3_IntertextualRelationship .
+                                   OPTIONAL {?relation intro:R13_has_referring_entity ?refPassage .
+                                   ?refPassage a intro:INT1_TextPassage . 
+                                   OPTIONAL { ?refPassage intro:R16_is_incorporated_in ?segment. 
+                                   ?segment a intro:INT16_Segment; 
+                                   intro:R41_has_location ?refPosition . 
+                                   FILTER (!REGEX(?refPosition, 'http'))
+                                   }
+                                   } 
+                                   OPTIONAL {?relation intro:R12_has_referred_to_entity ?targetPassage .
+                                   ?targetPassage a intro:INT1_TextPassage . 
+                                   OPTIONAL { ?targetPassage intro:R16_is_incorporated_in ?segment2. 
+                                   ?segment2 a intro:INT16_Segment; intro:R41_has_location ?targetPosition . 
+                                   FILTER (!REGEX(?targetPosition, 'http'))
+                                   }
+                                   }
+                                   }
+                                   }
+                                   "
+                                   ></semantic-table>
+          </template>
           </semantic-table>
         
         
-        <h3>Intertextual Relations (incoming)</h3>
+        <h3>Incoming</h3>
         <semantic-table
                         query="
 select distinct ?quotingText ?graph
 where {
   graph ?graph {
-    <https://sk.acdh.oeaw.ac.at/D_000068-062-000> (owl:sameAs | ^owl:sameAs)* ?text .
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
     {?text intro:R10_has_Text_Passage / intro:R12_is_referred_to_entity ?relation .}
     union
     {?text intro:R12_is_referred_to_entity ?relation .

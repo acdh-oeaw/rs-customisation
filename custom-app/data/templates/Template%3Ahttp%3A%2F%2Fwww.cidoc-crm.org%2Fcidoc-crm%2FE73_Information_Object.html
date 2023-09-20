@@ -134,16 +134,6 @@ where {
         <h3>Person Mentions</h3>
         <semantic-table
                         query="
-PREFIX prov: <http://www.w3.org/ns/prov#>
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-prefix schema: <https://schema.org/>
-prefix prov: <http://www.w3.org/ns/prov#>
-                               
 select ?mentioned ?mention ?mentionPosition ?mentionSource ?graph
 where {
   graph ?graph {

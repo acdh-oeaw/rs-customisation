@@ -154,15 +154,15 @@ where {
     # mention
     optional { 
     ?actualization intro:R18_actualization_found_on ?mention .
-    ?mention rdf:type intro:INT1_TextPassage . }
+    ?mention rdf:type intro:INT1_TextPassage . 
     
     # mentionPosition
-    optional {?actualization intro:R18_actualization_found_on/^intro:R16_incorporates ?segment .
+    optional {?mention ^intro:R16_incorporates ?segment .
       			?segment rdf:type intro:INT16_Segment ;
                	schema:pagination ?mentionPosition . }
     
     # mentionSource
-    optional { ?mentionAt intro:R17_actualizes_feature/prov:wasDerivedFrom ?mentionSource}
+    optional { ?mention intro:R17_actualizes_feature/prov:wasDerivedFrom ?mentionSource . } }
     
     
   }

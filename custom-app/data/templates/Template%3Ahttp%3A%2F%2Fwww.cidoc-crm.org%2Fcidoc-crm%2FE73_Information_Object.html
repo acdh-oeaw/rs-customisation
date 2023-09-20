@@ -214,30 +214,26 @@ where {
         <h3>Intertextual Relations (incoming)</h3>
         <semantic-table
                         query="
-select distinct ?text ?quotedPassage ?relation ?quotingPassage ?quotingText ?graph
+select distinct ?quotingText ?graph
 where {
   graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    {?text intro:R10_has_Text_Passage ?quotedPassage .
-      ?quotedPassage intro:R12_is_referred_to_entity ?relation .}
+    <https://sk.acdh.oeaw.ac.at/D_000068-062-000> (owl:sameAs | ^owl:sameAs)* ?text .
+    {?text intro:R10_has_Text_Passage / intro:R12_is_referred_to_entity ?relation .}
     union
     {?text intro:R12_is_referred_to_entity ?relation .
       FILTER NOT EXISTS { ?text a intro:INT1_TextPassage . }
     }
     
-    {?relation intro:R13_has_referring_entity ?quotingPassage .
-      ?quotingPassage ^intro:R10_has_Text_Passage ?quotingText . }
+    {?relation intro:R13_has_referring_entity / ^intro:R10_has_Text_Passage ?quotingText . }
     union
     {?relation intro:R13_has_referring_entity ?quotingText .
             FILTER NOT EXISTS { ?quotingText a intro:INT1_TextPassage . }}
                                
   }
-}          
+}        
                                "
                         
                         column-configuration='[
-    {"variableName": "quotedPassage", "displayName": "Quoted Passage"},
-    {"variableName": "quotingPassage", "displayName": "Quoted in Passage"},
     {"variableName": "quotingText", "displayName": "Quoted by Text"},
     {"variableName": "graph", "displayName": "Source Graph"}
   ]'

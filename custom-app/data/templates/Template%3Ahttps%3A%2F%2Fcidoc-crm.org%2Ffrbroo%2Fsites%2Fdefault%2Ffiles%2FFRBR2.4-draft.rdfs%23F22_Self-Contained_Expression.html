@@ -262,6 +262,46 @@ where {
         
         
         </bs-tab>
+
+        <!-- IDs, Links - Table -->
+  <bs-tab title="Entity IDs" event-key="10">
+    <semantic-table 
+query="
+SELECT ?text ?id ?idValue ?idURL ?idType ?graph
+WHERE {
+GRAPH ?graph {
+?? (owl:sameAs | ^owl:sameAs)* ?text .
+?text crm:P1_is_identified_by ?id .
+?id rdf:value ?idValue .
+    OPTIONAL { 
+        FILTER (CONTAINS(STR(?idValue), 'http'))
+        BIND(?idValue AS ?idURL)
+    }
+?id rdf:type crm:E42_Identifier .
+OPTIONAL {
+  #type
+  ?id crm:P2_has_type ?idType .
+    }
+  }
+}
+     "
+column-configuration='[
+{"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
+{"variableName": "idType", "displayName": "ID Type"}, 
+{"variableName": "graph", "displayName": "Source Graph"}
+]'
+>
+
+<template id="idValue">
+{{#if idURL}}
+<a href="{{idURL.value}}">{{idValue.value}}</a>
+{{else}}
+<div>{{idValue.value}}</div>
+{{/if}}
+</template>
+
+</semantic-table>
+</bs-tab>
   
       <!-- Source -->
       <bs-tab event-key="1" title="Source">

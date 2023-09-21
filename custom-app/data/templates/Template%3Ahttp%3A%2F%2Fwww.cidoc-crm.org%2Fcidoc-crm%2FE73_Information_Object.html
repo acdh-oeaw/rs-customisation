@@ -154,7 +154,8 @@ where {
                                   WHERE {
                                   GRAPH ?graph {
                                   ?reference crm:P67_refers_to <{{mentioned.value}}> .
-    							   ?reference intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of <{{text.value}}> .
+    							                ?reference intro:R17_feature_actualized_in / intro:R18_actualization_found_on ?mentionPassage .
+                                  ?mentionPassage intro:R10_is_Text_Passage_of <{{text.value}}> .
                                   # mentionPosition
 				             					    optional {?mentionPassage ^intro:R16_incorporates ?segment .
                     							?segment a intro:INT16_Segment ;

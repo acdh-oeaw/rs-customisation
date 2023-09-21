@@ -80,13 +80,6 @@ WHERE {
         <!-- CAUTION: This will have to be refined - esp. the appellation display - with the original data -->
         <semantic-table
                         query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-         
          select distinct  ?publText ?publDate ?graph ?pagination
 where {
   graph ?graph {
@@ -98,7 +91,7 @@ where {
       ?publF24 frbroo:R5i_is_component_of ?periodical .
     optional {
     # publication date                          
-      ?publText ^frbroo:R24_created/crm:P4_has_time-span ?publDate .
+      ?publF24 ^frbroo:R24_created/crm:P4_has_time-span ?publDate .
     }                 
     
     optional {
@@ -121,43 +114,13 @@ where {
                         >
           </semantic-table>
         
-        <h3>Performance / Recital</h3>
-        <semantic-table
-                        query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-         
-         select ?performanceDate
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span ?performanceDate .
-  }
-}       
-                               "
-                        column-configuration='[
-    {"variableName": "performanceDate", "displayName": "Date"}
-  ]'>
-        </semantic-table>
-        
         <h3>Publication Context</h3>
         <semantic-tree query="
-                              prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-
-select distinct ?node ?parent
-where {
-  ?parent frbroo:R5_has_component|intro:R25_has_segmemt|crm:P165_incorporates|intro:R10_has_Text_Passage ?node .
+                              SELECT DISTINCT ?node ?parent
+WHERE {
+  ?parent frbroo:R5_has_component|crm:P165_incorporates ?node .
   
-  {??  frbroo:R5_has_component*|intro:R25_has_segmemt*|crm:P165_incorporates*|(crm:P165_incorporates/intro:R10_has_Text_Passage)* ?node . }
-  UNION
-  { ?parent frbroo:R5_has_component*|intro:R25_has_segmemt*|crm:P165_incorporates*|(crm:P165_incorporates/intro:R10_has_Text_Passage)* ?? . }
+  { ?parent frbroo:R5_has_component*/crm:P165_incorporates*/intro:R10_has_Text_Passage* ?? . }
 }
                               "/>
         </bs-tab>

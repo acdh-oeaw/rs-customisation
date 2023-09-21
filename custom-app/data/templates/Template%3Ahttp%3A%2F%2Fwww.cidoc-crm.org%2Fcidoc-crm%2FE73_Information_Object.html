@@ -174,7 +174,7 @@ where {
         <h3>Outgoing</h3>
         <semantic-table
                         query="
-SELECT ?targetText
+SELECT DISTINCT ?targetText ?text
 WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
@@ -187,8 +187,8 @@ WHERE {
                                "
                         
                         column-configuration='[
-    {"variableName": "targetText", "displayName": "Text"},
-    {"displayName": "Relations","cellTemplate": "{{> relations}}"}
+    {"variableName": "targetText", "displayName": "Referenced Text"},
+    {"displayName": "Relation","cellTemplate": "{{> relations}}"}
   ]'
                         >
            <template id="relations">
@@ -216,7 +216,18 @@ WHERE {
                                    }
                                    }
                                    "
-                                   ></semantic-table>
+                            column-configuration='[
+    {"cellTemplate": "{{> reference}}"},
+    {"cellTemplate": "{{> target}}"}
+  ]'
+                                   >
+              <template id="reference">
+              Reference: {{#if refPassage}}<semantic-link uri={{refPassage.value}}>{{refPassage.value}}</semantic-link>{{#if refPosition}} – Position: {{refPosition.value}}{{/if}}{{else}}<semantic-link uri={{text.value}}>{{text.value}}</semantic-link>{{/if}}
+              </template>
+              <template id="target">
+              Target: {{#if targetPassage}}<semantic-link uri={{targetPassage.value}}>{{targetPassage.value}}</semantic-link>{{#if targetPosition}} – Position: {{targetPosition.value}}{{/if}}{{else}}<semantic-link uri={{text.value}}>{{targetText.value}}</semantic-link>{{/if}}
+              </template>
+             </semantic-table>
           </template>
           </semantic-table>
         

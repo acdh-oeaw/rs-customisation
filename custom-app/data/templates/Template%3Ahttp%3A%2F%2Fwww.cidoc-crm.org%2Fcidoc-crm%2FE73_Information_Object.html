@@ -134,39 +134,41 @@ where {
         <h3>Person Mentions</h3>
         <semantic-table
                         query="
-        select ?mentioned ?passage ?passagePosition ?reference ?mentionSource ?graph
-        where {
-          graph ?graph {
-            <https://sk.acdh.oeaw.ac.at/D_000068-062-000> (owl:sameAs | ^owl:sameAs)* ?text .
-            {?text intro:R10_has_Text_Passage ?passage .
-            ?passage ^intro:R18_actualization_found_on ?actualization. }
-                UNION 
-            {?text ^intro:R18_actualization_found_on ?actualization. }
-
-            ?actualization intro:R17_actualizes_feature ?reference .
-            ?reference crm:P67_refers_to ?mentioned.
-
-
-            # mentionPosition
-            optional {?passage ^intro:R16_incorporates ?segment .
-                    ?segment rdf:type intro:INT16_Segment ;
-                        schema:pagination ?passagePosition . }
-
-            # mentionSource
-            optional { ?reference prov:wasDerivedFrom ?mentionSource . }
-
-    
+        SELECT DISTINCT ?mentioned ?text
+        WHERE {
+          GRAPH ?graph {
+           ?? (owl:sameAs | ^owl:sameAs)* ?text .
+           ?text intro:R10_has_Text_Passage* / ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?mentioned.
   }
-}        
+}
                                "
                         column-configuration='[
     {"variableName": "mentioned", "displayName": "Mentioned Person"}, 
-    {"variableName": "mention", "displayName": "Mention"}, 
-    {"variableName": "mentionsource", "displayName": "Source"}, 
-    {"variableName": "graph", "displayName": "Source Graph"},
-    {"variableName": "mentionPosition", "displayName": "Mention Position"}
+    {"displayName": "Mention", "cellTemplate": "{{> mention}}"}
   ]'
                         >
+          <template it="mention">
+            <semantic-table
+                            query="
+																	SELECT ?mentionPassage ?mentionPosition ?source ?graph
+                                  WHERE {
+                                  GRAPH ?graph {
+                                  ?reference crm:P67_refers_to <{{mentioned.value}}> .
+    							   ?reference intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of <{{text.value}}> .
+                                  # mentionPosition
+				             					    optional {?mentionPassage ^intro:R16_incorporates ?segment .
+                    							?segment a intro:INT16_Segment ;
+                        					schema:pagination ?mentionPosition . }
+
+                                  # mentionSource
+                                  optional { ?reference prov:wasDerivedFrom ?mentionSource . }
+                                   }
+                                   }
+                                   "
+                            >
+              
+            </semantic-table>
+          </template>
           </semantic-table>
         </bs-tab>
       <bs-tab event-key="17" title="Intertextual Relations">

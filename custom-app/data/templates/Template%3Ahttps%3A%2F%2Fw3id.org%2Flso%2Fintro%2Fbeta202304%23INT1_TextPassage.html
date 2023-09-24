@@ -30,22 +30,67 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
       
     <!-- Text Passage Data --> 
       <bs-tab event-key="0" class="tab-overview" title="Text Passage Data">
-        <!-- Wording -->
-        <!-- Autor, Text, Jahr Entst., Jahr Publ, Jahr Auff.; Position im Text / Position in Publ -->
+					<semantic-query 
+                        query='
+          SELECT ?wording
+          WHERE {
+            GRAPH ?graph {
+             ?? (owl:sameAs | ^owl:sameAs)* ?passage .
+              ?passage intro:R44_has_wording ?wording . } } 
+              '
+              template='{{> template}}'
+                        >
+            <template id='template'>{{#each bindings}}{{#if wording}}<h2>Text Passage: "{{wording.value}}"</h2>{{/if}}{{/each}}</template>
+        </semantic-query>
         <semantic-table
-                        query="
-SELECT DISTINCT  ?author ?titleValue ?subtitleValue ?creationDate ?publDate ?graph ?performanceDate
+                        query='SELECT ?person ?targetPassage ?targetText ?refPassage ?refText ?graph
+WHERE {
+GRAPH ?graph {
+	  ?? (owl:sameAs | ^owl:sameAs)* ?passage .
+    OPTIONAL { ?passage ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?person .}
+    OPTIONAL { ?passage intro:R13_is_referring_entity ?relation .
+      { ?relation intro:R12_has_referred_to_entity ?targetText .
+      FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . } }
+      UNION
+      { ?relation intro:R12_has_referred_to_entity ?targetPassage .
+      ?targetPassage a intro:INT1_TextPassage ;
+                     ^intro:R10_has_Text_Passage ?targetText .}}
+      OPTIONAL { ?passage intro:R12_is_referred_to_entity ?relation2 .
+        { ?relation2 intro:R13_has_referring_entity ?refText . 
+        FILTER NOT EXISTS { ?refText a intro:INT1_TextPassage . } }
+              UNION
+              {?relation2 intro:R13_has_referring_entity ?refPassage .
+        ?refPassage a intro:INT1_TextPassage ;
+                     ^intro:R10_has_Text_Passage ?refText .}
+      }
+  }    
+}
+                        '
+                        column-configuration='[
+    {"displayName": "Relation / Reference:", "cellTemplate": "{{> ref}}" },
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+                        >
+          <template id="ref">
+            {{#if person}}Reference to: <semantic-link uri={{person.value}}>{{person.value}}</semantic-link>{{/if}}
+            {{#if targetText}}Reference to: <semantic-link uri={{targetText.value}}>{{targetText.value}}</semantic-link>{{#if targetPassage}}, resp. to <semantic-link uri={{targetPassage.value}}>{{targetPassage.value}}</semantic-link>{{/if}}{{/if}}
+            {{#if refText}}Referred to by: <semantic-link uri={{refText.value}}>{{refText.value}}</semantic-link>{{#if refPassage}}, resp. by <semantic-link uri={{refPassage.value}}>{{refPassage.value}}</semantic-link>{{/if}}{{/if}}
+          </template>
+          </semantic-table>
+
+        <semantic-table
+                        query='
+SELECT DISTINCT ?text ?author ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate ?location ?locationURL
 WHERE {
   GRAPH ?graph {
    ?? (owl:sameAs | ^owl:sameAs)* ?passage .
       ?text intro:R10_has_Text_Passage ?passage .
       OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text . }
       OPTIONAL { ?textCreation  crm:P4_has_time-span / rdfs:label ?creationDate . }
-      OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . } }
+      OPTIONAL { ?textCreation crm:P14_carried_out_by ?author . } }
       OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span / rdfs:label ?performanceDate .}
-			OPTIONAL { ?text crm:P165i_is_incorporated_in* ?publ . ?publ a frbroo:F24_Publication_Expression ; frbroo:R24i_was_created_through / crm:P4_has_time-span / rdfs:label ?publDate . } 
-                               
-                               
+			OPTIONAL { ?passage intro:R41_has_location ?location . FILTER (!REGEX(?location, "http")) . }
+  		OPTIONAL { ?passage intro:R41_has_location ?locationURL . FILTER (REGEX(?location, "http")) . } 
                                
     # text title(s)
     ?text crm:P102_has_title ?title .
@@ -67,44 +112,71 @@ WHERE {
     
   }
                                
-                               "
+                               '
                         column-configuration='[
-    {"variableName": "author", "displayName": "Author"}, 
-    {"displayName": "Title", "cellTemplate": "{{> title}}"}, 
-    {"displayName": "Date", "cellTemplate": "{{> date}}"},
+    {"displayName": "From Text:", "cellTemplate": "{{> text}}" },
     {"variableName": "graph", "displayName": "Source Graph"}
-    
   ]'
   options='{"showFilter": false}'
                         >
-          <template id="title">
-            {{#if subtitleValue}}{{titleValue.value}}<br/>{{subtitleValue.value}}{{else}}{{titleValue.value}}{{/if}}
-          </template>
-          <template id="date">
-            {{#if creationDate}}created {{creationDate.value}}<br/>{{/if}}
-						{{#if publDate}}published {{publDate.value}}<br/>{{/if}}
-            {{#if performanceDate}}first performed / recited {{performanceDate.value}}<br/>{{/if}}
+          <template id="text">
+            {{#if author}}<semantic-link uri={{author.value}}>{{author.value}}</semantic-link>: {{/if}}
+            <semantic-link uri={{text.value}}>{{#if subtitleValue}}{{titleValue.value}}. {{subtitleValue.value}}{{else}}{{titleValue.value}}{{/if}}</semantic-link>
+            {{#if location}}
+              {{#if performanceDate}}, 
+                {{#if creationDate}}created {{creationDate.value}}, {{/if}}
+                first performed / recited {{performanceDate.value}}
+                {{else}}, 
+                {{#if creationDate}}created {{creationDate.value}}{{else}}, {{/if}}
+              {{/if}}
+            {{#if locationURL}}
+            <semantic-link uri={{locationURL.value}}>{{location.value}}</semantic-link>.
+            {{else}}
+            {{location.value}}.
+            {{/if}}
+            {{else}}
+            {{#if performanceDate}}, 
+                {{#if creationDate}}created {{creationDate.value}}, {{/if}}
+                first performed / recited {{performanceDate.value}}
+                {{else}}, 
+                {{#if creationDate}}created {{creationDate.value}}{{else}}, {{/if}}
+              {{/if}}
+            {{/if}}
           </template>
           </semantic-table>
-        <!-- Publ-Kontext, nun inkl. Textpassage -->
-        <!-- Outgoing: Intert. / Mention (IF drumherum) inkl: source, Verweisziel -->
-        <!-- Incoming: bloß Text -->
         
-        
-        
-        
-        
-        </bs-tab>
 
-        <!-- IDs, Links - Table -->
-  <bs-tab title="Entity IDs" event-key="10">
-    <semantic-table 
-query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-     
+        <semantic-table
+                        query='
+						SELECT ?segLocation ?segURL ?publication ?publDate ?graph
+						WHERE { GRAPH ?graph{
+            ?? (owl:sameAs | ^owl:sameAs)* ?passage .
+            
+            OPTIONAL {?passage intro:R16_is_incorporated_in ?seg . 
+              OPTIONAL { ?seg intro:R41_has_location ?segLocation .
+              FILTER (!REGEX(?segLocation, "http")) . }
+              OPTIONAL { ?seg intro:R41_has_location ?segURL .
+              FILTER (REGEX(?segURL, "http")) . }
+              OPTIONAL { ?seg intro:R25_is_segment_of|crm:P128i_is_carried_by ?publication . } 
+            }
+            }  
+            }'
+                        column-configuration='[
+    {"displayName": "In Publication / on Carrier:", "cellTemplate": "{{> publication}}"},
+		{"displayName": "Location", "cellTemplate": "{{> segLocation}}"},
+		{"displayName": "URL", "cellTemplate": "{{> URL}}"},
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+                        options='{"showFilter": false}'
+                        >
+          <template id="publication">{{#if publication}}<semantic-link uri={{publication.value}}>{{publication.value}}{{#if publDate}} ({{publDate.value}}){{/if}}{{/if}}</semantic-link></template>
+          <template id="segLocation">{{#if segLocation}}{{segLocation.value}}{{/if}}</template>
+          <template id="URL">{{#if segURL}}<a href="{{segURL.value}}">{{segURL.value}}</a>{{/if}}</template>
+        </semantic-table>
+				
+        [[#if (ask "ASK {SELECT ?id WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?passage . ?passage crm:P1_is_identified_by ?id .}  LIMIT 1 }")]]<h3>Identifiers</h3>
+				<semantic-table 
+query='
 SELECT ?passage ?id ?idValue ?idURL ?idType ?graph
 WHERE {
 GRAPH ?graph {
@@ -112,7 +184,7 @@ GRAPH ?graph {
 ?passage crm:P1_is_identified_by ?id .
 ?id rdf:value ?idValue .
     OPTIONAL { 
-        FILTER (CONTAINS(STR(?idValue), 'http'))
+        FILTER (CONTAINS(STR(?idValue), "http"))
         BIND(?idValue AS ?idURL)
     }
 ?id rdf:type crm:E42_Identifier .
@@ -122,24 +194,31 @@ optional {
     }
   }
 }
-     "
+     '
 column-configuration='[
 {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
 {"variableName": "idType", "displayName": "ID Type"}, 
 {"variableName": "graph", "displayName": "Source Graph"}
 ]'
->
+options='{"showFilter": false}'
+                        >
 
 <template id="idValue">
 {{#if idURL}}
-<a href="{{idURL.value}}">{{idValue.value}}</a>
+<a href="{{idURL.value}}">{{idURL.value}}</a>
 {{else}}
 <div>{{idValue.value}}</div>
 {{/if}}
 </template>
 
 </semantic-table>
-</bs-tab>
+          [[/if]]
+          
+        <!-- Outgoing: Intert. / Mention (IF drumherum) inkl: source, Verweisziel -->
+        <!-- Incoming: bloß Text -->
+        </bs-tab> 
+       
+
   
       <!-- Source -->
       <bs-tab event-key="1" title="Source">

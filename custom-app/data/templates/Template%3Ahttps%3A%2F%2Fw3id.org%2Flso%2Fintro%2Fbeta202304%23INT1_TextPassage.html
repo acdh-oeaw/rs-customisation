@@ -70,6 +70,7 @@ GRAPH ?graph {
     {"displayName": "Relation / Reference:", "cellTemplate": "{{> ref}}" },
     {"variableName": "graph", "displayName": "Source Graph"}
   ]'
+                        options='{"showFilter": false}'
                         >
           <template id="ref">
             {{#if person}}Reference to: <semantic-link uri={{person.value}}>{{person.value}}</semantic-link>{{/if}}

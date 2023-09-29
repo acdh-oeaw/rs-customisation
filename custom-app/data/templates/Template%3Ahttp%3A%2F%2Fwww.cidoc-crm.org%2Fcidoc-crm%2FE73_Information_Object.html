@@ -133,7 +133,7 @@ where {
       <bs-tab event-key="2" title="Person Mentions">
         <h3>Person Mentions</h3>
         <semantic-table
-                        query="
+                        query='
         SELECT DISTINCT ?mentioned ?text
         WHERE {
           GRAPH ?graph {
@@ -141,42 +141,74 @@ where {
            ?text intro:R10_has_Text_Passage* / ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?mentioned.
   }
 }
-                               "
+                               '
                         column-configuration='[
     {"variableName": "mentioned", "displayName": "Mentioned Person"}, 
-    {"displayName": "Mention", "cellTemplate": "{{> mention}}"}
+    {"displayName": "Mention", "cellTemplate": "{{> ref}}"}
   ]'
                         >
-          <template id="mention">
+          <template id="ref">
             <semantic-table
-                            query="
-																	SELECT ?mentionPassage ?mentionPosition ?source ?graph
+                            query='
+																	SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph
                                   WHERE {
                                   GRAPH ?graph {
                                   ?reference crm:P67_refers_to <{{mentioned.value}}> .
-    							                ?reference intro:R17_feature_actualized_in / intro:R18_actualization_found_on ?mentionPassage .
-                                  ?mentionPassage intro:R10_is_Text_Passage_of <{{text.value}}> .
-                                  # mentionPosition
-				             					    optional {?mentionPassage ^intro:R16_incorporates ?segment .
-                    							?segment a intro:INT16_Segment ;
-                        					schema:pagination ?mentionPosition . }
+    							   ?reference intro:R17_feature_actualized_in / intro:R18_actualization_found_on ?refPassage.
+                                   ?refPassage intro:R10_is_Text_Passage_of <{{text.value}}> .
+                                  # refWording
+                                    OPTIONAL {?refPassage intro:R44_has_wording ?refWording .}
+                                  # refPosition
+                                    OPTIONAL {?refPassage intro:R41_has_location ?refPosition .}
+                                  # refSegPosition
+				             					    optional {?refPassage ^intro:R16_incorporates ?segment .
+                    							?segment a intro:INT16_Segment .
+                        					  OPTIONAL {?segment schema:pagination ?refSegPosition .}
+                                    OPTIONAL {?segment ^intro:R25_has_segment|crm:P128i_is_carried_by ?wit .
+                                             OPTIONAL { ?wit frbroo:R24i_was_created_through / crm:P4_has_time-span ?witDate .}} }
 
                                   # mentionSource
-                                  optional { ?reference prov:wasDerivedFrom ?mentionSource . }
+                                  optional { ?reference prov:wasDerivedFrom ?source . }
                                    }
                                    }
-                                   "
+                                   '
+                            
+                             column-configuration='[    
+{"displayName": "Passage", "cellTemplate": "{{> passage}}"},
+{"displayName": "Position", "cellTemplate": "{{> position}}"},
+{"variableName": "source", "displayName": "Source"},
+{"variableName": "graph", "displayName": "Named Graph"}
+  ]'
                             >
-              
+              <template id="passage">
+                <div>
+                {{#if refWording}}
+                <semantic-link uri={{refPassage.value}}>"{{refWording.value}}"</semantic-link>
+                {{else}}
+								<semantic-link uri={{refPassage.value}}>"{{refPassage.value}}"</semantic-link>
+                {{/if}}
+                {{#if refPosition}}
+                , {{refPosition.value}}
+                {{/if}}
+                </div>
+              </template>
+              <template id="position">
+                <div>
+                  {{#if refSegPosition}}
+                  (Position on <semantic-link uri={{wit.value}}>text witness / edition{{#if witDate}} from {{witDate.value}}{{/if}}</semantic-link>: {{refSegPosition.value}})
+                {{/if}}
+                </div>
+              </template>
             </semantic-table>
           </template>
           </semantic-table>
         </bs-tab>
+      
       <bs-tab event-key="17" title="Intertextual Relations">
 <!-- pick up here -->
         <h3>Outgoing</h3>
         <semantic-table
-                        query="
+                        query='
 SELECT DISTINCT ?targetText ?text
 WHERE {
   GRAPH ?graph {
@@ -187,7 +219,7 @@ WHERE {
     FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }                           
   }
 }          
-                               "
+                               '
                         
                         column-configuration='[
     {"variableName": "targetText", "displayName": "Referenced Text"},
@@ -196,36 +228,60 @@ WHERE {
                         >
            <template id="relations">
             <semantic-table
-                            query="
-                                   SELECT ?refPassage ?refPosition ?targetPassage ?targetPosition ?refSource ?graph
+                            query='
+                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph
                                    WHERE { GRAPH ?graph {
                                    ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* <{{targetText.value}}> .
                                    ?relation a intro:INT3_IntertextualRelationship .
+                                   OPTIONAL { ?reference prov:wasDerivedFrom ?source . }
                                    OPTIONAL {?relation intro:R13_has_referring_entity ?refPassage .
                                    ?refPassage a intro:INT1_TextPassage . 
+                                   OPTIONAL { ?refPassage intro:R41_has_location ?refPosition . }
+                                   OPTIONAL { ?refPassage intro:R44_has_wording ?refWording . }
                                    OPTIONAL { ?refPassage intro:R16_is_incorporated_in ?segment. 
                                    ?segment a intro:INT16_Segment; 
-                                   intro:R41_has_location ?refPosition . 
-                                   FILTER (!REGEX(?refPosition, 'http'))
+                                   intro:R41_has_location ?refSegPosition . 
+                                   FILTER (!REGEX(?refSegPosition, "http"))
+                                   OPTIONAL {?segment ^intro:R25_has_segment|crm:P128i_is_carried_by ?wit .
+                                     OPTIONAL { ?wit frbroo:R24i_was_created_through / crm:P4_has_time-span ?witDate .}} }
                                    }
                                    } 
                                    OPTIONAL {?relation intro:R12_has_referred_to_entity ?targetPassage .
                                    ?targetPassage a intro:INT1_TextPassage . 
                                    OPTIONAL { ?targetPassage intro:R16_is_incorporated_in ?segment2. 
                                    ?segment2 a intro:INT16_Segment; intro:R41_has_location ?targetPosition . 
-                                   FILTER (!REGEX(?targetPosition, 'http'))
+                                   FILTER (!REGEX(?targetPosition, "http"))
                                    }
                                    }
                                    }
-                                   }
-                                   "
+                                   
+                                   '
                             column-configuration='[
-    {"cellTemplate": "{{> reference}}"},
-    {"cellTemplate": "{{> target}}"}
-  ]'
+    {"displayName": "Passage", "cellTemplate": "{{> passage}}"},
+    {"displayName": "Position", "cellTemplate": "{{> position}}"},
+    {"displayName": "Reference Target", "cellTemplate": "{{> target}}"},
+    {"variableName": "source", "displayName": "Source"},
+    {"variableName": "graph", "displayName": "Named Graph"}
+                                                  ]'
                                    >
-              <template id="reference">
-              Reference: {{#if refPassage}}<semantic-link uri={{refPassage.value}}>{{refPassage.value}}</semantic-link>{{#if refPosition}} – Position: {{refPosition.value}}{{/if}}{{else}}<semantic-link uri={{text.value}}>{{text.value}}</semantic-link>{{/if}}
+              <template id="passage">
+                <div>
+                {{#if refWording}}
+                <semantic-link uri={{refPassage.value}}>"{{refWording.value}}"</semantic-link>
+                {{else}}
+								<semantic-link uri={{refPassage.value}}>"{{refPassage.value}}"</semantic-link>
+                {{/if}}
+                {{#if refPosition}}
+                , {{refPosition.value}}
+                {{/if}}
+                </div>
+              </template>
+              <template id="position">
+                <div>
+                  {{#if refSegPosition}}
+                  (Position on <semantic-link uri={{wit.value}}>text witness / edition{{#if witDate}} from {{witDate.value}}{{/if}}</semantic-link>: {{refSegPosition.value}})
+                {{/if}}
+                </div>
               </template>
               <template id="target">
               Target: {{#if targetPassage}}<semantic-link uri={{targetPassage.value}}>{{targetPassage.value}}</semantic-link>{{#if targetPosition}} – Position: {{targetPosition.value}}{{/if}}{{else}}<semantic-link uri={{text.value}}>{{targetText.value}}</semantic-link>{{/if}}
@@ -237,7 +293,7 @@ WHERE {
         
         <h3>Incoming</h3>
         <semantic-table
-                        query="
+                        query='
 select distinct ?quotingText ?graph
 where {
   graph ?graph {
@@ -255,7 +311,7 @@ where {
                                
   }
 }        
-                               "
+                               '
                         
                         column-configuration='[
     {"variableName": "quotingText", "displayName": "Quoted by Text"},
@@ -267,51 +323,6 @@ where {
         
         </bs-tab>
   
-<!-- IDs, Links - Table -->
-<bs-tab title="Entity IDs" event-key="10">
-  <semantic-table 
-query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-   
-SELECT ?text ?id ?idValue ?idURL ?idType ?graph
-WHERE {
-GRAPH ?graph {
-?? (owl:sameAs | ^owl:sameAs)* ?text .
-?text crm:P1_is_identified_by ?id .
-?id rdf:value ?idValue .
-  OPTIONAL { 
-      FILTER (CONTAINS(STR(?idValue), 'http'))
-      BIND(?idValue AS ?idURL)
-  }
-?id rdf:type crm:E42_Identifier .
-optional {
-#type
-?id crm:P2_has_type ?idType .
-  }
-}
-}
-   "
-column-configuration='[
-{"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
-{"variableName": "idType", "displayName": "ID Type"}, 
-{"variableName": "graph", "displayName": "Source Graph"}
-]'
->
-
-<template id="idValue">
-{{#if idURL}}
-<a href="{{idURL.value}}">{{idValue.value}}</a>
-{{else}}
-<div>{{idValue.value}}</div>
-{{/if}}
-</template>
-
-</semantic-table>
-</bs-tab>
-
       <!-- Source -->
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]

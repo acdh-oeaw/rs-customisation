@@ -1,0 +1,65 @@
+@prefix crmdig: <http://www.ics.forth.gr/isl/CRMdig/> .
+@prefix crminfluence: <http://www.cidoc-crm.org/cidoc-crm/influence/> .
+@prefix crmsci: <http://www.ics.forth.gr/isl/CRMsci/> .
+@prefix Help: <http://help.researchspace.org/resource/> .
+@prefix sk: <https://sk.acdh.oeaw.ac.at/%> .
+@prefix bds: <http://www.bigdata.com/rdf/search#> .
+@prefix crmba: <http://www.cidoc-crm.org/cidoc-crm/CRMba/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix crminf: <http://www.ics.forth.gr/isl/CRMinf/> .
+@prefix intro: <https://w3id.org/lso/intro/beta202304#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix User: <http://www.researchspace.org/resource/user/> .
+@prefix forms: <http://www.researchspace.org/resource/system/forms/> .
+@prefix schema: <https://schema.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rshelp: <http://researchspace.org/help/> .
+@prefix sp: <http://spinrdf.org/sp#> .
+@prefix Platform: <http://www.researchspace.org/resource/system/> .
+@prefix crmgeo: <http://www.ics.forth.gr/isl/CRMgeo/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#> .
+@prefix rso: <http://www.researchspace.org/ontology/> .
+@prefix Admin: <http://www.researchspace.org/resource/admin/> .
+@prefix ontodia: <http://ontodia.org/schema/v1#> .
+@prefix crmarchaeo: <http://www.cidoc-crm.org/cidoc-crm/CRMarchaeo/> .
+@prefix rsp: <http://www.researchspace.org/resource/> .
+@prefix app: <https://sk-app.acdh.oeaw.ac.at/> .
+
+<https://sk.acdh.oeaw.ac.at/fieldDefinition/sk_mentions_Person/context> {
+  <https://sk.acdh.oeaw.ac.at/fieldDefinition/sk_mentions_Person> a prov:Entity, <http://www.researchspace.org/resource/system/fields/Field>,
+      <http://www.w3.org/ns/ldp#Resource>;
+    <http://www.researchspace.org/resource/system/fields/selectPattern> _:t735118;
+    <http://www.researchspace.org/resource/system/fields/domain> crm:E73_Information_Object,
+      frbroo:F22_Self-Contained_Expression;
+    <http://www.researchspace.org/resource/system/fields/insertPattern> _:t735119;
+    prov:generatedAtTime "2023-09-14T15:14:33.982Z"^^xsd:dateTime;
+    prov:wasAttributedTo User:admin;
+    rdfs:comment "Text mentions Person";
+    <http://www.researchspace.org/resource/system/fields/category> <http://www.researchspace.org/category/sk_semantic_search_01>,
+      <http://www.researchspace.org/category/sk_person>, <http://www.researchspace.org/category/sk_knowledge_map_01>;
+    rdfs:label "mentions Person"@en;
+    <http://www.researchspace.org/resource/system/fields/xsdDatatype> xsd:anyURI;
+    <http://www.researchspace.org/resource/system/fields/range> crm:E21_Person .
+  
+  _:t735119 a sp:Query;
+    sp:text "INSERT { $subject ?predicate $value} WHERE {}" .
+  
+  _:t735118 a sp:Query;
+    sp:text """SELECT DISTINCT $value $label WHERE {
+  $subject (owl:sameAs | ^owl:sameAs)* ?text .
+    FILTER NOT EXISTS {?text a intro:INT1_TextPassage}
+  ?text intro:R10_has_Text_Passage* / intro:R18_shows_actualization / intro:R17_actualizes_feature / crm:P67_refers_to $value .
+        $value rdfs:label $label .
+}""" .
+  
+  _:node1hbgohvvex58 <http://www.w3.org/ns/ldp#contains> <https://sk.acdh.oeaw.ac.at/fieldDefinition/sk_mentions_Person> .
+}
+
+{
+  _:node1hbgohvvex58 a <http://www.w3.org/ns/ldp#Container>, <http://www.w3.org/ns/ldp#Resource>,
+      prov:Entity .
+}

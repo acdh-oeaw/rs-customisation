@@ -282,6 +282,7 @@ where {
         
       
       <!-- Works -->
+      [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) ?text . }} LIMIT 1 }")]]
       <bs-tab event-key="17" title="Wrote, Mentioned and Quoted">
         
         <h3>Authored Texts</h3>
@@ -334,19 +335,12 @@ where {
     {"displayName": "", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         ></semantic-table>
+        
+        [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) / intro:R10_has_Text_Passage / intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference . }} LIMIT 1 }")]]
         <h3>Referred-to Persons</h3>
         
                     <semantic-table
-                        query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-prefix prov: <http://www.w3.org/ns/prov#>
-         
-         select distinct ?person ?text ?refPerson
+                        query="select distinct ?person ?text ?refPerson
 where {
   graph ?graph {
     # text
@@ -361,9 +355,7 @@ where {
 }
 }
                                "
-                        column-configuration=
-                        
-                        '[
+                        column-configuration='[
     {"variableName": "refPerson", "displayName": "Person"}, 
     {"displayName": "Text", "cellTemplate": "{{> refText}}"}
   ]'
@@ -390,12 +382,12 @@ where {
                         </semantic-table>
                       </template>
                     </semantic-table>
+        [[/if]]
         
+        [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) / intro:R10_has_Text_Passage* / intro:R13_is_referring_entity ?reference . }} LIMIT 1 }")]]
 				<h3>Referred-to Texts</h3>
         <semantic-table
-                        query="
-                               select distinct ?text ?reference
-WHERE {
+                        query="SELECT DISTINCT ?text WHERE {
   GRAPH ?graph {
     # text
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
@@ -403,42 +395,37 @@ WHERE {
     (crm:P94_has_created | frbroo:R17_created) ?text.
     
     # reference
-    ?text intro:R10_has_Text_Passage*/^intro:R13_has_referring_entity ?reference .
-        
-    
+    ?text intro:R10_has_Text_Passage*/^intro:R13_has_referring_entity ?reference .    
 }
 }
                                     "
-                        column-configuration='
-                                              [
+                        column-configuration='[
     {"variableName": "text", "displayName": "Text"}, 
     {"displayName": "Referred-to Texts", "cellTemplate": "{{> refText}}"}
   ]'
                         >
           <template id="refText">
             <semantic-table
-                            query='
-SELECT DISTINCT ?refText ?source ?graph
-WHERE {
-  GRAPH ?graph {
-    <{{reference.value}}> intro:R12_has_referred_to_entity / intro:R10_is_Text_Passage_of* ?refText .
-  OPTIONAL {?reference prov:wasDerivedFrom ?source .}  
-  }
-  }
-'
-                            column-configuration='
-                                                  [
-                                                  {"variableName": "refText"},
-                                                  {"cellTemplate": "{{#if source}}<div>Noted by: {{source.value}}</div>{{/if}}"},
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
-                                                  ]
-                                                  '>
+                            query="SELECT DISTINCT ?refToText ?source
+                                   WHERE {
+                                   <{{text.value}}> intro:R10_has_Text_Passage*/^intro:R13_has_referring_entity ?reference.
+                                   ?reference intro:R12_has_referred_to_entity / intro:R10_is_Text_Passage_of* ?refToText .
+                                   { ?refToText a frbroo:F22_Self-Contained_Expression . }
+                                   UNION
+                                   { ?refToText a crm:E73_Information_Object .  }
+                                   OPTIONAL {?reference prov:wasDerivedFrom ?source .}
+                                   }
+                                   "
+                            column-configuration='[
+                                                  {"variableName": "refToText"},
+                                                  {"cellTemplate": "{{#if source}}<div>Noted by: {{source.value}}</div>{{/if}}"}
+                                                  ]'>
             </semantic-table>
           </template>
         </semantic-table>
-        
+        [[/if]]
         </bs-tab>
-      
+      [[/if]]
       <!-- Mentions: -->
       <bs-tab event-key="3" title="Was Quoted and Mentioned">
       

@@ -287,38 +287,33 @@ where {
         
         <h3>Authored Texts</h3>
         <semantic-table
-                        query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-         
-         select distinct  ?text ?publIssue ?creationTimespan ?publicationTimespan ?performanceTimespan ?graph
-where {
-  graph ?graph {
+                        query="SELECT DISTINCT ?text ?issue ?creationTimespan ?publicationTimespan ?performanceTimespan ?graph
+                               WHERE {
+  GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
-     ?textCreation crm:P14_carried_out_by ?person ;
-        (crm:P94_has_created | frbroo:R17_created) ?text .
+    ?person crm:P14i_performed ?textCreation .
+		?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
 
     
     # creation
-    optional {
-      ?textCreation crm:P4_has_time-span ?creationTimespan .
+    OPTIONAL {
+      ?textCreation crm:P4_has_time-span/rdfs:label ?creationTimespan .
     }
-    # publication
-     optional {
+    # issue
+     OPTIONAL {
       
-      ?text crm:P165i_is_incorporated_in* ?publIssue .
-      ?publIssue frbroo:R5i_is_component_of ?periodical .
+      ?text crm:P165i_is_incorporated_in* ?issue .
+      ?issue crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical .
                                }
 		OPTIONAL {
-              ?text crm:P165i_is_incorporated_in* / ^frbroo:R24_created / crm:P4_has_time-span ?publicationTimespan .
+              ?text crm:P165i_is_incorporated_in* ?publIssue .
+							?publIssue frbroo:R5i_is_component_of ?periodical ; 
+                               frbroo:R24i_was_created_through / crm:P4_has_time-span / rdfs:label ?publicationTimespan .
                                }
     }
     # performance
     optional {
-      ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span ?performanceTimespan .
+      ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span/rdfs:label ?performanceTimespan .
     }
   }
 
@@ -328,13 +323,24 @@ where {
                         
                         '[
     {"variableName": "text", "displayName": "Text"}, 
-    {"variableName": "publIssue", "displayName": "Publication"},
-    {"variableName": "creationTimespan", "displayName": "Creation"},
-    {"variableName": "publicationTimespan", "displayName": "Publication"},
-    {"variableName": "performanceTimespan", "displayName": "Initial Performance/Recitation"},
-    {"displayName": "", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "{{> textData}}"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
-                        ></semantic-table>
+                        >
+          <template id="textData">
+            <div>
+              {{#if issue}}Published in: <semantic-link iri={{issue.value}}></semantic-link><br/>
+            	{{/if}}
+            	{{#if publicationTimespan}}Publication Date: {{publicationTimespan.value}}<br/>
+            	{{/if}}
+             	{{#if creationTimespan}}Creation Date: {{creationTimespan.value}}<br/>
+            	{{/if}}
+            	{{#if performanceTimespan}}Initial Performance / Recitation: {{performanceTimespan.value}}<br/>
+            	{{/if}}
+            </div>
+          </template>
+          
+        </semantic-table>
         
         [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) / intro:R10_has_Text_Passage / intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference . }} LIMIT 1 }")]]
         <h3>Referred-to Persons</h3>

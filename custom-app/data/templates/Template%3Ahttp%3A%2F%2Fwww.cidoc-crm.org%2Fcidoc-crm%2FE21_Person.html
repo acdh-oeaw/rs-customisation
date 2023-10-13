@@ -221,7 +221,7 @@ where {
     
     ?legalAct crm:P14_carried_out_by ?person ;
     	crm:P10_falls_within ?legalCase ;
-        crm:P2_has_type ?legalActType .
+        crm:P2_has_type / rdfs:label ?legalActType .
     ?legalCase rdf:type crm:E5_Event .
     
   }

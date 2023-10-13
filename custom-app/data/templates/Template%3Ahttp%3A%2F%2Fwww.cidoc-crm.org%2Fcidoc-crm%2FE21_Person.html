@@ -221,7 +221,7 @@ where {
     
     ?legalAct crm:P14_carried_out_by ?person ;
     	crm:P10_falls_within ?legalCase ;
-        crm:P2_has_type / rdfs:label ?legalActType .
+        crm:P2_has_type ?legalActType .
     ?legalCase rdf:type crm:E5_Event .
     
   }
@@ -229,7 +229,7 @@ where {
          "
   column-configuration='[
     {"variableName": "legalCase"},
-    {"cellTemplate": "<div>Involved as: {{legalActType.value}}</div>"},
+    {"cellTemplate": "<div>Involved as: <semantic-link iri={{legalActType.value}}></semantic-link></div>"},
     {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 ></semantic-table>
@@ -444,38 +444,26 @@ prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix intro: <https://w3id.org/lso/intro/beta202304#>                               
                                
-SELECT ?person ?reference ?refWording ?refSource ?graph ?passage ?text ?periodical
+SELECT DISTINCT ?text ?issue ?graph
 WHERE {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person ^crm:P67_refers_to ?reference.
-    
-    ?actualization intro:R17_actualizes_feature ?reference ;
-					intro:R18_actualization_found_on ?passage .
-    
-    ?passage intro:R44_has_wording ?refWording ;
-             ^intro:R10_has_Text_Passage ?text .
+    ?person crm:P67i_is_referred_to_by / intro:R17_feature_actualized_in / intro:R18_actualization_found_on /
+             intro:R10_is_Text_Passage_of ?text .
     OPTIONAL
     {
-    ?text crm:P165i_is_incorporated_in ?periodical .
+    ?text crm:P165i_is_incorporated_in* ?issue .
+		?issue crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical . 
     }
-    OPTIONAL
-    {
-    ?reference <http://www.w3.org/ns/prov#wasDerivedFrom> ?refSource .
-    }
-    
-    
     }
   }
                                "
                         column-configuration=
                         
                         '[
-    {"variableName": "refWording", "displayName": "Mention Wording"}, 
     {"variableName": "text", "displayName": "Text"},
-    {"variableName": "periodical", "displayName": "Optional: Text Source"},
-    {"variableName": "refSource", "displayName": "Provenance"},  
-    {"displayName": "", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"variableName": "issue", "displayName": "Published in"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         
                         ></semantic-table>

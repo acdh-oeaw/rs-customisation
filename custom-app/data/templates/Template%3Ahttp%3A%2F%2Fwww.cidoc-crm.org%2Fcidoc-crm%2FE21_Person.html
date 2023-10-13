@@ -444,7 +444,7 @@ prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 prefix intro: <https://w3id.org/lso/intro/beta202304#>                               
                                
-SELECT DISTINCT ?text ?issue ?graph
+SELECT DISTINCT ?author ?text ?issue ?graph
 WHERE {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
@@ -455,13 +455,16 @@ WHERE {
     ?text crm:P165i_is_incorporated_in* ?issue .
 		?issue crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical . 
     }
+    OPTIONAL { 
+      ?text (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author
+  }
     }
   }
                                "
                         column-configuration=
                         
                         '[
-    {"variableName": "text", "displayName": "Text"},
+                        {"displayName": "Mentioned in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
     {"variableName": "issue", "displayName": "Published in"},
     {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
@@ -469,7 +472,7 @@ WHERE {
                         ></semantic-table>
         
         
-        <!-- MENTION CHART -->
+        <!-- MENTION CHART
         <h3>Mention Chart</h3>
         <semantic-chart
             type='line'
@@ -512,7 +515,28 @@ WHERE {
               ORDER BY ?year' sets='[
             {"dataSetName": "Mention Frequency", "category": "year", "value": "mentionSum"}
           ]'>
-          </semantic-chart>
+          </semantic-chart>-->
+
+<semantic-table
+query="
+SELECT ?author ?refText ?graph WHERE
+{
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P14i_performed / ( frbroo:R17_created | crm:P94_has_created ) ?text .
+    ?text intro:R10_has_Text_Passage* / intro:R12_is_referred_to_entity / intro:R13_has_referring_entity / intro:R10_is_Text_Passage_of* ?refText .
+    OPTIONAL { 
+      ?refText (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author
+  }
+}
+}
+"
+column-configuration='[
+{"displayName": "Quoted in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{refText.value}}></semantic-link></div>"},
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+]'>
+</semantic-table>
+
         
         
       </bs-tab>

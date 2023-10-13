@@ -265,7 +265,8 @@ where {
       }
       
       ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start .
-                          OPTIONAL {?event crm:P4_has_time-span / crm:P82b_end_of_the_end ?start .}
+                          OPTIONAL {?event crm:P4_has_time-span / crm:P82b_end_of_the_end ?end .
+                            FILTER ( ?end != ?start )}
     }
   }
 

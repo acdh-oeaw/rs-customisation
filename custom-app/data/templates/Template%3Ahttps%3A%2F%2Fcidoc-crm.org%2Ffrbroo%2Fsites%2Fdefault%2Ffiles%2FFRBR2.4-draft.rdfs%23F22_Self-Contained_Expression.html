@@ -125,6 +125,8 @@ WHERE {
                               "/>
         </bs-tab>
       
+
+        [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]
       <bs-tab event-key="2" title="Person Mentions">
         <h3>Person Mentions</h3>
         <semantic-table
@@ -198,10 +200,14 @@ WHERE {
           </template>
           </semantic-table>
         </bs-tab>
+      [[/if]]
+
+      <!-- INTERTEXTUAL RELATIONS -->
       
-      <bs-tab event-key="17" title="Intertextual Relations">
-<!-- pick up here -->
-        <h3>Outgoing</h3>
+      [[#if (ask "ASK {{ SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation . } LIMIT 1 } UNION { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation . } }")]]
+      
+        <bs-tab event-key="17" title="Intertextual Relations">
+
         <semantic-table
                         query='
 SELECT DISTINCT ?targetText ?text
@@ -286,7 +292,7 @@ WHERE {
           </semantic-table>
         
         
-        <h3>Incoming</h3>
+
         <semantic-table
                         query='
 select distinct ?quotingText ?graph
@@ -309,12 +315,12 @@ where {
                                '
                         
                         column-configuration='[
-    {"variableName": "quotingText", "displayName": "Quoted by Text"},
+    {"variableName": "quotingText", "displayName": "Referenced by Text"},
     {"variableName": "graph", "displayName": "Source Graph"}
   ]'
                         >
           </semantic-table>
-        
+        [[/if]]
         
         </bs-tab>
   

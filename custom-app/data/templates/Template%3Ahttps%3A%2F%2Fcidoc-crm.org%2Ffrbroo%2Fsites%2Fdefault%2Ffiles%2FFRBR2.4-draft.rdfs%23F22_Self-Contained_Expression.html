@@ -116,14 +116,13 @@ where {
         
 <!-- TEXT PASSAGES TOTAL -->
 <!-- SHORT QUERY; ORIGINAL QUERY TBD -->
+[[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
 <semantic-table
 query="
 SELECT ?passage ?wording ?graph WHERE { 
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
     ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage .
-
-
     OPTIONAL {
       ?passage intro:R44_has_wording ?wording .
     }
@@ -131,7 +130,7 @@ SELECT ?passage ?wording ?graph WHERE {
 }
 "
 column-configuration='[
-{"variableName": "passage", "cellTemplate": "{{> passage}}"},
+{"displayName": "Recorded Text Passages", "cellTemplate": "{{> passage}}"},
 {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 ]'
 >
@@ -145,16 +144,19 @@ column-configuration='[
   </div>
 </template>
 </semantic-table>
+[[/if]]
 
-
-        <h3>Publication Context</h3>
+        <h4>Publication Context</h4>
         <semantic-tree query="
-                              SELECT DISTINCT ?node ?parent
-WHERE {
-  ?parent frbroo:R5_has_component|crm:P165_incorporates ?node .
-  
-  { ?parent frbroo:R5_has_component*/crm:P165_incorporates*/intro:R10_has_Text_Passage* ?? . }
-}
+        SELECT DISTINCT ?node ?parent
+        WHERE {
+          {?? crm:P165_incorporates* ?node .}
+          UNION
+          {?node crm:P165_incorporates* ?? .}
+          ?parent crm:P165_incorporates ?node .
+          ?parent a frbroo:F22_Self-Contained_Expression .
+          ?node a frbroo:F22_Self-Contained_Expression .
+        }
                               "/>
         </bs-tab>
       

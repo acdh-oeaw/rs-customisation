@@ -130,22 +130,21 @@ prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
          
       
-select ?person ?occupation ?time ?employer ?employerPeriod ?graph
+select ?person ?occupation ?time ?employer ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person crm:P14i_performed ?occupation .
-    ?occupation rdf:type frbroo:F51_Pursuit .
+    ?person crm:P14i_performed ?occ .
+    ?occ rdf:type frbroo:F51_Pursuit ;
+    rdfs:label ?occupation .
     OPTIONAL
     {
-      ?occupation crm:P10_falls_within ?employerPeriod .
-      ?employerPeriod rdfs:label ?employerLabel .
+      ?occ crm:P10_falls_within ?employer .
     }
     OPTIONAL
     {
-    ?occupation crm:P4_has_time-span/rdfs:label ?time .
+    ?occ crm:P4_has_time-span/rdfs:label ?time .
     }
-    BIND ( IF (BOUND(?employerPeriod), CONCAT("Employer: ", STR(?employerLabel)), "" ) AS ?employer ).
     
   }
 }
@@ -154,7 +153,7 @@ where {
                     column-configuration='[
     {"variableName": "occupation"},
 		{"variableName": "time"},
-		{"variableName": "employer"}, 
+		{"cellTemplate": "{{#if employer}}<div>Employer: <semantic-link iri={{employer.value}}></semantic-link></div>{{/if}}"}, 
     {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
   options='{"showFilter": false}'

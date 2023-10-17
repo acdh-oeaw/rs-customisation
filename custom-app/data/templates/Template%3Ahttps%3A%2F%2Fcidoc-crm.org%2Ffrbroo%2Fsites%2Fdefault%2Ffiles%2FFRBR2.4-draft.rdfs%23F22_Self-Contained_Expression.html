@@ -126,16 +126,16 @@ WHERE {
         </bs-tab>
       
 
-        [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]
+        [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]
       <bs-tab event-key="2" title="Person Mentions">
-        <h3>Person Mentions</h3>
+
         <semantic-table
                         query='
         SELECT DISTINCT ?mentioned ?text
         WHERE {
           GRAPH ?graph {
            ?? (owl:sameAs | ^owl:sameAs)* ?text .
-           ?text intro:R10_has_Text_Passage* / ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?mentioned.
+           ?text crm:P165_incorporates* / intro:R10_has_Text_Passage* / intro:R18_shows_actualization / intro:R17_actualizes_feature / crm:P67_refers_to ?mentioned.
   }
 }
                                '
@@ -207,14 +207,14 @@ WHERE {
       [[#if (ask "ASK {{ SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation . } LIMIT 1 } UNION { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation . } }")]]
       
         <bs-tab event-key="17" title="Intertextual Relations">
-
+        <!-- OUTGOING RELATIONS -->
         <semantic-table
                         query='
 SELECT DISTINCT ?targetText ?text
 WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
+    ?text crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
     
     ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* ?targetText .
     FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }                           
@@ -232,29 +232,33 @@ WHERE {
                             query='
                                    SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph
                                    WHERE { GRAPH ?graph {
-                                   ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* <{{targetText.value}}> .
+                                    <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation.
+                                    <{{text.value}}> crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
+
+                                  
                                    ?relation a intro:INT3_IntertextualRelationship .
-                                   OPTIONAL { ?reference prov:wasDerivedFrom ?source . }
-                                   OPTIONAL {?relation intro:R13_has_referring_entity ?refPassage .
-                                   ?refPassage a intro:INT1_TextPassage . 
-                                   OPTIONAL { ?refPassage intro:R41_has_location ?refPosition . }
-                                   OPTIONAL { ?refPassage intro:R44_has_wording ?refWording . }
-                                   OPTIONAL { ?refPassage intro:R16_is_incorporated_in ?segment. 
-                                   ?segment a intro:INT16_Segment; 
-                                   intro:R41_has_location ?refSegPosition . 
-                                   FILTER (!REGEX(?refSegPosition, "http"))
-                                   OPTIONAL {?segment ^intro:R25_has_segment|crm:P128i_is_carried_by ?wit .
-                                     OPTIONAL { ?wit frbroo:R24i_was_created_through / crm:P4_has_time-span ?witDate .}} }
-                                   }
-                                   } 
+                                   OPTIONAL { ?relation prov:wasDerivedFrom ?source . }
+                                   OPTIONAL { ?relation intro:R13_has_referring_entity ?refPassage .
+                                      ?refPassage a intro:INT1_TextPassage . 
+                                      OPTIONAL { ?refPassage intro:R41_has_location ?refPosition . }
+                                      OPTIONAL { ?refPassage intro:R44_has_wording ?refWording . }
+                                      OPTIONAL { ?refPassage intro:R16_is_incorporated_in ?segment. 
+                                      ?segment a intro:INT16_Segment; 
+                                      intro:R41_has_location ?refSegPosition . 
+                                      FILTER (!REGEX(?refSegPosition, "http"))
+                                        OPTIONAL {?segment ^intro:R25_has_segment|crm:P128i_is_carried_by ?wit .
+                                          OPTIONAL { ?wit frbroo:R24i_was_created_through / crm:P4_has_time-span ?witDate .}} }
+                                      }
+                                    
                                    OPTIONAL {?relation intro:R12_has_referred_to_entity ?targetPassage .
                                    ?targetPassage a intro:INT1_TextPassage . 
-                                   OPTIONAL { ?targetPassage intro:R16_is_incorporated_in ?segment2. 
-                                   ?segment2 a intro:INT16_Segment; intro:R41_has_location ?targetPosition . 
-                                   FILTER (!REGEX(?targetPosition, "http"))
+                                      OPTIONAL { ?targetPassage intro:R16_is_incorporated_in ?segment2. 
+                                      ?segment2 a intro:INT16_Segment; intro:R41_has_location ?targetPosition . 
+                                      FILTER (!REGEX(?targetPosition, "http"))
+                                      }
                                    }
                                    }
-                                   }
+                                  }
                                    
                                    '
                             column-configuration='[
@@ -292,7 +296,7 @@ WHERE {
           </semantic-table>
         
         
-
+        <!-- INCOMING RELATIONS -->
         <semantic-table
                         query='
 select distinct ?quotingText ?graph

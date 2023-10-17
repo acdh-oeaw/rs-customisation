@@ -152,7 +152,7 @@ WHERE {
                                   GRAPH ?graph {
                                   ?reference crm:P67_refers_to <{{mentioned.value}}> .
     							   ?reference intro:R17_feature_actualized_in / intro:R18_actualization_found_on ?refPassage.
-                                   ?refPassage intro:R10_is_Text_Passage_of <{{text.value}}> .
+                                   ?refPassage intro:R10_is_Text_Passage_of / crm:P165i_is_incorporated_in* <{{text.value}}> .
                                   # refWording
                                     OPTIONAL {?refPassage intro:R44_has_wording ?refWording .}
                                   # refPosition

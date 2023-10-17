@@ -134,7 +134,7 @@ where {
     <!-- PERSON MENTIONS -->
     [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]
       <bs-tab event-key="2" title="Person Mentions">
-        <h3>Person Mentions</h3>
+
         <semantic-table
                         query='
         SELECT DISTINCT ?mentioned ?text

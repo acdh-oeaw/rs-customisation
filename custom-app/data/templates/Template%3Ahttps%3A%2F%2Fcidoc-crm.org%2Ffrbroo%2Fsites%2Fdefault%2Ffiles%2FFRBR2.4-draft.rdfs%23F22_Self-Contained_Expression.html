@@ -69,14 +69,14 @@ WHERE {
     {"variableName": "subtitleValue", "displayName": "Subtitle"},  
     {"variableName": "creationDate", "displayName": "Created"},
     {"variableName": "performanceDate", "displayName": "First Performed"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
   ]'
   options='{"showFilter": false}'
                         >
           </semantic-table>
         
-        <h4>Publication</h4>
+        
         <!-- CAUTION: This will have to be refined - esp. the appellation display - with the original data -->
         <semantic-table
                         query="
@@ -107,13 +107,46 @@ where {
     {"variableName": "publText", "displayName": "Published in"},
     {"variableName": "pagination", "displayName": "Pagination"},
     {"variableName": "publDate", "displayName": "Publication Date"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
   ]'
   options='{"showFilter": false}'
                         >
           </semantic-table>
         
+<!-- TEXT PASSAGES TOTAL -->
+<!-- SHORT QUERY; ORIGINAL QUERY TBD -->
+<semantic-table
+query="
+SELECT ?passage ?wording ?graph WHERE { 
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+    ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage .
+
+
+    OPTIONAL {
+      ?passage intro:R44_has_wording ?wording .
+    }
+  }
+}
+"
+column-configuration='[
+{"variableName": "passage", "cellTemplate": "{{> passage}}"},
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+]'
+>
+<template id="passage">
+  <div>
+  {{#if wording}}
+  <semantic-link uri={{passage.value}}>"{{wording.value}}"</semantic-link>
+  {{else}}
+  <semantic-link uri={{passage.value}}></semantic-link>
+  {{/if}}
+  </div>
+</template>
+</semantic-table>
+
+
         <h3>Publication Context</h3>
         <semantic-tree query="
                               SELECT DISTINCT ?node ?parent
@@ -320,7 +353,7 @@ where {
                         
                         column-configuration='[
     {"variableName": "quotingText", "displayName": "Referenced by Text"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         >
           </semantic-table>
@@ -358,7 +391,7 @@ WHERE {
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
     {"variableName": "idType", "displayName": "ID Type"}, 
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 >
 

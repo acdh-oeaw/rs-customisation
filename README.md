@@ -29,7 +29,9 @@ For using GIT as runtime storage, the following PLATFORM_OPTS Rancher ENV variab
 -Dconfig.storage.images.root=/images   
 -Dconfig.storage.tmp.type=nonVersionedFile  
 -Dconfig.storage.tmp.mutable=true   
--Dconfig.storage.tmp.root=/tmp-data   
+-Dconfig.storage.tmp.root=/tmp-data
+-Dconfig.environment.enableLocalUsers=true
+-Dconfig.environment.shiroAuthenticationFilter=authcBasic,anon,auth
 -Dconfig.environment.shiroConfig=/srv/shiro.ini   
 -Dorg.eclipse.jetty.server.Request.maxFormContentSize=1000000
 ```

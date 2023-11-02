@@ -45,7 +45,7 @@ where {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
     OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
      OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . }
-     OPTIONAL { ?textCreation crm:P4_has_time-span ?creationDate . }
+     OPTIONAL { ?textCreation crm:P4_has_time-span/rdfs:label ?creationDate . }
     }
     
     # text title(s)
@@ -82,11 +82,12 @@ where {
 
 				<semantic-table 
           query='
-        select ?case
+        select ?case ?caseLabel
         where {
           graph ?graph {
             ?? (owl:sameAs | ^owl:sameAs)* ?file .
             ?file crm:P12i_was_present_at ?case .
+            ?case rdfs:label ?caseLabel .
           }
         }
           ' 
@@ -102,16 +103,16 @@ where {
             SELECT ?participant WHERE {
               <{{case.value}}> crm:P10i_contains/crm:P14_carried_out_by ?participant .
             }
-            '>
+            '
+                            template='{{> template}}'>
           		<template id="template">
             		<div>
-                  <semantic-link iri='{{case.value}}'>{{case.value}}</h5>
+                  <semantic-link iri='{{case.value}}'>{{caseLabel.value}}</semantic-link>
                   {{#if participant}}
                   <h6>Participants:</h6>
                   {{#each bindings}}
-                  {{participant.value}}<br/>
+                  <div>{{participant.value}}</div><br/>
                   {{/each}}
-                  {{else}}
                   {{/if}}
             		</div>
           		</template>

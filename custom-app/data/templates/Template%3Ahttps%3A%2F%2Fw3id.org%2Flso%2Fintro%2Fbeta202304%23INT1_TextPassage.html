@@ -42,43 +42,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
                         >
             <template id='template'>{{#each bindings}}{{#if wording}}<h2>Text Passage: "{{wording.value}}"</h2>{{/if}}{{/each}}</template>
         </semantic-query>
-        <semantic-table
-                        query='SELECT ?person ?targetPassage ?targetText ?refPassage ?refText ?graph
-WHERE {
-GRAPH ?graph {
-	  ?? (owl:sameAs | ^owl:sameAs)* ?passage .
-    OPTIONAL { ?passage ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?person .}
-    OPTIONAL { ?passage intro:R13_is_referring_entity ?relation .
-      { ?relation intro:R12_has_referred_to_entity ?targetText .
-      FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . } }
-      UNION
-      { ?relation intro:R12_has_referred_to_entity ?targetPassage .
-      ?targetPassage a intro:INT1_TextPassage ;
-                     ^intro:R10_has_Text_Passage ?targetText .}}
-      OPTIONAL { ?passage intro:R12_is_referred_to_entity ?relation2 .
-        { ?relation2 intro:R13_has_referring_entity ?refText . 
-        FILTER NOT EXISTS { ?refText a intro:INT1_TextPassage . } }
-              UNION
-              {?relation2 intro:R13_has_referring_entity ?refPassage .
-        ?refPassage a intro:INT1_TextPassage ;
-                     ^intro:R10_has_Text_Passage ?refText .}
-      }
-  }    
-}
-                        '
-                        column-configuration='[
-    {"displayName": "Relation / Reference:", "cellTemplate": "{{> ref}}" },
-    {"variableName": "graph", "displayName": "Source Graph"}
-  ]'
-                        options='{"showFilter": false}'
-                        >
-          <template id="ref">
-            {{#if person}}Reference to: <semantic-link uri={{person.value}}>{{person.value}}</semantic-link>{{/if}}
-            {{#if targetText}}Reference to: <semantic-link uri={{targetText.value}}>{{targetText.value}}</semantic-link>{{#if targetPassage}}, resp. to <semantic-link uri={{targetPassage.value}}>{{targetPassage.value}}</semantic-link>{{/if}}{{/if}}
-            {{#if refText}}Referred to by: <semantic-link uri={{refText.value}}>{{refText.value}}</semantic-link>{{#if refPassage}}, resp. by <semantic-link uri={{refPassage.value}}>{{refPassage.value}}</semantic-link>{{/if}}{{/if}}
-          </template>
-          </semantic-table>
-
+        
         <semantic-table
                         query='
 SELECT DISTINCT ?text ?author ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate ?location ?locationURL
@@ -103,7 +67,7 @@ WHERE {
     ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/prov> .
     }
     
-    ?title rdf:value ?titleValue .
+    ?title rdfs:label ?titleValue .
     
     OPTIONAL {
     ?text crm:P102_has_title ?subtitle .
@@ -145,6 +109,45 @@ WHERE {
             {{/if}}
           </template>
           </semantic-table>
+        
+        <semantic-table
+                        query='SELECT ?person ?targetPassage ?targetText ?refPassage ?refText ?graph
+WHERE {
+GRAPH ?graph {
+	  ?? (owl:sameAs | ^owl:sameAs)* ?passage .
+    OPTIONAL { ?passage ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?person .}
+    OPTIONAL { ?passage intro:R13_is_referring_entity ?relation .
+      { ?relation intro:R12_has_referred_to_entity ?targetText .
+      FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . } }
+      UNION
+      { ?relation intro:R12_has_referred_to_entity ?targetPassage .
+      ?targetPassage a intro:INT1_TextPassage ;
+                     ^intro:R10_has_Text_Passage ?targetText .}}
+      OPTIONAL { ?passage intro:R12_is_referred_to_entity ?relation2 .
+        { ?relation2 intro:R13_has_referring_entity ?refText . 
+        FILTER NOT EXISTS { ?refText a intro:INT1_TextPassage . } }
+              UNION
+              {?relation2 intro:R13_has_referring_entity ?refPassage .
+        ?refPassage a intro:INT1_TextPassage ;
+                     ^intro:R10_has_Text_Passage ?refText .}
+      }
+  }    
+}
+                        '
+                        column-configuration='[
+    {"displayName": "Relation / Reference:", "cellTemplate": "{{> ref}}" },
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+                        options='{"showFilter": false}'
+                        >
+          <template id="ref">
+            {{#if person}}Reference to: <semantic-link uri={{person.value}}>{{person.value}}</semantic-link>{{/if}}
+            {{#if targetText}}Reference to: <semantic-link uri={{targetText.value}}>{{targetText.value}}</semantic-link>{{#if targetPassage}}, resp. to <semantic-link uri={{targetPassage.value}}>{{targetPassage.value}}</semantic-link>{{/if}}{{/if}}
+            {{#if refText}}Referred to by: <semantic-link uri={{refText.value}}>{{refText.value}}</semantic-link>{{#if refPassage}}, resp. by <semantic-link uri={{refPassage.value}}>{{refPassage.value}}</semantic-link>{{/if}}{{/if}}
+          </template>
+          </semantic-table>
+
+        
         
 
         <semantic-table

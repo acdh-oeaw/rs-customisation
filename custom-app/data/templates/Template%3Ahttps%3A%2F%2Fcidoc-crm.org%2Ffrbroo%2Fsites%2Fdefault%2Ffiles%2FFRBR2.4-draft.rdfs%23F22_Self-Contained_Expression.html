@@ -69,29 +69,30 @@ WHERE {
     {"variableName": "subtitleValue", "displayName": "Subtitle"},  
     {"variableName": "creationDate", "displayName": "Created"},
     {"variableName": "performanceDate", "displayName": "First Performed"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"variableName": "graph", "displayName": "Source Graph"}
     
   ]'
   options='{"showFilter": false}'
                         >
           </semantic-table>
         
-        
-        <!-- CAUTION: This will have to be refined - esp. the appellation display - with the original data -->
+        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ / rdf:type frbroo:F24_Publication_Expression } LIMIT 1 }")]]
+        <h4>Publication</h4>
         <semantic-table
                         query="
-         select distinct  ?publText ?publDate ?graph ?pagination
+select distinct  ?publText ?publDate ?graph ?pagination
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
 
-      ?text crm:P165i_is_incorporated_in* ?publText .
+    OPTIONAL { ?text crm:P165i_is_incorporated_in+ ?publText .
       ?publText rdf:type frbroo:F22_Self-Contained_Expression ;
-              crm:P165i_is_incorporated_in ?publF24 .
-      ?publF24 frbroo:R5i_is_component_of ?periodical .
+              crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical . }
+      
+      
     optional {
     # publication date                          
-      ?publF24 ^frbroo:R24_created/crm:P4_has_time-span ?publDate .
+      ?text crm:P165i_is_incorporated_in+ / ^frbroo:R24_created / crm:P4_has_time-span ?publDate .
     }                 
     
     optional {
@@ -107,57 +108,25 @@ where {
     {"variableName": "publText", "displayName": "Published in"},
     {"variableName": "pagination", "displayName": "Pagination"},
     {"variableName": "publDate", "displayName": "Publication Date"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"variableName": "graph", "displayName": "Source Graph"}
     
   ]'
   options='{"showFilter": false}'
                         >
           </semantic-table>
+        [[/if]]
         
-<!-- TEXT PASSAGES TOTAL -->
-<!-- SHORT QUERY; ORIGINAL QUERY TBD -->
-[[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
-<semantic-table
-query="
-SELECT ?passage ?wording ?graph WHERE { 
-  GRAPH ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage .
-    OPTIONAL {
-      ?passage intro:R44_has_wording ?wording .
-    }
-  }
-}
-"
-column-configuration='[
-{"displayName": "Recorded Text Passages", "cellTemplate": "{{> passage}}"},
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
-]'
->
-<template id="passage">
-  <div>
-  {{#if wording}}
-  <semantic-link uri={{passage.value}}>"{{wording.value}}"</semantic-link>
-  {{else}}
-  <semantic-link uri={{passage.value}}></semantic-link>
-  {{/if}}
-  </div>
-</template>
-</semantic-table>
-[[/if]]
-
-        <h4>Publication Context</h4>
+        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in ?o } LIMIT 1 }")]]
+        <h3>Publication Context</h3>
         <semantic-tree query="
-        SELECT DISTINCT ?node ?parent
-        WHERE {
-          {?? crm:P165_incorporates* ?node .}
-          UNION
-          {?node crm:P165_incorporates* ?? .}
-          ?parent crm:P165_incorporates ?node .
-          ?parent a frbroo:F22_Self-Contained_Expression .
-          ?node a frbroo:F22_Self-Contained_Expression .
-        }
+                              SELECT DISTINCT ?node ?parent
+WHERE {
+  ?parent frbroo:R5_has_component|crm:P165_incorporates ?node .
+  
+  { ?parent frbroo:R5_has_component*/crm:P165_incorporates*/intro:R10_has_Text_Passage* ?? . }
+}
                               "/>
+        [[/if]]
         </bs-tab>
       
 
@@ -355,7 +324,7 @@ where {
                         
                         column-configuration='[
     {"variableName": "quotingText", "displayName": "Referenced by Text"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"variableName": "graph", "displayName": "Source Graph"}
   ]'
                         >
           </semantic-table>
@@ -393,7 +362,7 @@ WHERE {
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
     {"variableName": "idType", "displayName": "ID Type"}, 
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"variableName": "graph", "displayName": "Source Graph"}
   ]'
 >
 

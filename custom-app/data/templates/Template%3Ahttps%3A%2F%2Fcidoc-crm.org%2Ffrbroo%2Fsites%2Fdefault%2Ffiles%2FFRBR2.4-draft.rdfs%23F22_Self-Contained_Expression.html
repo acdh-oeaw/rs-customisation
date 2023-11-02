@@ -127,6 +127,40 @@ WHERE {
 }
                               "/>
         [[/if]]
+        
+        
+        <!-- TEXT PASSAGES TOTAL -->
+<!-- SHORT QUERY; ORIGINAL QUERY TBD -->
+[[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
+<semantic-table
+query="
+SELECT ?passage ?wording ?graph WHERE { 
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+    ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage .
+    OPTIONAL {
+      ?passage intro:R44_has_wording ?wording .
+    }
+  }
+}
+"
+column-configuration='[
+{"displayName": "Recorded Text Passages", "cellTemplate": "{{> passage}}"},
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+]'
+>
+<template id="passage">
+  <div>
+  {{#if wording}}
+  <semantic-link uri={{passage.value}}>"{{wording.value}}"</semantic-link>
+  {{else}}
+  <semantic-link uri={{passage.value}}></semantic-link>
+  {{/if}}
+  </div>
+</template>
+</semantic-table>
+[[/if]]
+        
         </bs-tab>
       
 

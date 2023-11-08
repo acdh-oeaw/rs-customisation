@@ -77,7 +77,7 @@ WHERE {
           </semantic-table>
         
         [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ / rdf:type frbroo:F24_Publication_Expression } LIMIT 1 }")]]
-        <h4>Publication</h4>
+
         <semantic-table
                         query="
 select distinct  ?publText ?publDate ?graph ?pagination
@@ -117,11 +117,11 @@ where {
         [[/if]]
         
         [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in ?o } LIMIT 1 }")]]
-        <h3>Publication Context</h3>
+        <h4>Publication Context</h4>
         <semantic-tree query="
                               SELECT DISTINCT ?node ?parent
 WHERE {
-  ?parent frbroo:R5_has_component* / crm:P165_incorporates* / intro:R10_has_Text_Passage* <https://sk.acdh.oeaw.ac.at/pmb61389> . 
+  ?parent frbroo:R5_has_component* / crm:P165_incorporates* / intro:R10_has_Text_Passage* ?? . 
 
   ?parent (frbroo:R5_has_component / crm:P165_incorporates) | crm:P165_incorporates ?node .
   
@@ -133,11 +133,11 @@ WHERE {
                               "/>
         [[/if]]
         
-        
+      </bs-tab>
 [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
-        <h3>Text Passages</h3>
+<bs-tab event-key="22" title="Text Passages">
 <semantic-table
-query="
+query='
 SELECT ?passage ?wording ?graph WHERE { 
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
@@ -147,7 +147,7 @@ SELECT ?passage ?wording ?graph WHERE {
     }
   }
 }
-"
+'
 column-configuration='[
 {"displayName": "Recorded Text Passages", "cellTemplate": "{{> passage}}"},
 {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
@@ -163,9 +163,10 @@ column-configuration='[
   </div>
 </template>
 </semantic-table>
+</bs-tab>
 [[/if]]
         
-        </bs-tab>
+        
       
 
         [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]

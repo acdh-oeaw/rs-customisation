@@ -121,16 +121,21 @@ where {
         <semantic-tree query="
                               SELECT DISTINCT ?node ?parent
 WHERE {
-  ?parent frbroo:R5_has_component|crm:P165_incorporates ?node .
+  ?parent frbroo:R5_has_component* / crm:P165_incorporates* / intro:R10_has_Text_Passage* <https://sk.acdh.oeaw.ac.at/pmb61389> . 
+
+  ?parent (frbroo:R5_has_component / crm:P165_incorporates) | crm:P165_incorporates ?node .
   
-  { ?parent frbroo:R5_has_component*/crm:P165_incorporates*/intro:R10_has_Text_Passage* ?? . }
+  { ?parent a frbroo:F22_Self-Contained_Expression . }
+  UNION
+  { ?parent frbroo:R5_has_component ?issueF24 . }
 }
+
                               "/>
         [[/if]]
         
         
-
 [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
+        <h3>Text Passages</h3>
 <semantic-table
 query="
 SELECT ?passage ?wording ?graph WHERE { 

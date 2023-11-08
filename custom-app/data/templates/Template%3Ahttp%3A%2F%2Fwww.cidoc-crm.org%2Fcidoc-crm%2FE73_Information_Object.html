@@ -33,38 +33,32 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 
         <semantic-table
                         query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-         
-         select distinct  ?author ?titleValue ?creationDate ?graph
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
-     OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . }
-     OPTIONAL { ?textCreation crm:P4_has_time-span/rdfs:label ?creationDate . }
-    }
-    
+SELECT DISTINCT  ?author ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate
+WHERE {
+  GRAPH ?graph {
+   ?? (owl:sameAs | ^owl:sameAs)* ?text .
+      OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+      OPTIONAL { ?textCreation  crm:P4_has_time-span ?creationDate . }
+      OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . } }
+      OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span ?performanceDate .}
     # text title(s)
     ?text crm:P102_has_title ?title .
     {                               
     ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/main> .
     }
-    union
+    UNION
     {                               
     ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/prov> .
     }
     
     ?title rdf:value ?titleValue .
     
-    optional {
+    OPTIONAL {
     ?text crm:P102_has_title ?subtitle .
     ?subtitle crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/sub> ;
         rdf:value ?subtitleValue .
-    }   
+    }
+    
   }
 }
                                
@@ -72,70 +66,78 @@ where {
                         column-configuration='[
     {"variableName": "author", "displayName": "Author"}, 
     {"variableName": "titleValue", "displayName": "Title"}, 
-    {"variableName": "creationDate", "displayName": "Creation Date"},
+    {"variableName": "subtitleValue", "displayName": "Subtitle"},  
+    {"variableName": "creationDate", "displayName": "Created"},
+    {"variableName": "performanceDate", "displayName": "First Performed"},
     {"variableName": "graph", "displayName": "Source Graph"}
     
   ]'
-                        options='{"showFilter": false}'
+  options='{"showFilter": false}'
                         >
           </semantic-table>
-
-				<semantic-table 
-          query='
-        select ?case ?caseLabel
-        where {
-          graph ?graph {
-            ?? (owl:sameAs | ^owl:sameAs)* ?file .
-            ?file crm:P12i_was_present_at ?case .
-            ?case rdfs:label ?caseLabel .
-          }
-        }
-          ' 
-          column-configuration='[
-            {"displayName": "Legal Case", "cellTemplate": "{{> case}}"}, 
-            {"displayName": "Files", "cellTemplate": "{{> files}}"}
-          ]'
-                        options='{"showFilter": false}'
-        >
-          <template id='case'>
-            <semantic-query
-            query='
-            SELECT ?participant WHERE {
-              <{{case.value}}> crm:P10i_contains/crm:P14_carried_out_by ?participant .
-            }
-            '
-                            template='{{> template}}'>
-          		<template id="template">
-            		<div>
-                  <semantic-link iri='{{case.value}}'>{{caseLabel.value}}</semantic-link>
-                  {{#if participant}}
-                  <h6>Participants:</h6>
-                  {{#each bindings}}
-                  <div>{{participant.value}}</div><br/>
-                  {{/each}}
-                  {{/if}}
-            		</div>
-          		</template>
-            </semantic-query>
-          </template>
-          <template id="files">
-            <semantic-table
-            query='
-						SELECT ?file WHERE {
-            ?file crm:P12i_was_present_at <{{case.value}}>.
-            }
-						'
-            column-configuration='[
-              {"variableName": "file"}
-            ]'               
-            ></semantic-table>
-          </template>
-				</semantic-table>
         
-        <!-- List of Text Passages -->
-        [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
+        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ / rdf:type frbroo:F24_Publication_Expression } LIMIT 1 }")]]
+
+        <semantic-table
+                        query="
+select distinct  ?publText ?publDate ?graph ?pagination
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+
+    OPTIONAL { ?text crm:P165i_is_incorporated_in+ ?publText .
+      ?publText rdf:type frbroo:F22_Self-Contained_Expression ;
+              crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical . }
+      
+      
+    optional {
+    # publication date                          
+      ?text crm:P165i_is_incorporated_in+ / ^frbroo:R24_created / crm:P4_has_time-span ?publDate .
+    }                 
+    
+    optional {
+    # pagination
+    ?text ^intro:R16_incorporates ?segment .
+    ?segment a intro:INT16_Segment ;
+    <https://schema.org/pagination> ?pagination .
+                               }
+  }
+}       
+                               "
+                        column-configuration='[
+    {"variableName": "publText", "displayName": "Published in"},
+    {"variableName": "pagination", "displayName": "Pagination"},
+    {"variableName": "publDate", "displayName": "Publication Date"},
+    {"variableName": "graph", "displayName": "Source Graph"}
+    
+  ]'
+  options='{"showFilter": false}'
+                        >
+          </semantic-table>
+        [[/if]]
+        
+        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in ?o } LIMIT 1 }")]]
+        <h4>Publication Context</h4>
+        <semantic-tree query="
+                              SELECT DISTINCT ?node ?parent
+WHERE {
+  ?parent frbroo:R5_has_component* / crm:P165_incorporates* / intro:R10_has_Text_Passage* ?? . 
+
+  ?parent (frbroo:R5_has_component / crm:P165_incorporates) | crm:P165_incorporates ?node .
+  
+  { ?parent a frbroo:F22_Self-Contained_Expression . }
+  UNION
+  { ?parent frbroo:R5_has_component ?issueF24 . }
+}
+
+                              "/>
+        [[/if]]
+        
+      </bs-tab>
+[[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
+<bs-tab event-key="22" title="Text Passages">
 <semantic-table
-query="
+query='
 SELECT ?passage ?wording ?graph WHERE { 
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
@@ -145,7 +147,7 @@ SELECT ?passage ?wording ?graph WHERE {
     }
   }
 }
-"
+'
 column-configuration='[
 {"displayName": "Recorded Text Passages", "cellTemplate": "{{> passage}}"},
 {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
@@ -161,23 +163,22 @@ column-configuration='[
   </div>
 </template>
 </semantic-table>
+</bs-tab>
 [[/if]]
         
         
-    </bs-tab>
       
 
-    <!-- PERSON MENTIONS -->
-    [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]
+        [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]
       <bs-tab event-key="2" title="Person Mentions">
-        <h3>Person Mentions</h3>
+
         <semantic-table
                         query='
         SELECT DISTINCT ?mentioned ?text
         WHERE {
           GRAPH ?graph {
            ?? (owl:sameAs | ^owl:sameAs)* ?text .
-           ?text intro:R10_has_Text_Passage* / ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?mentioned.
+           ?text crm:P165_incorporates* / intro:R10_has_Text_Passage* / intro:R18_shows_actualization / intro:R17_actualizes_feature / crm:P67_refers_to ?mentioned.
   }
 }
                                '
@@ -194,7 +195,7 @@ column-configuration='[
                                   GRAPH ?graph {
                                   ?reference crm:P67_refers_to <{{mentioned.value}}> .
     							   ?reference intro:R17_feature_actualized_in / intro:R18_actualization_found_on ?refPassage.
-                                   ?refPassage intro:R10_is_Text_Passage_of <{{text.value}}> .
+                                   ?refPassage intro:R10_is_Text_Passage_of / crm:P165i_is_incorporated_in* <{{text.value}}> .
                                   # refWording
                                     OPTIONAL {?refPassage intro:R44_has_wording ?refWording .}
                                   # refPosition
@@ -242,22 +243,21 @@ column-configuration='[
           </template>
           </semantic-table>
         </bs-tab>
-[[/if]]
+      [[/if]]
 
+      <!-- INTERTEXTUAL RELATIONS -->
       
-<!-- INTERTEXTUAL RELATIONS -->
-
-        [[#if (ask "ASK {{ SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation . } LIMIT 1 } UNION { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation . } }")]]
-      <bs-tab event-key="17" title="Intertextual Relations">
-
-<!-- OUTGOING -->
+      [[#if (ask "ASK {{ SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation . } LIMIT 1 } UNION { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation . } }")]]
+      
+        <bs-tab event-key="17" title="Intertextual Relations">
+        <!-- OUTGOING RELATIONS -->
         <semantic-table
                         query='
 SELECT DISTINCT ?targetText ?text
 WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
+    ?text crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
     
     ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* ?targetText .
     FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }                           
@@ -275,29 +275,33 @@ WHERE {
                             query='
                                    SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph
                                    WHERE { GRAPH ?graph {
-                                   ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* <{{targetText.value}}> .
+                                    <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation.
+                                    <{{text.value}}> crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
+
+                                  
                                    ?relation a intro:INT3_IntertextualRelationship .
-                                   OPTIONAL { ?reference prov:wasDerivedFrom ?source . }
-                                   OPTIONAL {?relation intro:R13_has_referring_entity ?refPassage .
-                                   ?refPassage a intro:INT1_TextPassage . 
-                                   OPTIONAL { ?refPassage intro:R41_has_location ?refPosition . }
-                                   OPTIONAL { ?refPassage intro:R44_has_wording ?refWording . }
-                                   OPTIONAL { ?refPassage intro:R16_is_incorporated_in ?segment. 
-                                   ?segment a intro:INT16_Segment; 
-                                   intro:R41_has_location ?refSegPosition . 
-                                   FILTER (!REGEX(?refSegPosition, "http"))
-                                   OPTIONAL {?segment ^intro:R25_has_segment|crm:P128i_is_carried_by ?wit .
-                                     OPTIONAL { ?wit frbroo:R24i_was_created_through / crm:P4_has_time-span ?witDate .}} }
-                                   }
-                                   } 
+                                   OPTIONAL { ?relation prov:wasDerivedFrom ?source . }
+                                   OPTIONAL { ?relation intro:R13_has_referring_entity ?refPassage .
+                                      ?refPassage a intro:INT1_TextPassage . 
+                                      OPTIONAL { ?refPassage intro:R41_has_location ?refPosition . }
+                                      OPTIONAL { ?refPassage intro:R44_has_wording ?refWording . }
+                                      OPTIONAL { ?refPassage intro:R16_is_incorporated_in ?segment. 
+                                      ?segment a intro:INT16_Segment; 
+                                      intro:R41_has_location ?refSegPosition . 
+                                      FILTER (!REGEX(?refSegPosition, "http"))
+                                        OPTIONAL {?segment ^intro:R25_has_segment|crm:P128i_is_carried_by ?wit .
+                                          OPTIONAL { ?wit frbroo:R24i_was_created_through / crm:P4_has_time-span ?witDate .}} }
+                                      }
+                                    
                                    OPTIONAL {?relation intro:R12_has_referred_to_entity ?targetPassage .
                                    ?targetPassage a intro:INT1_TextPassage . 
-                                   OPTIONAL { ?targetPassage intro:R16_is_incorporated_in ?segment2. 
-                                   ?segment2 a intro:INT16_Segment; intro:R41_has_location ?targetPosition . 
-                                   FILTER (!REGEX(?targetPosition, "http"))
+                                      OPTIONAL { ?targetPassage intro:R16_is_incorporated_in ?segment2. 
+                                      ?segment2 a intro:INT16_Segment; intro:R41_has_location ?targetPosition . 
+                                      FILTER (!REGEX(?targetPosition, "http"))
+                                      }
                                    }
                                    }
-                                   }
+                                  }
                                    
                                    '
                             column-configuration='[
@@ -334,16 +338,17 @@ WHERE {
           </template>
           </semantic-table>
         
-        <!-- INCOMING -->
+        
+        <!-- INCOMING RELATIONS -->
         <semantic-table
                         query='
 select distinct ?quotingText ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    {?text intro:R10_has_Text_Passage / intro:R12_is_referred_to_entity ?relation .}
+    { ?text intro:R10_has_Text_Passage / intro:R12_is_referred_to_entity ?relation .}
     union
-    {?text intro:R12_is_referred_to_entity ?relation .
+    {?text ^intro:R12_has_referred_to_entity ?relation .
       FILTER NOT EXISTS { ?text a intro:INT1_TextPassage . }
     }
     
@@ -362,12 +367,55 @@ where {
   ]'
                         >
           </semantic-table>
-        
+        [[/if]]
         
         </bs-tab>
-  [[/if]]
+  
+      <!-- IDs, Links - Table -->
+  <bs-tab title="Entity IDs" event-key="10">
+        <semantic-table 
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+SELECT ?text ?id ?idValue ?idURL ?idType ?graph
+WHERE {
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+    ?text crm:P1_is_identified_by ?id .
+    ?id rdf:value ?idValue .
+        OPTIONAL { 
+            FILTER (CONTAINS(STR(?idValue), 'http'))
+            BIND(?idValue AS ?idURL)
+        }
+    ?id rdf:type crm:E42_Identifier .
+    optional {
+      #type
+      ?id crm:P2_has_type ?idType .
+        }
+      }
+    }
+         "
+  column-configuration='[
+    {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
+    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+>
 
+<template id="idValue">
+  {{#if idURL}}
+  <a href="{{{idURL.value}}}">{{idValue.value}}</a>
+  {{else}}
+  <div>{{idValue.value}}</div>
+  {{/if}}
+</template>
 
+</semantic-table>
+  </bs-tab>
+      
       <!-- Source -->
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]

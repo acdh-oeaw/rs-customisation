@@ -560,7 +560,7 @@ prefix owl: <http://www.w3.org/2002/07/owl#>
 SELECT ?person ?id ?idValue ?idURL ?idType ?graph
 WHERE {
   GRAPH ?graph {
-    <https://sk.acdh.oeaw.ac.at/pmb11988> (owl:sameAs | ^owl:sameAs)* ?person .
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person crm:P1_is_identified_by ?id .
     ?id rdf:value ?idValue .
         OPTIONAL { 

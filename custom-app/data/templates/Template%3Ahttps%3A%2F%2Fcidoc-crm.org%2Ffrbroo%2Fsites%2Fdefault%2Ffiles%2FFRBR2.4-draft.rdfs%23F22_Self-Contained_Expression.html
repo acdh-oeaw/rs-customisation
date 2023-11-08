@@ -129,8 +129,7 @@ WHERE {
         [[/if]]
         
         
-        <!-- TEXT PASSAGES TOTAL -->
-<!-- SHORT QUERY; ORIGINAL QUERY TBD -->
+
 [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
 <semantic-table
 query="

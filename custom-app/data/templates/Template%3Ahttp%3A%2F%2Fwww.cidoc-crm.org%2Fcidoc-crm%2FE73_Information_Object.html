@@ -275,7 +275,7 @@ WHERE {
            <template id="relations">
             <semantic-table
                             query='
-                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph
+                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph ?targetPassage
                                    WHERE { GRAPH ?graph {
                                    ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* <{{targetText.value}}> .
                                    ?relation a intro:INT3_IntertextualRelationship .

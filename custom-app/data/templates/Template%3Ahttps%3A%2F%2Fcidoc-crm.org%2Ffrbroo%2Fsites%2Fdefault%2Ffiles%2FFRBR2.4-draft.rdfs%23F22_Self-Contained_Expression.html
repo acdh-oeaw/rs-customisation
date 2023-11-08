@@ -116,7 +116,7 @@ where {
           </semantic-table>
         [[/if]]
         
-        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in ?o } LIMIT 1 }")]]
+        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . {?text crm:P165i_is_incorporated_in / rdf:type frbroo:F22_Self-Contained_Expression . } UNION { ?text crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?o . }  } LIMIT 1 }")]]
         <h4>Publication Context</h4>
         <semantic-tree query="
                               SELECT DISTINCT ?node ?parent
@@ -134,8 +134,8 @@ WHERE {
         [[/if]]
         
       </bs-tab>
-[[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . } LIMIT 1 }")]]
-<bs-tab event-key="22" title="Text Passages">
+[[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates|intro:R10_has_Text_Passage ?content . } LIMIT 1 }")]]
+<bs-tab event-key="22" title="Textual Contents">
 <semantic-table
 query='
 SELECT ?passage ?wording ?graph WHERE { 
@@ -163,7 +163,25 @@ column-configuration='[
   </div>
 </template>
 </semantic-table>
-</bs-tab>
+
+      <semantic-table
+query='
+SELECT ?incText ?graph WHERE { 
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+    ?text crm:P165_incorporates ?incText .
+  }
+}
+'
+column-configuration='[
+{"displayName": "Incorporated Texts", "variableName": "incText"},
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+]'
+></semantic-table>
+      
+      
+      
+      </bs-tab>
 [[/if]]
         
         
@@ -407,7 +425,7 @@ WHERE {
 
 <template id="idValue">
   {{#if idURL}}
-  <a href="{{idURL.value}}">{{idValue.value}}</a>
+  <a href="{{{idURL.value}}}">{{idValue.value}}</a>
   {{else}}
   <div>{{idValue.value}}</div>
   {{/if}}

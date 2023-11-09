@@ -94,10 +94,10 @@ WHERE {
                 {{else}}, 
                 {{#if creationDate}}created {{creationDate.value}}{{else}}, {{/if}}
               {{/if}}
-            {{#if locationURL}}
+            {{#if locationURL}}, 
             <semantic-link uri={{locationURL.value}}>{{location.value}}</semantic-link>.
             {{else}}
-            {{location.value}}.
+            , {{location.value}}.
             {{/if}}
             {{else}}
             {{#if performanceDate}}, 

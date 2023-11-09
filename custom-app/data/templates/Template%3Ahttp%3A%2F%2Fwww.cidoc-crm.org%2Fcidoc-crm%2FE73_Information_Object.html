@@ -261,7 +261,7 @@ WHERE {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
     ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
     
-    ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* ?targetText .
+    ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage? ?targetText .
     FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }                           
   }
 }          
@@ -275,10 +275,11 @@ WHERE {
            <template id="relations">
             <semantic-table
                             query='
-                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph ?targetPassage
+                                   SELECT DISTINCT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph ?targetPassage
                                    WHERE { GRAPH ?graph {
-                                   ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* <{{targetText.value}}> .
-                                   ?relation a intro:INT3_IntertextualRelationship .
+                                   ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage? <{{targetText.value}}> ;
+                                      a intro:INT3_IntertextualRelationship ;
+                                      intro:R13_has_referring_entity / ^intro:R10_has_Text_Passage? <{{text.value}}> .
                                    OPTIONAL { ?reference prov:wasDerivedFrom ?source . }
                                    OPTIONAL {?relation intro:R13_has_referring_entity ?refPassage .
                                    ?refPassage a intro:INT1_TextPassage . 

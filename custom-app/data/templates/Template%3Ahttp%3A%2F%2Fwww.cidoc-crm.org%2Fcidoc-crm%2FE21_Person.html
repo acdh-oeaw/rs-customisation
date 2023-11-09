@@ -262,7 +262,7 @@ where {
       UNION
       {
         ?event frbroo:R24_created /
-                 crm:P165_incorporates* /
+                 crm:P165_incorporates+ /
                  frbroo:R17i_was_created_by /
                  crm:P14_carried_out_by ?person ;
                  rdfs:label ?subject .
@@ -292,8 +292,9 @@ where {
         
         <h3>Authored Texts</h3>
         <semantic-table
-                        query="SELECT DISTINCT ?text ?issue ?creationTimespan ?publicationTimespan ?performanceTimespan ?graph
-                               WHERE {
+                        query="
+                        SELECT DISTINCT ?text ?issue ?creationTimespan ?publicationTimespan ?performanceTimespan ?graph
+                        WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person crm:P14i_performed ?textCreation .
@@ -311,22 +312,19 @@ where {
       ?issue crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical .
                                }
 		OPTIONAL {
-              ?text crm:P165i_is_incorporated_in* ?publIssue .
+              ?text crm:P165i_is_incorporated_in+ ?publIssue .
 							?publIssue frbroo:R5i_is_component_of ?periodical ; 
                                frbroo:R24i_was_created_through / crm:P4_has_time-span / rdfs:label ?publicationTimespan .
                                }
-    }
+    
     # performance
     optional {
       ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span/rdfs:label ?performanceTimespan .
     }
   }
-
-                               
-                               "
-                        column-configuration=
-                        
-                        '[
+}
+"
+                        column-configuration='[
     {"variableName": "text", "displayName": "Text"}, 
     {"displayName": " ", "cellTemplate": "{{> textData}}"},
     {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
@@ -351,18 +349,16 @@ where {
         <h3>Referred-to Persons</h3>
         
                     <semantic-table
-                        query="select distinct ?person ?text ?refPerson
+                        query="select distinct ?person ?refPerson
 where {
   graph ?graph {
-    # text
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?textCreation crm:P14_carried_out_by  ?person ;
     (crm:P94_has_created | frbroo:R17_created) / 
     intro:R10_has_Text_Passage /
     intro:R18_shows_actualization / 
-    intro:R17_actualizes_feature ?reference . 
-    ?reference crm:P67_refers_to ?refPerson .
-    
+    intro:R17_actualizes_feature / 
+    crm:P67_refers_to ?refPerson .    
 }
 }
                                "
@@ -406,7 +402,7 @@ where {
     (crm:P94_has_created | frbroo:R17_created) ?text.
     
     # reference
-    ?text intro:R10_has_Text_Passage*/^intro:R13_has_referring_entity ?reference .    
+    ?text intro:R10_has_Text_Passage?/^intro:R13_has_referring_entity ?reference .    
 }
 }
                                     "
@@ -419,11 +415,14 @@ where {
             <semantic-table
                             query="SELECT DISTINCT ?refToText ?source
                                    WHERE {
-                                   <{{text.value}}> intro:R10_has_Text_Passage*/^intro:R13_has_referring_entity ?reference.
-                                   ?reference intro:R12_has_referred_to_entity / intro:R10_is_Text_Passage_of* ?refToText .
+                                   <{{text.value}}> intro:R10_has_Text_Passage?/^intro:R13_has_referring_entity ?reference.
+                                   ?reference intro:R12_has_referred_to_entity / intro:R10_is_Text_Passage_of? ?refToText .
                                    { ?refToText a frbroo:F22_Self-Contained_Expression . }
                                    UNION
                                    { ?refToText a crm:E73_Information_Object .  }
+                                   UNION
+                                   { ?refToText a frbroo:F24_Publication_Expression . }
+
                                    OPTIONAL {?reference prov:wasDerivedFrom ?source .}
                                    }
                                    "
@@ -456,7 +455,7 @@ WHERE {
              intro:R10_is_Text_Passage_of ?text .
     OPTIONAL
     {
-    ?text crm:P165i_is_incorporated_in* ?issue .
+    ?text crm:P165i_is_incorporated_in+ ?issue .
 		?issue crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical . 
     }
     OPTIONAL { 
@@ -528,7 +527,7 @@ SELECT DISTINCT ?author ?refText ?graph WHERE
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person crm:P14i_performed / ( frbroo:R17_created | crm:P94_has_created ) ?text .
-    ?text intro:R10_has_Text_Passage* / intro:R12_is_referred_to_entity / intro:R13_has_referring_entity / intro:R10_is_Text_Passage_of* ?refText .
+    ?text intro:R10_has_Text_Passage? / intro:R12_is_referred_to_entity / intro:R13_has_referring_entity / intro:R10_is_Text_Passage_of? ?refText .
        
     FILTER NOT EXISTS { ?refText a intro:INT1_TextPassage . }
     OPTIONAL { 

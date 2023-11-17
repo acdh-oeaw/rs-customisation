@@ -1,0 +1,134 @@
+@prefix cls: <https://clscor.io/ontologies/CRMcls/> .
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix lrm: <http://www.cidoc-crm.org/cidoc-crm/lrmoo/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+<https://core.clscor.io/entity/type/identifier/gnd> a crm:E55_Type ;
+    rdfs:label "GND ID" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/pnd> .
+
+<https://core.clscor.io/entity/type/identifier/textgrid> a crm:E55_Type ;
+    rdfs:label "Textgrid ID" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/doc/ger000088/digital_source/id/url> .
+
+<https://core.clscor.io/entity/type/identifier/url> a crm:E55_Type ;
+    rdfs:label "URL (as identfier)" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/doc/ger000088/digital_source/id/url> .
+
+<https://core.clscor.io/entity/type/identifier/wikidata> a crm:E55_Type ;
+    rdfs:label "Wikidata ID" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/wikidata> .
+
+<https://dracor.clscor.io/entity/type/appellation/fullname> a crm:E55_Type ;
+    rdfs:label "Full name of an author" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/fullname> .
+
+<https://dracor.clscor.io/entity/type/appellation/name> a crm:E55_Type ;
+    rdfs:label "Name of an author" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/name> .
+
+<https://dracor.clscor.io/entity/type/appellation/shortname> a crm:E55_Type ;
+    rdfs:label "Short name of an author" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/shortname> .
+
+<https://dracor.clscor.io/entity/type/identifier/dracor_id> a crm:E55_Type ;
+    rdfs:label "DraCor ID" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/doc/ger000088/id/dracor> .
+
+<https://dracor.clscor.io/entity/type/identifier/playname> a crm:E55_Type ;
+    rdfs:label "Playname" ;
+    crm:P2i_is_type_of <https://gerdracor.clscor.io/entity/doc/ger000088/id/playname> .
+
+<https://gerdracor.clscor.io/entity/actor/wdQ34628/id/fullname> a crm:E41_Appellation ;
+    rdfs:label "Full name of Lessing" ;
+    crm:P190_has_symbolic_content "Gotthold Ephraim Lessing" ;
+    crm:P1i_identifies <https://gerdracor.clscor.io/entity/actor/wdQ34628> ;
+    crm:P2_has_type <https://dracor.clscor.io/entity/type/appellation/fullname> .
+
+<https://gerdracor.clscor.io/entity/actor/wdQ34628/id/name> a crm:E41_Appellation ;
+    rdfs:label "Name of Lessing" ;
+    crm:P190_has_symbolic_content "Lessing, Gotthold Ephraim" ;
+    crm:P1i_identifies <https://gerdracor.clscor.io/entity/actor/wdQ34628> ;
+    crm:P2_has_type <https://dracor.clscor.io/entity/type/appellation/name> .
+
+<https://gerdracor.clscor.io/entity/actor/wdQ34628/id/pnd> a crm:E42_Identifier ;
+    rdfs:label "ID of type pnd of Lessing" ;
+    crm:P190_has_symbolic_content "118572121" ;
+    crm:P1i_identifies <https://gerdracor.clscor.io/entity/actor/wdQ34628> ;
+    crm:P2_has_type <https://core.clscor.io/entity/type/identifier/gnd> .
+
+<https://gerdracor.clscor.io/entity/actor/wdQ34628/id/shortname> a crm:E41_Appellation ;
+    rdfs:label "Short name of Lessing" ;
+    crm:P190_has_symbolic_content "Lessing" ;
+    crm:P1i_identifies <https://gerdracor.clscor.io/entity/actor/wdQ34628> ;
+    crm:P2_has_type <https://dracor.clscor.io/entity/type/appellation/shortname> .
+
+<https://gerdracor.clscor.io/entity/actor/wdQ34628/id/wikidata> a crm:E42_Identifier ;
+    rdfs:label "ID of type wikidata of Lessing" ;
+    crm:P190_has_symbolic_content "Q34628" ;
+    crm:P1i_identifies <https://gerdracor.clscor.io/entity/actor/wdQ34628> ;
+    crm:P2_has_type <https://core.clscor.io/entity/type/identifier/wikidata> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088/digital_source> a lrm:F3_Manifestation ;
+    rdfs:label "Emilia Galotti [Digital Source]" ;
+    crm:P1_is_identified_by <https://gerdracor.clscor.io/entity/doc/ger000088/digital_source/id/url> ;
+    lrm:R4_embodies <https://gerdracor.clscor.io/entity/doc/ger000088/expession/1> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088/expession/1/creation> a lrm:F28_Expression_Creation ;
+    rdfs:label "Emilia Galotti [Expression Creation]" ;
+    crm:P14_carried_out_by <https://gerdracor.clscor.io/entity/actor/wdQ34628> ;
+    lrm:R17_created <https://gerdracor.clscor.io/entity/doc/ger000088/expession/1> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088/id/dracor> a crm:E42_Identifier ;
+    rdfs:label "Emilia Galotti [DraCor ID]" ;
+    crm:P190_has_symbolic_content "ger000088" ;
+    crm:P1i_identifies <https://gerdracor.clscor.io/entity/doc/ger000088> ;
+    crm:P2_has_type <https://dracor.clscor.io/entity/type/identifier/dracor_id> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088/id/playname> a crm:E42_Identifier ;
+    rdfs:label "Emilia Galotti [DraCor playname]" ;
+    crm:P190_has_symbolic_content "lessing-emilia-galotti" ;
+    crm:P1i_identifies <https://gerdracor.clscor.io/entity/doc/ger000088> ;
+    crm:P2_has_type <https://dracor.clscor.io/entity/type/identifier/playname> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088/work> a lrm:F1_Work ;
+    rdfs:label "Emilia Galotti [Work]" ;
+    lrm:R16i_was_created_by <https://gerdracor.clscor.io/entity/doc/ger000088/work/creation> ;
+    lrm:R3_is_realised_in <https://gerdracor.clscor.io/entity/doc/ger000088/expession/1> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088/work/creation> a lrm:F27_Work_Creation ;
+    rdfs:label "Emilia Galotti [Work Creation]" ;
+    crm:P14_carried_out_by <https://gerdracor.clscor.io/entity/actor/wdQ34628> ;
+    lrm:R16_created <https://gerdracor.clscor.io/entity/doc/ger000088/work> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088> a cls:X2_Corpus_Document ;
+    rdfs:label "Emilia Galotti [Document]" ;
+    crm:P1_is_identified_by <https://gerdracor.clscor.io/entity/doc/ger000088/id/dracor>,
+        <https://gerdracor.clscor.io/entity/doc/ger000088/id/playname> ;
+    lrm:R4_embodies <https://gerdracor.clscor.io/entity/doc/ger000088/expession/1> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088/digital_source/id/url> a crm:E42_Identifier ;
+    rdfs:label "Emilia Galotti [Digital Source URL]",
+        "Textgrid ID of Digital Source of Emilia Galotti" ;
+    crm:P190_has_symbolic_content "<dlod.cidoc.E42Identifier object at 0xffff94580390>",
+        "http://www.textgridrep.org/textgrid:rksp.0" ;
+    crm:P1i_identifies <https://gerdracor.clscor.io/entity/doc/ger000088/digital_source> ;
+    crm:P2_has_type <https://core.clscor.io/entity/type/identifier/textgrid>,
+        <https://core.clscor.io/entity/type/identifier/url> .
+
+<https://gerdracor.clscor.io/entity/doc/ger000088/expession/1> a lrm:F2_Expression ;
+    rdfs:label "Emilia Galotti [Expression]" ;
+    lrm:R17i_was_created_by <https://gerdracor.clscor.io/entity/doc/ger000088/expession/1/creation> ;
+    lrm:R3i_realises <https://gerdracor.clscor.io/entity/doc/ger000088/work> ;
+    lrm:R4i_is_embodied_in <https://gerdracor.clscor.io/entity/doc/ger000088>,
+        <https://gerdracor.clscor.io/entity/doc/ger000088/digital_source> .
+
+<https://gerdracor.clscor.io/entity/actor/wdQ34628> a crm:E39_Actor ;
+    rdfs:label "Lessing [Actor]" ;
+    crm:P14i_performed <https://gerdracor.clscor.io/entity/doc/ger000088/expession/1/creation>,
+        <https://gerdracor.clscor.io/entity/doc/ger000088/work/creation> ;
+    crm:P1_is_identified_by <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/fullname>,
+        <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/name>,
+        <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/pnd>,
+        <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/shortname>,
+        <https://gerdracor.clscor.io/entity/actor/wdQ34628/id/wikidata> .

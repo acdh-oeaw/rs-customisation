@@ -1,0 +1,79 @@
+@prefix crm: <http://www.cidoc-crm.org/cidoc-crm/> .
+@prefix crmcls: <https://clsinfra.io/ontologies/CRMcls/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+crmcls:X1_Corpus a rdfs:Class ;
+    rdfs:label "Korpus"@de,
+        "Corpus"@en ;
+    rdfs:subClassOf crm:E73_Information_Object .
+
+crmcls:X2_Corpus_Document a rdfs:Class ;
+    rdfs:label "Korpus-Dokument"@de,
+        "Corpus Document"@en ;
+    rdfs:subClassOf crm:E33_Linguistic_Object,
+        crm:E73_Information_Object .
+
+crmcls:X3_Project a rdfs:Class ;
+    rdfs:label "(Forschungs-)Projekt"@de,
+        "(Research) Project"@en ;
+    rdfs:subClassOf crm:E74_Group .
+
+crmcls:Y1_has_subcorpus a rdf:Property ;
+    rdfs:label "hat als Subkorpus"@de,
+        "has subcorpus"@en ;
+    rdfs:comment "associates a corpus with its subcorpus"@en ;
+    rdfs:domain crmcls:X1_Corpus ;
+    rdfs:range crmcls:X1_Corpus ;
+    rdfs:subPropertyOf crm:P148_has_component .
+
+crmcls:Y1i_is_subcorpus_of a rdf:Property ;
+    rdfs:label "ist Subkorpus von"@de,
+        "is subcorpus of"@en ;
+    rdfs:comment "associates subcorpus with its super corpus"@en ;
+    rdfs:domain crmcls:X1_Corpus ;
+    rdfs:range crmcls:X1_Corpus ;
+    rdfs:subPropertyOf crm:P148i_is_component_of .
+
+crmcls:Y2_documents_should_have_language a rdf:Property ;
+    rdfs:label "sollte Dokumente in der Sprache enthalten"@de,
+        "documents should have language"@en ;
+    rdfs:comment "associates a corpus with the language of one or more Corpus Documents"@en ;
+    rdfs:domain crmcls:X1_Corpus ;
+    rdfs:range crm:E56_Language .
+
+crmcls:Y2i_should_be_language_of_documents a rdf:Property ;
+    rdfs:label "sollte die Sprache von Dokumenten im Korpus sein"@de,
+        "should be language of cocuments in corpus"@en ;
+    rdfs:comment "associates a language of one or more Corpus Documents with their corpus"@en ;
+    rdfs:domain crm:E56_Language ;
+    rdfs:range crmcls:X1_Corpus .
+
+crmcls:Y3_documents_should_cover a rdf:Property ;
+    rdfs:label "Dokumente sollten Zeitspanne abdecken"@de,
+        "documents should cover time-span"@en ;
+    rdfs:comment "associates a corpus with the time-span covers the datings of the documents"@en ;
+    rdfs:domain crmcls:X1_Corpus ;
+    rdfs:range crm:E52_Time-Span .
+
+crmcls:Y3i_should_be_covered_by_documents a rdf:Property ;
+    rdfs:label "sollte durch die Dokumente in einem Korpus abgedeckt werden"@de,
+        "should be covered by documents in corpus"@en ;
+    rdfs:comment "associates a time-span with the corpus presumeably containing documents that cover it"@en ;
+    rdfs:domain crm:E52_Time-Span ;
+    rdfs:range crmcls:X1_Corpus .
+
+crmcls:Y4_documents_should_have_type a rdf:Property ;
+    rdfs:label "Dokumente sollten als Typ haben"@de,
+        "documents should have type"@en ;
+    rdfs:comment "associates a corpus with the type of the documents"@en ;
+    rdfs:domain crmcls:X1_Corpus ;
+    rdfs:range crm:E55_Type .
+
+crmcls:Y4i_should_be_type_of_documents a rdf:Property ;
+    rdfs:label "sollte der Typ der Dokumente sein"@de,
+        "should be type of documents"@en ;
+    rdfs:comment "associates type with the corpus that is presumeably the type of one or more documents"@en ;
+    rdfs:domain crm:E55_Type ;
+    rdfs:range crmcls:X1_Corpus .
+

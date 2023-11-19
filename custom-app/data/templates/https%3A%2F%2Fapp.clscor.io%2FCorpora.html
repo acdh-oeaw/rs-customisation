@@ -26,7 +26,18 @@
     </div>
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
       <bs-tab event-key="0" class="tab-overview" title="Overview">
-        Fields and stats will be here
+        Fields and stats will be here<br/>
+ Overview of types:
+        <semantic-table 
+  query="
+        SELECT ?type (COUNT(?s) as ?cnt)
+WHERE {
+ ?s a ?type.
+}
+GROUP BY ?type
+ORDER BY  DESC ( ?cnt)"
+         >
+         </semantic-table>
       </bs-tab>
       
       <!-- Top Level Corpora -->

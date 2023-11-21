@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<title>SemanticKraus</title>
+	<meta name="description" content="SemanticKraus">
+	<!-- <link href="https://sk.acdh-dev.oeaw.ac.at" rel="canonical"> -->
+	<meta property="og:title" content="SemanticKraus">
+	<meta property="og:description" content="SemanticKraus">
+	<!-- <meta property="og:url" content="https://sk.acdh-dev.oeaw.ac.at"> -->
+	<meta property="og:site_name" content="SemanticKraus">
+	<meta property="og:locale" content="en">
+	<meta property="og:type" content="website">
+	<!-- <meta property="og:image" content="https://sk.acdh-dev.oeaw.ac.at/assets/opengraph-image.png"> -->
+	<meta name="twitter:card" content="summary_large_image">
+
+	<link rel="icon" href="/assets/favicon.ico" type="image/x-icon" sizes="32x32">
+	<link rel="icon" href="/assets/icon.svg" type="image/svg+xml" sizes="any">
+	<link rel="apple-touch-icon" href="/apple-icon.png" type="image/png" sizes="180x180">
+
+	<link href="/assets/styles.css" rel="stylesheet" type="text/css">
+
+	{{#each assetsMap.app.css}}
+	<link href="{{this}}" rel="stylesheet" type="text/css">
+	{{/each}}
+
+	{{{html-head}}}
+
+	{{#each assetsMap.app.js}}
+	<script defer type="text/javascript" src="{{this}}"></script>
+	{{/each}}
+
+	<!-- <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"SemanticKraus","description":"SemanticKraus"}</script> -->
+</head>
+
+<body>
+	<div id="application" class="rs-application"></div>
+</body>
+
+</html>

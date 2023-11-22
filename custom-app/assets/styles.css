@@ -74,7 +74,7 @@ body {
 }
 
 h1, h2, h3, h4 {
-	font-weight: 300;
+	font-weight: 300 !important;
 }
 
 /* Screenreader only */
@@ -92,7 +92,7 @@ h1, h2, h3, h4 {
 
 /* Client side transition overlay */
 .modal-backdrop {
-	background-color: var(--color-accent-50);
+	background-color: var(--color-accent-50) !important;
 }
 
 /* App header */
@@ -162,6 +162,10 @@ h1, h2, h3, h4 {
 	color: var(--color-neutral-200);
 	text-decoration: underline;
 	text-decoration-style: dotted;
+}
+
+.app-footer__bottom a:hover {
+	color: var(--color-neutral-100);
 }
 
 /* Breadcrumb navigation (built-in class) */
@@ -248,12 +252,12 @@ h1, h2, h3, h4 {
 }
 
 .page__body-navtabs li.active {
-	box-shadow: none;
+	box-shadow: none !important;
 	border-bottom: 1px solid var(--color-neutral-800);
 }
 
 .page__body-navtabs li.active:hover {
-	box-shadow: none;
+	box-shadow: none !important;
 	border-bottom: 1px solid var(--color-neutral-800);
 }
 

@@ -42,7 +42,7 @@
 
   --font-family-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
 
-  --container-width: 1024px;
+  --container-width: 1280px;
 }
 
 /* Globals */
@@ -69,6 +69,8 @@
 
   --color-success: var(--color-accent-500);
   --color-success-darker: var(--color-accent-600);
+
+  --color-km-bg: var(--color-neutral-50);
 
   --font-family: var(--font-family-body);
   --font-family-navbar-logo: var(--font-family-body);
@@ -193,9 +195,7 @@ h4 {
 /* .page-breadcrumb {} */
 
 /* Main page container (built-in class) */
-.page {
-	padding-inline: 32px;
-}
+/* .page {} */
 
 .content-container {
   margin-inline: auto;
@@ -294,7 +294,10 @@ h4 {
 
 /* Templates */
 .page__header {
-  padding: 32px 0;
+  padding: 32px 32px !important;
+  width: 100%;
+  max-width: calc(64px + var(--container-width));
+  margin-inline: auto;
 }
 
 .page__header-body h1 {
@@ -304,6 +307,12 @@ h4 {
 
 .page__header-body b {
   font-weight: 600;
+}
+
+.page__body-navtabs {
+  max-width: var(--container-width);
+  width: 100%;
+  margin-inline: auto;
 }
 
 .page__body-navtabs li.active {
@@ -329,4 +338,10 @@ h4 {
 /* Hide floating toolbar */
 .component-page-toolbar {
   display: none !important;
+}
+
+/* Knowledge map */
+.ontodia {
+  border: 1px solid var(--color-neutral-200);
+  margin-top: -2px;
 }

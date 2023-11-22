@@ -1,56 +1,13 @@
-<style>
-	table.table {
-	  min-width: 100%;
-	}
-
-	tr.standard-row {
-	  border: none!important;
-	}
-
-	.table > tbody + tbody {
-	  border: none!important;
-	}
-
-	.table > tbody + tbody > tr {
-	  border: none!important;
-	}
-
-
-	.res-label {
-	  float: left;
-	}
-
-	.res-comment {
-	  clear: left;
-	  margin-top: 10px;
-	  margin-bottom: 10px;
-	}
-
-	.res-img-thumbnail {
-	  display: inline;
-	  float: left;
-	  max-width: 50px;
-	  max-height: 50px;
-	  margin-right: 10px;
-	  margin-bottom: 5px;
-	}
-
-	input#semantic-search-text-input {
-	  margin-top: 10vh!important;
-	  width: 50vw;
-	  margin: 0 auto;
-	  text-align: center;
-	}
-  </style>
-
-<ol class="page-breadcrumb">
-<li>
-  <mp-link title="Home" url="/">Home</mp-link>
-</li>
-<li class="active">
-  <mp-label iri="[[this]]"></mp-label>
-</li>
-</ol>
+<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
+	<ol class="page-breadcrumb">
+		<li>
+			<mp-link title="Home" url="/">Home</mp-link>
+		</li>
+		<li class="active">
+			<mp-label iri="[[this]]"></mp-label>
+		</li>
+	</ol>
+</nav>
 
 <main class="page">
 <div class="page__hero">
@@ -58,70 +15,70 @@
   <h1>Semantic Kraus - Exploration platform</h1>
 </div>
 
-  <section class="page-section">
-	  <h2 class="page-section__title">Sample Entities:</h2>
-	  <div class="home-page__grid">
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb11988">
-				  Sample: Karl Kraus (LK)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb39331">
-				  Sample: Oscar Pollak (LK)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb61389">
-				  Sample: Newspaper Article (LK)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000">
-				  Sample: Court File (LK)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link
-				  uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000/passage/771"
-			  >
-				  Sample: Text Passage – Intertextual Relation  (LK)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link
-				  uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000/passage/854"
-			  >
-				  Sample: Text Passage – Person Mention  (LK)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/DWbibl00000">
-				  Sample: Dritte Walpurgisnacht (DW)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/DWpers0125">
-				  Sample: Alfred Kerr (DW)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/DWbibl00000/passage/2092">
-				  Sample: Text Passage – Person Mention (DW)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/p_46460">
-				  Sample: Imre Békessy (FA)
-			  </semantic-link>
-		  </div>
-		  <div class="home-page__grid-item">
-			  <semantic-link uri="https://sk.acdh.oeaw.ac.at/text10013">
-				  Sample: Das technoromantische Abenteuer (FA)
-			  </semantic-link>
-		  </div>
-	  </div>
-  </section>
+	<section class="page-section">
+		<h2 class="page-section__title">Sample Entities:</h2>
+		<div class="home-page__grid">
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb11988">
+					Sample:<br>Karl Kraus
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb39331">
+					Sample:<br>Oscar Pollak
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb61389">
+					Sample:<br>Newspaper Article
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000">
+					Sample:<br>Court File
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link
+					uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000/passage/771"
+				>
+					Sample:<br>Text Passage (Intertextual Relation)
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link
+					uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000/passage/854"
+				>
+					Sample:<br>Text Passage (Person Mention)
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/DWbibl00000">
+					Sample:<br>Dritte Walpurgisnacht
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/DWpers0125">
+					Sample:<br>Alfred Kerr
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/DWbibl00000/passage/2092">
+					Sample:<br>Text Passage (Person Mention)
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/p_46460">
+					Sample:<br>Imre Békessy
+				</semantic-link>
+			</div>
+			<div class="home-page__grid-item">
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/text10013">
+					Sample:<br>Das technoromantische Abenteuer
+				</semantic-link>
+			</div>
+		</div>
+	</section>
 
 <!--
   <h2>

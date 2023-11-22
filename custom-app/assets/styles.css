@@ -63,6 +63,9 @@
 
 	--color-primary-10: var(--color-accent-50);
 
+	--color-success: var(--color-accent-500);
+	--color-success-darker: var(--color-accent-600);
+
   --font-family: var(--font-family-body);
   --font-family-navbar-logo: var(--font-family-body);
   --font-size-body: 0.875rem;
@@ -245,6 +248,11 @@ h1, h2, h3, h4 {
 /* Templates */
 .page__header {
 	padding: 32px 32px;
+}
+
+.page__header-body h1 {
+	font-size: 2rem;
+	margin-bottom: 16px;
 }
 
 .page__header-body b {

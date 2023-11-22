@@ -182,6 +182,12 @@ h1, h2, h3, h4 {
 /* Main page container (built-in class) */
 /* .page {} */
 
+.content-container {
+	margin-inline: auto;
+	max-width: 1024px;
+	width: 100%;
+}
+
 .page__hero {
 	display: grid;
 	position: relative;
@@ -216,7 +222,8 @@ h1, h2, h3, h4 {
 	display: grid;
 	gap: 16px;
 	margin-inline: auto;
-	max-width: 1280px;
+	max-width: 1024px;
+	width: 100%;
 }
 
 .page-section__title {

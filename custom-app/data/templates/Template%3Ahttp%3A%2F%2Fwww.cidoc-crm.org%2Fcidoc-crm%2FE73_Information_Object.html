@@ -110,12 +110,10 @@ where {
           		<template id="template">
             		<div>
                   <semantic-link iri='{{case.value}}'>{{caseLabel.value}}</semantic-link>
-                  {{#if participant}}
                   <h6>Participants:</h6>
                   {{#each bindings}}
                   <div>{{participant.value}}</div><br/>
                   {{/each}}
-                  {{/if}}
             		</div>
           		</template>
             </semantic-query>

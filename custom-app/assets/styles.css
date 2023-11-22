@@ -193,7 +193,9 @@ h4 {
 /* .page-breadcrumb {} */
 
 /* Main page container (built-in class) */
-/* .page {} */
+.page {
+	padding-inline: 32px;
+}
 
 .content-container {
   margin-inline: auto;
@@ -292,7 +294,7 @@ h4 {
 
 /* Templates */
 .page__header {
-  padding: 32px 32px;
+  padding: 32px 0;
 }
 
 .page__header-body h1 {

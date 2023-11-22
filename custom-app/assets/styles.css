@@ -197,14 +197,22 @@ h1, h2, h3, h4 {
 }
 
 .page-breadcrumbs {
+	position: fixed;
+	left: 0;
+	right: 0;
+	z-index: 1000;
+	background-color: var(--color-breadcrumb-bg,#fff);
+	box-shadow: 0 0 6px var(--color-neutral-200);
+}
+
+.page-breadcrumb {
+	position: relative;
+	padding: 0 !important;
 	width: 100%;
 	max-width: var(--container-width);
 	margin-inline: auto;
 	padding: 10px 32px;
-}
-
-.page-breadcrumbs {
-	padding: 0 !important;
+	box-shadow: none !important;
 }
 
 .page__hero {

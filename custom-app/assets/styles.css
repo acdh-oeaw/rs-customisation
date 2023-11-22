@@ -31,6 +31,13 @@
   --rounded-lg: 8px;
   --rounded-full: 9999px;
 
+	--shadow-xs: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+	--shadow-sm: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+	--shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+	--shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+	--shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+	--shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+
   --font-family-body: Inter Variable, ui-sans-serif, system-ui, sans-serif;
 }
 
@@ -42,11 +49,20 @@
 	font-synthesis: none;
 }
 
-/* Overwrite researchspace custom properties */
+/*
+ * Overwrite researchspace custom properties
+ * @see https://github.com/researchspace/researchspace/blob/master/src/main/web/styling/_variables.scss
+ */
 :root {
   --color-body-bg: var(--color-neutral-50);
-  --color-dark: var(--color-neutral-800);
-  --color-dark--op75: var(--color-neutral-600);
+
+	--color-dark: var(--color-neutral-800);
+  --color-dark-darker: var(--color-neutral-950);
+  --color-dark--op50: var(--color-neutral-200);
+  --color-dark--op75: var(--color-neutral-500);
+
+	--color-primary-10: var(--color-accent-50);
+
   --font-family: var(--font-family-body);
   --font-family-navbar-logo: var(--font-family-body);
   --font-size-body: 0.875rem;
@@ -55,6 +71,10 @@
 /** Overwrite researchspace defaults */
 body {
   font-family: var(--font-family-body) !important;
+}
+
+h1, h2, h3, h4 {
+	font-weight: 300;
 }
 
 /* Screenreader only */
@@ -68,6 +88,11 @@ body {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border-width: 0;
+}
+
+/* Client side transition overlay */
+.modal-backdrop {
+	background-color: var(--color-accent-50);
 }
 
 /* App header */
@@ -103,6 +128,10 @@ body {
 }
 
 /* App footer */
+.app-footer__top {
+	margin-top: 32px;
+}
+
 .app-footer__top {
 	background-color: var(--color-neutral-100);
 	color: var(--color-neutral-800);
@@ -192,16 +221,42 @@ body {
 .home-page__grid-item {
 	border-radius: var(--rounded-md);
 	border: 1px solid var(--color-neutral-200);
-	display: grid;
-	place-items: center;
-	text-align: center;
-	transition: background-color 150ms ease-out;
+	transition: background-color border-color 150ms ease-out;
 }
 
 .home-page__grid-item a {
 	padding: 16px 12px;
+	display: grid;
+	place-items: center;
+	text-align: center;
+	width: 100%;
+	height: 100%;
 }
 
 .home-page__grid-item:hover {
 	background-color: var(--color-accent-50);
+	border-color: var(--color-accent-200);
+}
+
+/* Templates */
+.page__header {
+	padding: 32px 32px;
+}
+
+.page__header-body b {
+	font-weight: 600;
+}
+
+.page__body-navtabs li.active {
+	box-shadow: none;
+	border-bottom: 1px solid var(--color-neutral-800);
+}
+
+.page__body-navtabs li.active:hover {
+	box-shadow: none;
+	border-bottom: 1px solid var(--color-neutral-800);
+}
+
+.page__body-navtabs li.active a {
+	font-weight: 600;
 }

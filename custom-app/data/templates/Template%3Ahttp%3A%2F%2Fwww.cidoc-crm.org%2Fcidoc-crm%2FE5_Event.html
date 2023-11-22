@@ -1,0 +1,152 @@
+<!-- template (in by now very small parts) copied from X1_Corpus in CLScor
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+2023-04-21
+--> 
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri='[[this]]'></mp-label>
+  </li>
+</ol>
+
+<style>
+  #tabs .tab-ontodia {
+    margin: 0px;
+    padding: 2px 0px 0px;
+    width: 100%;
+    height: calc(100vh - 300px);
+  }
+</style>
+
+<div class="page">
+	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
+    <div class='page__header-navtabs'>
+      [[> Platform:DefaultResourceHeader]]
+    </div>
+  	
+    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+      
+    <!-- Event Data --> 
+      <bs-tab event-key="0" class="tab-overview" title="Event Data">
+				<!-- Approximate Duration-->
+        <semantic-query
+                        query='
+SELECT (MIN(?fileDate) AS ?start) (MAX(?fileDate) AS ?end)
+WHERE {
+    ?? crm:P12_occurred_in_the_presence_of ?file .
+  ?file crm:P94i_was_created_by / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?fileDate .
+    FILTER ( DATATYPE(?fileDate) = <http://www.w3.org/2001/XMLSchema#date> )
+    }
+'
+              template='{{> template}}'
+>
+          <template id="template">
+            {{#each bindings}}<div><h3>Estimated duration <small>(based on case file creation dates)</small></h3> {{start.value}} to {{end.value}}</div>{{/each}}
+          </template>
+</semantic-query>
+        <!-- Description -->
+        
+        <semantic-query
+                        query='
+SELECT ?comment ?graph WHERE 
+{GRAPH ?graph 
+       { ?? rdfs:comment ?comment . }
+}
+'
+                        template='{{> template}}'>
+          <template id="template">
+            {{#each bindings}}<h3>Case Description <small>(from {{graph.value}}</small></h3>
+            <div>{{comment.value}}</div>{{/each}}
+          </template>
+</semantic-query>
+        
+        <!-- Participants -->
+        
+        <semantic-table
+            query='
+            SELECT ?graph ?participant ?partType WHERE { 
+                        GRAPH ?graph {
+              ?? crm:P10i_contains ?participation .
+              ?participation crm:P14_carried_out_by ?participant .
+              OPTIONAL { ?participation crm:P2_has_type ?partType .}
+                        }
+            }
+            '
+                         column-configuration='[
+    {"displayName": "Participants", "variableName": "participant" },
+    {"displayName": " ", "variableName": "?partType"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+  options='{"showFilter": false}'>
+        </semantic-table>
+        <!-- Files involved -->
+        <semantic-table
+                        query='
+						SELECT ?file ?graph WHERE { 
+              GRAPH ?graph {
+            ?file crm:P12i_was_present_at ?? .
+                }
+            }
+						'
+                        column-configuration='[
+    {"displayName": "Files Involved", "variableName": "file" },
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+                        >
+          
+          </semantic-table>
+        </bs-tab>
+        <!-- Case timeline -->
+      <bs-tab event-key="2" title="Case Timeline">
+        <semantic-timeline query="
+                          SELECT DISTINCT ?event ?subject ?start ?end ?file
+  WHERE {
+		?? crm:P12_occurred_in_the_presence_of ?file .
+  	?file crm:P94i_was_created_by ?creation ;
+                                  rdfs:label ?subject .
+      ?creation crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start .
+                          OPTIONAL {?creation crm:P4_has_time-span / crm:P82b_end_of_the_end ?end .
+                            FILTER ( ?end != ?start )}
+    
+  }
+"
+                   tuple-template="{{> template}}" 
+                   tuple-template-height="42">
+            <template id="template">
+                <semantic-link iri={{file.value}}><b>{{subject.value}}</b></semantic-link>
+                <div>{{start.value}}{{#if end}}–{{end.value}}{{/if}}</div>
+            </template>
+          </semantic-timeline>
+        </bs-tab>
+
+
+        
+        
+        
+
+  
+      <!-- Source -->
+      <bs-tab event-key="1" title="Source">
+        [[> Platform:SourceStatements]]
+      </bs-tab>
+      
+      <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
+        <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
+      </bs-tab>
+      
+    
+    </bs-tabs>
+  
+  [[else]]
+  <div class='page__body'>
+    <p>
+      It seems that no entity with IRI <code>"[[this]]"</code> in any subject, predicate or object position is known in the knowledge graph. Also no static application page with this identifier can be found.
+    </p>
+    <p>
+      Click on the edit button (<i class="fa fa-pencil"></i>) in the top right of this page (<i>only visibile if the respective ACL permissions are being granted to you</i>) to create a new, static application page with this identifier.
+    </p>
+  </div>
+  [[/if]]
+</div>

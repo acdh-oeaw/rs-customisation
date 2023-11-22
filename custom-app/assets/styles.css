@@ -196,11 +196,15 @@ h1, h2, h3, h4 {
 	width: 100%;
 }
 
-.page-breadcrumb {
+.page-breadcrumbs {
 	width: 100%;
 	max-width: var(--container-width);
 	margin-inline: auto;
 	padding: 10px 32px;
+}
+
+.page-breadcrumbs {
+	padding: 0 !important;
 }
 
 .page__hero {

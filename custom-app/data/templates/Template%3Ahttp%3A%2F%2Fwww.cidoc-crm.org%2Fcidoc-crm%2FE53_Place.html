@@ -1,0 +1,157 @@
+<!-- template (in by now very small parts) copied from X1_Corpus in CLScor
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+2023-04-21
+--> 
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri='[[this]]'></mp-label>
+  </li>
+</ol>
+
+<style>
+  #tabs .tab-ontodia {
+    margin: 0px;
+    padding: 2px 0px 0px;
+    width: 100%;
+    height: calc(100vh - 300px);
+  }
+</style>
+
+<div class="page">
+	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
+    <div class='page__header-navtabs'>
+      [[> Platform:DefaultResourceHeader]]
+    </div>
+  	
+    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+      
+    <!-- Place Data --> 
+      <bs-tab event-key="0" class="tab-overview" title="Place Data">
+				<!-- Place Names -->
+        <semantic-table
+            query='
+            SELECT DISTINCT ?graph ?name WHERE { 
+                        GRAPH ?graph {
+                          ?? (owl:sameAs | ^owl:sameAs)* ?place .
+                          ?place crm:P1_is_identified_by ?name .
+                          ?name a crm:E33_E41_Linguistic_Appellation .
+                          
+              }
+              }
+            '
+                         column-configuration='[
+                                               {"displayName": "Place Name", "variableName": "name" },
+                                               {"displayName": "Name Type(s)", "cellTemplate": "{{> nameType}}"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+  options='{"showFilter": false}'>
+          <template id="nameType">
+            <semantic-query
+                            query='
+SELECT DISTINCT ?nameType WHERE {
+<{{name.value}}> crm:P2_has_type ?nameType . }
+'
+                            template='{{> template}}'
+                            >
+              <template id="template">
+                {{#each bindings}}<div>{{nameType.value}}</div>{{/each}}
+              </template>
+              </semantic-query>
+          </template>
+        </semantic-table>
+        
+        <!-- Witnessed Events -->
+        
+
+        <semantic-table
+            query='
+            SELECT DISTINCT ?graph ?event ?timeSpan WHERE { 
+                        GRAPH ?graph {
+                          ?? (owl:sameAs | ^owl:sameAs)* ?place .
+                          ?place crm:P7i_witnessed ?event .
+                          OPTIONAL {
+                            ?event crm:P4_has_time-span ?timeSpan .
+                            }
+              }
+              }
+            '
+                         column-configuration='[
+                                               {"displayName": "Events Witnessed", "variableName": "event" },
+																								{"displayName": "Date", "variableName": "timeSpan"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+>
+          </semantic-table>
+
+        </bs-tab>
+      
+    <bs-tab title="Entity IDs" event-key="10">
+        <semantic-table 
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+SELECT ?place ?id ?idValue ?idURL ?idType ?graph
+WHERE {
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?place .
+    ?place crm:P1_is_identified_by ?id .
+    ?id rdf:value ?idValue .
+        OPTIONAL { 
+            FILTER (CONTAINS(STR(?idValue), 'http'))
+            BIND(?idValue AS ?idURL)
+        }
+    ?id rdf:type crm:E42_Identifier .
+    optional {
+      #type
+      ?id crm:P2_has_type ?idType .
+        }
+      }
+    }
+         "
+  column-configuration='[
+    {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
+    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+>
+
+<template id="idValue">
+  {{#if idURL}}
+  <a href="{{{idURL.value}}}">{{idValue.value}}</a>
+  {{else}}
+  <div>{{idValue.value}}</div>
+  {{/if}}
+</template>
+
+</semantic-table>
+  </bs-tab>
+      
+      
+      <!-- Source -->
+      <bs-tab event-key="1" title="Source">
+        [[> Platform:SourceStatements]]
+      </bs-tab>
+      <!-- Ontodia -->
+      <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
+        <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
+      </bs-tab>
+      
+    </bs-tabs>
+  
+  [[else]]
+  <div class='page__body'>
+    <p>
+      It seems that no entity with IRI <code>"[[this]]"</code> in any subject, predicate or object position is known in the knowledge graph. Also no static application page with this identifier can be found.
+    </p>
+    <p>
+      Click on the edit button (<i class="fa fa-pencil"></i>) in the top right of this page (<i>only visibile if the respective ACL permissions are being granted to you</i>) to create a new, static application page with this identifier.
+    </p>
+  </div>
+  [[/if]]
+</div>

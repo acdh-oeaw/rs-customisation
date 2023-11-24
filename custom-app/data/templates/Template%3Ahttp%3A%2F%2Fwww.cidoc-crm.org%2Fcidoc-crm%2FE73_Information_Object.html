@@ -110,7 +110,7 @@ where {
                   <semantic-link iri='{{case.value}}'>{{caseLabel.value}}</semantic-link>
                   <h6>Participants:</h6>                 
                   {{#each bindings}}
-                  <div>{{participant.value}}</div><br/>
+                  <semantic-link iri={{participant.value}}></semantic-link><br/>
                   {{/each}}
             		</div>
           		</template>

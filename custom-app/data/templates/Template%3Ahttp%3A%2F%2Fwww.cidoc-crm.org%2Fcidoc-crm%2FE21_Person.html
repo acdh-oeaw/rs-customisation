@@ -368,6 +368,8 @@ where {
   ]'
                         >
                       <template id="refText">
+                        <details>
+                          <summary>Click for more information</summary>
                         <semantic-table
                           query="SELECT DISTINCT ?text WHERE {
                             ?textCreation crm:P14_carried_out_by  <{{person.value}}> ;
@@ -387,6 +389,7 @@ where {
                           >
                           
                         </semantic-table>
+                        </details>
                       </template>
                     </semantic-table>
         [[/if]]
@@ -412,6 +415,8 @@ where {
   ]'
                         >
           <template id="refText">
+            <details>
+                          <summary>Click for more information</summary>
             <semantic-table
                             query="SELECT DISTINCT ?refToText ?source
                                    WHERE {
@@ -431,6 +436,7 @@ where {
                                                   {"cellTemplate": "{{#if source}}<div>Noted by: {{source.value}}</div>{{/if}}"}
                                                   ]'>
             </semantic-table>
+            </details>
           </template>
         </semantic-table>
         [[/if]]

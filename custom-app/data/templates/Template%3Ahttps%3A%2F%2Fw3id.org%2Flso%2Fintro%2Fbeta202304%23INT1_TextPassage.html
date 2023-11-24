@@ -88,23 +88,23 @@ WHERE {
             {{#if author}}<semantic-link uri={{author.value}}>{{author.value}}</semantic-link>: {{/if}}
             <semantic-link uri={{text.value}}>{{#if subtitleValue}}{{titleValue.value}}. {{subtitleValue.value}}{{else}}{{titleValue.value}}{{/if}}</semantic-link>
             {{#if location}}
+                {{#if performanceDate}}, 
+                  {{#if creationDate}}created {{creationDate.value}}, {{/if}}
+                  first performed / recited {{performanceDate.value}}
+                {{else}}, 
+                  {{#if creationDate}}created {{creationDate.value}}{{else}}{{/if}}
+                {{/if}}
+              {{#if locationURL}}, 
+              	<semantic-link uri={{locationURL.value}}>{{location.value}}</semantic-link>.
+              {{else}},
+								{{location.value}}.
+            {{/if}}
+            {{else}}
               {{#if performanceDate}}, 
                 {{#if creationDate}}created {{creationDate.value}}, {{/if}}
                 first performed / recited {{performanceDate.value}}
                 {{else}}, 
-                {{#if creationDate}}created {{creationDate.value}}{{else}}, {{/if}}
-              {{/if}}
-            {{#if locationURL}}, 
-            <semantic-link uri={{locationURL.value}}>{{location.value}}</semantic-link>.
-            {{else}}
-            , {{location.value}}.
-            {{/if}}
-            {{else}}
-            {{#if performanceDate}}, 
-                {{#if creationDate}}created {{creationDate.value}}, {{/if}}
-                first performed / recited {{performanceDate.value}}
-                {{else}}, 
-                {{#if creationDate}}created {{creationDate.value}}{{else}}, {{/if}}
+                  {{#if creationDate}}created {{creationDate.value}}{{/if}}
               {{/if}}
             {{/if}}
           </template>
@@ -174,8 +174,8 @@ GRAPH ?graph {
                         options='{"showFilter": false}'
                         >
           <template id="publication">{{#if publication}}<semantic-link uri={{publication.value}}>{{publication.value}}{{#if publDate}} ({{publDate.value}}){{/if}}{{/if}}</semantic-link></template>
-          <template id="segLocation">{{#if segLocation}}{{segLocation.value}}{{/if}}</template>
-          <template id="URL">{{#if segURL}}<a href="{{segURL.value}}">{{segURL.value}}</a>{{/if}}</template>
+          <template id="segLocation">{{segLocation.value}}</template>
+          <template id="URL"><a href="{{segURL.value}}">{{segURL.value}}</a></template>
         </semantic-table>
 				
         [[#if (ask "ASK {SELECT ?id WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?passage . ?passage crm:P1_is_identified_by ?id .}  LIMIT 1 }")]]<h3>Identifiers</h3>

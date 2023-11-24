@@ -50,9 +50,9 @@ WHERE {
   GRAPH ?graph {
    ?? (owl:sameAs | ^owl:sameAs)* ?passage .
       ?text intro:R10_has_Text_Passage ?passage .
-      OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text . }
+      OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text . 
       OPTIONAL { ?textCreation  crm:P4_has_time-span / rdfs:label ?creationDate . }
-      OPTIONAL { ?textCreation crm:P14_carried_out_by ?author . } }
+      OPTIONAL { ?textCreation crm:P14_carried_out_by ?author . } }}
       OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span / rdfs:label ?performanceDate .}
 			OPTIONAL { ?passage intro:R41_has_location ?location . FILTER (!REGEX(?location, "http")) . }
   		OPTIONAL { ?passage intro:R41_has_location ?locationURL . FILTER (REGEX(?location, "http")) . } 

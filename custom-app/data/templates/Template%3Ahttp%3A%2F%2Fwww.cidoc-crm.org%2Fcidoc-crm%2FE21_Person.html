@@ -23,7 +23,516 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 
 <div class="page">
 	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
+    
+  [[#if (ask "ASK { {SELECT (COUNT(*) AS ?count) WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person ?p ?o . } } }  FILTER (?count > 9999)}")]]
+  <div class='page__body'>
+    
     <div class='page__header-navtabs'>
+      [[> Platform:DefaultResourceHeader]]
+    </div>
+  	
+    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+     
+      <!-- Biographical Info -->
+  <bs-tab title="Biographical Information" event-key="9">
+    <!-- Names
+    CAUTION: persName - Type-Typo in query -->
+    <h4>Names</h4>
+    <semantic-table
+                    
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+
+SELECT ?appellation ?name ?graph
+WHERE {
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P1_is_identified_by ?appellation .
+    ?appellation a crm:E33_E41_Linguistic_Appellation ;
+                 rdf:value ?name.
+    
+  }
+  }
+         "
+         
+  column-configuration='[
+    {"variableName": "name"}, 
+    {"variableName": "appellation", "cellTemplate": "{{> type}}"},
+    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+  options='{"showFilter": false}'
+>
+      <template id="type">
+        <semantic-query
+                        query='
+SELECT ?type WHERE { GRAPH ?g {
+<{{appellation.value}}> crm:P2_has_type ?type .
+  FILTER ( ?type NOT IN ( <https://sk.acdh.oeaw.ac.at/types/person/persname/male>, <https://sk.acdh.oeaw.ac.at/types/person/persname/female> ))
+}
+}
+'
+                        template='{{> template}}'>
+          <template id="template">
+            {{#each bindings}}
+            <div><semantic-link iri={{type.value}}></semantic-link></div>
+            {{/each}}
+          </template>
+        </semantic-query>
+      </template>
+    
+    </semantic-table>
+    
+    <!-- Biographical Events -->
+    [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P98i_was_born | crm:P100i_died_in) ?event} LIMIT 1}}")]]
+    <h4>Biographical Events</h4>
+    <semantic-table
+                    
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+      
+select ?eventLabel ?eventDate ?eventPlace ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person (crm:P98i_was_born | crm:P100i_died_in) ?event .
+    ?event rdfs:label ?eventLabel .
+    optional {
+      #date
+      ?event crm:P4_has_time-span/rdfs:label ?eventDate .
+        }
+    optional {
+      #place
+      ?event crm:P7_took_place_at ?eventPlace .
+    }    
+  }
+}
+         "
+         
+  column-configuration='[
+    {"variableName": "eventLabel"}, 
+    {"variableName": "eventDate"}, 
+    {"variableName": "eventPlace"},  
+    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+  options='{"showFilter": false}'
+></semantic-table>
+[[/if]]
+
+[[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P14i_performed ?occ .  ?occ rdf:type frbroo:F51_Pursuit} LIMIT 1}}")]]            
+<h4>Professional Occupation</h4>
+    <semantic-table
+                    query='
+prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+      
+select ?person ?occupation ?time ?employer ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P14i_performed ?occ .
+    ?occ rdf:type frbroo:F51_Pursuit ;
+    rdfs:label ?occupation .
+    OPTIONAL
+    {
+      ?occ crm:P10_falls_within ?employer .
+    }
+    OPTIONAL
+    {
+    ?occ crm:P4_has_time-span/rdfs:label ?time .
+    }
+    
+  }
+}
+                          '
+                           
+                    column-configuration='[
+    {"variableName": "occupation"},
+		{"variableName": "time"},
+		{"cellTemplate": "{{#if employer}}<div>Employer: <semantic-link iri={{employer.value}}></semantic-link></div>{{/if}}"}, 
+    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+  options='{"showFilter": false}'
+></semantic-table>
+[[/if]]
+    
+[[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P143i_was_joined_by ?joining} LIMIT 1}}")]]    
+            <h4>Party Membership</h4>
+    <semantic-table
+                    query="
+
+select distinct ?party ?from ?to ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P143i_was_joined_by ?joining .
+		?joining crm:P144_joined_with ?party .
+
+    OPTIONAL
+    {
+      ?joining crm:P4_has_time-span/rdfs:label ?from .
+    }
+    OPTIONAL
+    {
+      ?person crm:P145i_left_by ?leaving .
+			?leaving crm:P146_separated_from ?party ;
+        crm:P4_has_time-span/rdfs:label ?to .
+    }
+    
+  }
+}
+                           "
+                           
+    column-configuration='[
+    {"variableName": "party"}, 
+		{"cellTemplate": "{{> fromto}}"}, 
+		{"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+  options='{"showFilter": false}'
+>
+      <template id="fromto">
+     
+        <div>{{#if from}}from {{from.value}} {{/if}}{{#if to}}to {{to.value}}{{/if}}</div>
+     
+      </template>
+        </semantic-table>
+[[else]]
+[[/if]]
+[[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person. ?legalAct crm:P14_carried_out_by ?person; crm:P10_falls_within ?legalCase . ?legalCase rdf:type crm:E5_Event .} LIMIT 1}}")]]  
+    <!-- legal cases -->
+        <h4>Legal Involvement</h4>
+    <semantic-table
+                    
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+      
+select ?legalCase ?legalActType ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    
+    ?legalAct crm:P14_carried_out_by ?person ;
+    	crm:P10_falls_within ?legalCase ;
+        crm:P2_has_type ?legalActType .
+    ?legalCase rdf:type crm:E5_Event .
+    
+  }
+}
+         "
+  column-configuration='[
+    {"variableName": "legalCase"},
+    {"cellTemplate": "<div>Involved as: <semantic-link iri={{legalActType.value}}></semantic-link></div>"},
+    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+></semantic-table>
+[[else]]
+[[/if]]
+
+    
+    </bs-tab>
+
+      <bs-tab event-key="19" title="Timeline">
+<semantic-timeline query="
+                          SELECT DISTINCT ?event ?subject ?start ?end
+  WHERE {
+    GRAPH ?g {
+      
+      ?? (owl:sameAs | ^owl:sameAs)* ?person .
+     
+      {
+        ?event ( crm:P100_was_death_of | crm:P98_brought_into_life ) ?person ;
+        rdfs:label ?subject .
+      }
+      UNION
+      { ?event crm:P14_carried_out_by ?person ;
+        rdfs:label ?subject .
+      }
+      UNION
+      {
+        ?event frbroo:R24_created /
+                 crm:P165_incorporates+ /
+                 frbroo:R17i_was_created_by /
+                 crm:P14_carried_out_by ?person ;
+                 rdfs:label ?subject .
+      }
+      
+      ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start .
+                          OPTIONAL {?event crm:P4_has_time-span / crm:P82b_end_of_the_end ?end .
+                            FILTER ( ?end != ?start )}
+    }
+  }
+
+"
+                   tuple-template="{{> template}}" 
+                   tuple-template-height="42">
+            <template id="template">
+                <semantic-link iri={{event.value}}><b>{{subject.value}}</b></semantic-link>
+                <div>{{start.value}}</div>
+            </template>
+          </semantic-timeline>
+
+      </bs-tab>
+        
+      
+      <!-- Works -->
+      [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) ?text . }} LIMIT 1 }")]]
+      <bs-tab event-key="17" title="Wrote">
+        
+        <h3>Authored Texts</h3>
+        <semantic-table
+                        query="
+                        SELECT DISTINCT ?text ?graph
+                        WHERE {
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P14i_performed ?textCreation .
+		?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+  }
+}
+"
+                        column-configuration='[
+    {"variableName": "text", "displayName": "Text"}, 
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+                        >
+        </semantic-table>
+        
+        
+        
+        <!-- Referred-to Texts eliminated --> 
+        
+        </bs-tab>
+      [[/if]]
+      <!-- Mentions: -->
+      <bs-tab event-key="3" title="Mentioned and Was Mentioned">
+        
+        [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) / intro:R10_has_Text_Passage / intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference . }} LIMIT 1 }")]]
+        
+                    <semantic-table
+                        query="select distinct ?text ?refPerson
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?textCreation crm:P14_carried_out_by  ?person ;
+    (crm:P94_has_created | frbroo:R17_created) ?text .
+		?text intro:R10_has_Text_Passage /
+    intro:R18_shows_actualization / 
+    intro:R17_actualizes_feature / 
+    crm:P67_refers_to ?refPerson .
+}
+}
+                               "
+                        column-configuration='[
+    {"variableName": "refPerson", "displayName": "Mentioned Person"}, 
+    {"variableName": "text", "displayName": "Text"}
+  ]'>
+                    </semantic-table>
+        [[/if]]
+      
+        <semantic-table
+                        query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix intro: <https://w3id.org/lso/intro/beta202304#>                               
+                               
+SELECT DISTINCT ?author ?text ?issue ?graph
+WHERE {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P67i_is_referred_to_by / intro:R17_feature_actualized_in / intro:R18_actualization_found_on /
+             intro:R10_is_Text_Passage_of ?text .
+    OPTIONAL { 
+      ?text (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author
+  }
+    }
+  }
+                               "
+                        column-configuration=
+                        
+                        '[
+                        {"displayName": "Was Mentioned in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+                        
+                        ></semantic-table>
+        
+    <!-- Quoted in Text eliminated -->
+
+        
+        
+      </bs-tab>
+      
+      <bs-tab title="Mention Chart" event-key="27">
+        <!-- MENTION CHART -->
+        <h3>Mention Chart</h3>
+        <semantic-chart
+            type='bar'
+            query='
+              SELECT distinct ?year (COUNT(distinct ?faMention) as ?faMentionSum) (COUNT(distinct ?lkMention) as ?lkMentionSum)
+WHERE {
+  OPTIONAL { SELECT ?year ?lkMention WHERE {
+  graph <https://sk.acdh.oeaw.ac.at/project/legal-kraus> {
+    
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?lkMention crm:P67_refers_to ?person .
+    
+    ?lkMention intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of ?text .
+    
+    
+    ?text a crm:E73_Information_Object ;
+                crm:P94i_was_created_by / crm:P4_has_time-span ?timeSpan .
+    
+    
+    ?timeSpan crm:P82a_begin_of_the_begin ?date .
+    
+    BIND ( YEAR(?date) AS ?year )
+  }
+  }
+}
+  OPTIONAL { 
+    SELECT ?year ?faMention WHERE {
+  graph <https://sk.acdh.oeaw.ac.at/project/fackel> {
+    
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?faMention crm:P67_refers_to ?person .
+    
+    ?faMention intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of ?text .
+    
+    # publYear of F24
+    ?text crm:P165i_is_incorporated_in* / frbroo:R24i_was_created_through / crm:P4_has_time-span ?timeSpan .
+    
+    ?timeSpan crm:P82a_begin_of_the_begin ?date .
+    
+    BIND ( YEAR(?date) AS ?year )
+  }
+  }
+  }
+}
+              GROUP BY ?year
+              ORDER BY ?year' 
+sets='[
+            {"dataSetName": "Die Fackel", "category": "year", "value": "faMentionSum"},
+            {"dataSetName": "Legal Files", "category": "year", "value": "lkMentionSum"}
+          ]'
+          styles='[{
+            "provider": "chartjs",
+            "style": {
+              "options": {
+                "scales": {
+                  "xAxes": [{
+                    "stacked": true
+                  }],
+                  "yAxes": [{
+                    "stacked": true
+                  }]
+                }
+              },
+             "data": {
+                "datasets": [
+                 { "backgroundColor": "rgba(87, 199, 212, 0.7)",
+                   "pointBackgroundColor": "rgb(87, 199, 212)",
+                   "pointHoverBackgroundColor": "rgb(87, 199, 212)",
+                   "borderColor": "rgb(87, 199, 212)",
+                   "pointBorderColor": "#fff",
+                   "pointHoverBorderColor": "rgb(87, 199, 212)"
+                 },
+                 { "backgroundColor": "rgba(87, 170, 212, 0.7)",
+                   "pointBackgroundColor": "rgb(87, 170, 212)",
+                   "pointHoverBackgroundColor": "rgb(87, 170, 212)",
+                   "borderColor": "rgb(87, 170, 212)",
+                   "pointBorderColor": "#fff",
+                   "pointHoverBorderColor": "rgb(87, 170, 212)"
+                 }
+                ]
+              }
+            }
+          }]'
+>
+          </semantic-chart>
+        </bs-tab>
+  
+      
+  <!-- IDs, Links - Table -->
+  <bs-tab title="Entity IDs" event-key="10">
+        <semantic-table 
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+SELECT ?person ?id ?idValue ?idURL ?idType ?graph
+WHERE {
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P1_is_identified_by ?id .
+    ?id rdf:value ?idValue .
+        OPTIONAL { 
+            FILTER (CONTAINS(STR(?idValue), 'http'))
+            BIND(?idValue AS ?idURL)
+        }
+    ?id rdf:type crm:E42_Identifier .
+    optional {
+      #type
+      ?id crm:P2_has_type ?idType .
+        }
+      }
+    }
+         "
+  column-configuration='[
+    {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
+    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+>
+
+<template id="idValue">
+  {{#if idURL}}
+  <a href="{{{idURL.value}}}">{{idValue.value}}</a>
+  {{else}}
+  <div>{{idValue.value}}</div>
+  {{/if}}
+</template>
+
+</semantic-table>
+  </bs-tab>
+  
+      <!-- Source -->
+      <bs-tab event-key="6" title="Source">
+        [[> Platform:SourceStatements]]
+      </bs-tab>
+      
+      <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
+        <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
+      </bs-tab>
+      
+    
+    </bs-tabs>
+    
+    
+  </div>
+    
+  [[else]]
+  
+  <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
   	
@@ -655,7 +1164,7 @@ WHERE {
       
     
     </bs-tabs>
-  
+  [[/if]]
   [[else]]
   <div class='page__body'>
     <p>

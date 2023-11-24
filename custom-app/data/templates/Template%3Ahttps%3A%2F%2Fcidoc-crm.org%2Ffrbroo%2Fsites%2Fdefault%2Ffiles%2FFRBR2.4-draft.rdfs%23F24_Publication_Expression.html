@@ -1,17 +1,15 @@
 <!-- template (in by now very small parts) copied from X1_Corpus in CLScor
-https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
 2023-04-21
--->
-<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
-	<ol class="page-breadcrumb">
-		<li>
-			<mp-link title="Home" url="/">Home</mp-link>
-		</li>
-		<li class="active">
-			<mp-label iri="[[this]]"></mp-label>
-		</li>
-	</ol>
-</nav>
+--> 
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri='[[this]]'></mp-label>
+  </li>
+</ol>
 
 <style>
   #tabs .tab-ontodia {
@@ -24,82 +22,227 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 
 <div class="page">
 	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
-    <div class='page__header'>
+    <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
-
+  	
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-
-
+      
+     
       <bs-tab event-key="2" title="Bibliographical Data">
+        [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?publ . ?publ ^frbroo:R5_has_component ?o}LIMIT 1}}")]]
+        
+        <!-- Issue -->
+        
+        <semantic-query
+                        query="
+                               select distinct  ?tMain ?tSub ?ni ?nv ?place ?date ?ed ?graph
+                               where {
+                               graph ?graph {
+                               ?? (owl:sameAs | ^owl:sameAs)* ?publ .
+                               ?publ crm:P1_is_identified_by ?app .
+                               ?app a crm:E33_E41_Linguistic_Appellation .
+                               OPTIONAL {
+                               ?app crm:P106_is_composed_of ?tMainO .
+                               ?tMainO crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/appellation/title/main> ;
+                               rdf:value ?tMain . }
+                               OPTIONAL {
+                               ?app crm:P106_is_composed_of ?tSubO .
+                               ?tSubO crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/appellation/title/sub> ;
+                               rdf:value ?tSub . }
+                               OPTIONAL {
+                               ?app crm:P106_is_composed_of ?niO .
+                               ?niO crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/appellation/num/issue> ;
+                               rdf:value ?ni . }
+                               OPTIONAL {
+                               ?app crm:P106_is_composed_of ?nvO .
+                               ?nvO crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/appellation/num/volume> ;
+                               rdf:value ?nv . }
+                               OPTIONAL {
+                               ?app crm:P106_is_composed_of ?placeO .
+                               ?placeO crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/appellation/place> ;
+                               rdf:value ?place . }
+                               OPTIONAL {
+                               ?app crm:P106_is_composed_of ?dateO .
+                               ?dateO crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/appellation/date> ;
+                               rdf:value ?date . }
+                               OPTIONAL {
+                               ?app crm:P106_is_composed_of ?edO .
+                               ?edO crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/appellation/ed> ;
+                               rdf:value ?ed . }
+  }
+}
+                               "
+                        template='{{> template}}'>
+          <template id="template">
+            {{#each bindings}}
+            <h3>{{tMain.value}}{{#if tSub}}. {{tSub.value}}{{/if}}{{#if place}}. {{place.value}}{{/if}}{{#if ni}}. {{ni.value}}{{/if}}{{#if nv}} ({{nv.value}}){{/if}}{{#if date}}, {{date.value}}{{/if}}{{#if ed}} ({{ed.value}}){{/if}} <small>From Graph: {{graph.value}}</small></h3>
+              {{/each}}
+          </template>
+          </semantic-query>
+        
+        <semantic-query
+                        query='
+                               select distinct  ?per ?graph
+                               where {
+                               graph ?graph {
+                               ?? (owl:sameAs | ^owl:sameAs)* ?publ .
+                               ?publ frbroo:R5i_is_component_of ?per .
+                               }
+                               }
+                               '
+                        template='{{> template}}'>
+          <template id="template">
+            {{#each bindings}}<h4>Part of Series / Periodical: <semantic-link iri={{per.value}}></semantic-link> <small>From Graph: {{graph.value}}</small></h4>{{/each}}
+          </template>
+          </semantic-query>
+        
         <semantic-table
                         query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-
-         select distinct  ?appComp ?publDate ?publPlace ?graph
+                               select distinct ?text ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?publ .
-	?publ frbroo:R24i_was_created_through ?publEvent ;
-		crm:P1_is_identified_by ?appComp .
-    ?appComp a crm:E33_E41_Linguistic_Appellation .
-
-    OPTIONAL {
-      ?publEvent crm:P7_took_place_at ?publPlace .
-    }
-    OPTIONAL {
-      ?publEvent crm:P4_has_time-span ?publDate .
-    }
-
+		?publ crm:P165_incorporates/crm:P165_incorporates+ ?text .
   }
 }
                                "
                         column-configuration='[
-    {"variableName": "appComp", "displayName": "Publication Title"},
-    {"variableName": "publDate", "displayName": "Publication Date"},
-    {"variableName": "publPlace", "displayName": "Publication Place"},
-    {"variableName": "graph", "displayName": "Source Graph"}
-
+		{"variableName": "text", "displayName": "Incorporated Texts"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    
   ]'
+    options='{"showFilter": false}'                    
+                        >
+          </semantic-table>
+        
+        [[else]]
+          [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?publ . ?publ frbroo:R5_has_component ?o}LIMIT 1}}")]]
 
+          <!-- periodical -->
+        <h3>[[this]]</h3>
+        <h4>Publication Tree:</h4>
+        <semantic-tree query="
+                              SELECT DISTINCT ?node ?parent
+WHERE {
+  ?parent frbroo:R5_has_component* / crm:P165_incorporates* / intro:R10_has_Text_Passage* ?? . 
+
+  ?parent (frbroo:R5_has_component / crm:P165_incorporates) | crm:P165_incorporates ?node .
+  
+  { ?parent a frbroo:F22_Self-Contained_Expression . }
+  UNION
+  { ?parent frbroo:R5_has_component ?issueF24 . }
+}
+
+                              "/>
+        
+          [[else]]
+					<!-- monograph publication -->
+					<h3>[[this]]</h3>
+        
+        <semantic-query
+                        query='
+                               select distinct ?publ ?date ?place ?graph
+                               where {
+                               graph ?graph {
+                               ?? (owl:sameAs | ^owl:sameAs)* ?publ .
+                               ?publ frbroo:R24i_was_created_through ?publEvent .
+                                 OPTIONAL { ?publEvent crm:P4_has_time-span ?date .}
+                                 OPTIONAL { ?publEvent crm:P7_took_place_at ?place .}
+                               }
+                               }
+                               '
+                        template='{{> template}}'>
+          <template id="template">
+            {{#each bindings}}<h4>{{#if date}}{{publ.value}} ({{#if place}}<semantic-link iri={{place.value}}></semantic-link>, {{/if}}{{date.value}}){{/if}} <small>From Graph: {{graph.value}}</small></h4>{{/each}}
+          </template>
+          </semantic-query>
+        
+        <semantic-table
+                        query="
+                               select distinct ?text ?graph
+where {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?publ .
+		?publ crm:P165_incorporates/crm:P165_incorporates+ ?text .
+  }
+}
+                               "
+                        column-configuration='[
+		{"variableName": "text", "displayName": "Incorporated Texts"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    
+  ]'
+    options='{"showFilter": false}'                    
                         >
           </semantic-table>
 
-        <h3>Publication Context</h3>
-        <semantic-tree query="
-                              prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+          [[/if]]
+
+        
+        [[/if]]
+        
+        
+        
+        
+      </bs-tab>
+  
+      <bs-tab title="Entity IDs" event-key="10">
+        <semantic-table 
+  query="
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+         
+SELECT ?entity ?id ?idValue ?idURL ?idType ?graph
+WHERE {
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?entity .
+    ?entity crm:P1_is_identified_by ?id .
+    ?id rdf:value ?idValue .
+        OPTIONAL { 
+            FILTER (CONTAINS(STR(?idValue), 'http'))
+            BIND(?idValue AS ?idURL)
+        }
+    ?id rdf:type crm:E42_Identifier .
+    optional {
+      #type
+      ?id crm:P2_has_type ?idType .
+        }
+      }
+    }
+         "
+  column-configuration='[
+    {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
+    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"variableName": "graph", "displayName": "Source Graph"}
+  ]'
+>
 
-select distinct ?node ?parent
-where {
-  ?parent frbroo:R5_has_component|intro:R25_has_segmemt|crm:P165_incorporates|intro:R10_has_Text_Passage ?node .
+<template id="idValue">
+  {{#if idURL}}
+  <a href="{{{idURL.value}}}">{{idValue.value}}</a>
+  {{else}}
+  <div>{{idValue.value}}</div>
+  {{/if}}
+</template>
 
-  {??  frbroo:R5_has_component*|intro:R25_has_segmemt*|crm:P165_incorporates*|(crm:P165_incorporates/intro:R10_has_Text_Passage)* ?node . }
-  UNION
-  { ?parent frbroo:R5_has_component*|intro:R25_has_segmemt*|crm:P165_incorporates*|(crm:P165_incorporates/intro:R10_has_Text_Passage)* ?? . }
-}
-                              "/>
-      </bs-tab>
-
+</semantic-table>
+  </bs-tab>
+      
       <!-- Source -->
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]
       </bs-tab>
-
+      
       <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
         <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
       </bs-tab>
-
-
+      
+    
     </bs-tabs>
-
+  
   [[else]]
   <div class='page__body'>
     <p>

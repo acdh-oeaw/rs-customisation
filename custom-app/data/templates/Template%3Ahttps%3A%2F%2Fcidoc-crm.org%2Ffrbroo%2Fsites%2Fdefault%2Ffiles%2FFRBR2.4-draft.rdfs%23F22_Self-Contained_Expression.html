@@ -99,7 +99,7 @@ where {
     # pagination
     ?text ^intro:R16_incorporates ?segment .
     ?segment a intro:INT16_Segment ;
-    <https://schema.org/pagination> ?pagination .
+     ( <https://schema.org/pagination> | intro:R41_has_location ) ?pagination .
                                }
   }
 }       

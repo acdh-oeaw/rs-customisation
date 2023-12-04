@@ -26,7 +26,12 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
       [[> Platform:DefaultResourceHeader]]
     </div>
   	
+  
+  
+  
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+      
+      [[#if (ask "ASK { SELECT * WHERE { ?? a <http://www.cidoc-crm.org/cidoc-crm/E73_Information_Object> . } LIMIT 1 }")]]
       
     <!-- Bibliographical Data --> 
       <bs-tab event-key="0" class="tab-overview" title="Bibliographical Data">
@@ -422,6 +427,8 @@ WHERE {
 
 </semantic-table>
   </bs-tab>
+      
+      [[/if]]
       
 
       <!-- Source -->

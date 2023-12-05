@@ -41,14 +41,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <semantic-table
                     
   query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-
-SELECT ?name
+SELECT DISTINCT ?name
 WHERE {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person crm:P1_is_identified_by ?appellation .
@@ -68,7 +61,7 @@ WHERE {
       <template id="type">
         <semantic-query
                         query='
-SELECT ?type WHERE  {
+SELECT DISTINCT ?type WHERE  {
   ?? (owl:sameAs | ^owl:sameAs)* ?person .
   ?person crm:P1_is_identified_by ?appellation .
     ?appellation rdf:value "{{name.value}}" .
@@ -90,18 +83,18 @@ SELECT ?type WHERE  {
     	<template id="graph">
         <semantic-query
                         query='
-SELECT ?graph WHERE { GRAPH ?graph {
+SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
 ?? (owl:sameAs | ^owl:sameAs)* ?person .
   ?person crm:P1_is_identified_by / rdf:value "{{name.value}}" .
 }}
 '
                         template='{{> template}}'>
           <template id="template">
-            <div>(From Graph(s): 
+            <div>Source Graph(s):
           {{#each bindings}}
-            <semantic-link iri={{graph.value}}></semantic-link>
+              <div><semantic-link iri={{graph.value}}></semantic-link></div>
             {{/each}}
-            )</div>
+            </div>
           </template>
         </semantic-query>
       </template>

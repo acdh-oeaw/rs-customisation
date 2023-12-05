@@ -48,7 +48,7 @@ prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.r
 prefix intro: <https://w3id.org/lso/intro/beta202304#>
 prefix owl: <http://www.w3.org/2002/07/owl#>
 
-SELECT ?appellation ?name ?person
+SELECT ?name
 WHERE {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person crm:P1_is_identified_by ?appellation .
@@ -60,7 +60,7 @@ WHERE {
          
   column-configuration='[
     {"variableName": "name"}, 
-    {"variableName": "appellation", "cellTemplate": "{{> type}}"},
+    {"cellTemplate": "{{> type}}"},
     {"cellTemplate": "{{> graph}}"}
   ]'
   options='{"showFilter": false}'
@@ -68,10 +68,15 @@ WHERE {
       <template id="type">
         <semantic-query
                         query='
-SELECT ?type WHERE { GRAPH ?g {
-<{{appellation.value}}> crm:P2_has_type ?type .
+SELECT ?type WHERE  {
+  ?? (owl:sameAs | ^owl:sameAs)* ?person .
+  ?person crm:P1_is_identified_by ?appellation .
+    ?appellation rdf:value "{{name.value}}" .
+
+  ?appellation crm:P2_has_type ?type .
+  
   FILTER ( ?type NOT IN ( <https://sk.acdh.oeaw.ac.at/types/person/persname/male>, <https://sk.acdh.oeaw.ac.at/types/person/persname/female> ))
-}
+
 }
 '
                         template='{{> template}}'>
@@ -86,7 +91,8 @@ SELECT ?type WHERE { GRAPH ?g {
         <semantic-query
                         query='
 SELECT ?graph WHERE { GRAPH ?graph {
-<{{person.value}}> crm:P1_is_identified_by / rdf:value "{{name.value}}" .
+?? (owl:sameAs | ^owl:sameAs)* ?person .
+  ?person crm:P1_is_identified_by / rdf:value "{{name.value}}" .
 }}
 '
                         template='{{> template}}'>

@@ -103,7 +103,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
     </semantic-table>
     
     <!-- Biographical Events -->
-    [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P98i_was_born | crm:P100i_died_in) ?event} LIMIT 1}}")]]
+   [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P98i_was_born | crm:P100i_died_in) ?event} LIMIT 1}}")]]
     <h4>Biographical Events</h4>
     <semantic-table
                     

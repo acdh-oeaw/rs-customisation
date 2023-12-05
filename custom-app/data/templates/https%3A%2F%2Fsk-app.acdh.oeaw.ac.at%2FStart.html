@@ -169,7 +169,7 @@
 		<semantic-table id='grid-result'
 				  query='SELECT DISTINCT ?subject (SAMPLE(?rawDesc) as ?description) WHERE {
 								OPTIONAL { ?subject rdfs:comment ?rawDesc . }
-						  } GROUP BY ?subject LIMIT [[#if searchLimit]][[searchLimit]][[else]]10[[/if]]'
+						  } GROUP BY ?subject LIMIT [[#if searchLimit]][[searchLimit]][[else]]100[[/if]]'
 
 				  number-of-displayed-rows='10'
 				  column-configuration='[

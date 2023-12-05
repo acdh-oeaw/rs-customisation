@@ -433,39 +433,35 @@ WHERE {
     <semantic-table
                     
   query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> 
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix frbroo: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-
-SELECT ?appellation ?name ?graph
+SELECT DISTINCT ?name
 WHERE {
-  GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
     ?person crm:P1_is_identified_by ?appellation .
     ?appellation a crm:E33_E41_Linguistic_Appellation ;
                  rdf:value ?name.
     
   }
-  }
          "
          
   column-configuration='[
     {"variableName": "name"}, 
-    {"variableName": "appellation", "cellTemplate": "{{> type}}"},
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"cellTemplate": "{{> type}}"},
+    {"cellTemplate": "{{> graph}}"}
   ]'
   options='{"showFilter": false}'
 >
       <template id="type">
         <semantic-query
                         query='
-SELECT ?type WHERE { GRAPH ?g {
-<{{appellation.value}}> crm:P2_has_type ?type .
+SELECT DISTINCT ?type WHERE  {
+  ?? (owl:sameAs | ^owl:sameAs)* ?person .
+  ?person crm:P1_is_identified_by ?appellation .
+    ?appellation rdf:value "{{name.value}}" .
+
+  ?appellation crm:P2_has_type ?type .
+  
   FILTER ( ?type NOT IN ( <https://sk.acdh.oeaw.ac.at/types/person/persname/male>, <https://sk.acdh.oeaw.ac.at/types/person/persname/female> ))
-}
+
 }
 '
                         template='{{> template}}'>
@@ -476,7 +472,26 @@ SELECT ?type WHERE { GRAPH ?g {
           </template>
         </semantic-query>
       </template>
-    
+    	<template id="graph">
+        <semantic-query
+                        query='
+SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
+?? (owl:sameAs | ^owl:sameAs)* ?person .
+  ?person crm:P1_is_identified_by / rdf:value "{{name.value}}" .
+}}
+'
+                        template='{{> template}}'>
+          <template id="template">
+            <div>Source Graph(s):
+          {{#each bindings}}
+              <div><semantic-link iri={{graph.value}}></semantic-link></div>
+            {{/each}}
+            </div>
+          </template>
+        </semantic-query>
+      </template>
+      
+      
     </semantic-table>
     
     <!-- Biographical Events -->

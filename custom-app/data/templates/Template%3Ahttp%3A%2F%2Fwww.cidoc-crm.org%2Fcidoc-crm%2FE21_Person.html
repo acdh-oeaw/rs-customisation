@@ -102,14 +102,14 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
       
     </semantic-table>
     
-    <!-- Biographical Events -->
+
    <!-- Biographical Events -->
     [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P98i_was_born | crm:P100i_died_in) ?event} LIMIT 1}}")]]
   
     <h4>Biographical Events</h4>
     <semantic-table              
 			query="
-          SELECT ?event
+          SELECT ?event ?person
           WHERE {
           { SELECT ?event WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P100i_died_in ?event . } LIMIT 1  }
         	UNION
@@ -130,7 +130,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                         query="
                                SELECT DISTINCT ?graph ?date
                                WHERE { GRAPH ?graph {
-                               <{{event.value}}> crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
+                               <{{person.value}}> (crm:P100i_died_in|crm:P98i_was_born|crm:P12i_was_present_at) / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
                                }}
                                "
                         template="{{> template}}">
@@ -144,7 +144,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                         query="
                                SELECT DISTINCT ?graph ?place
                                WHERE { GRAPH ?graph {
-                               <{{event.value}}> crm:P7_took_place_at ?place .
+                               <{{person.value}}> (crm:P100i_died_in|crm:P98i_was_born|crm:P12i_was_present_at) / crm:P7_took_place_at ?place .
                                }}
                                "
                         template="{{> template}}">
@@ -516,7 +516,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
     <h4>Biographical Events</h4>
     <semantic-table              
 			query="
-          SELECT ?event
+          SELECT ?event ?person
           WHERE {
           { SELECT ?event WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P100i_died_in ?event . } LIMIT 1  }
         	UNION
@@ -537,7 +537,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                         query="
                                SELECT DISTINCT ?graph ?date
                                WHERE { GRAPH ?graph {
-                               <{{event.value}}> crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
+                               <{{person.value}}> (crm:P100i_died_in|crm:P98i_was_born|crm:P12i_was_present_at) / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
                                }}
                                "
                         template="{{> template}}">
@@ -551,7 +551,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                         query="
                                SELECT DISTINCT ?graph ?place
                                WHERE { GRAPH ?graph {
-                               <{{event.value}}> crm:P7_took_place_at ?place .
+                               <{{person.value}}> (crm:P100i_died_in|crm:P98i_was_born|crm:P12i_was_present_at) / crm:P7_took_place_at ?place .
                                }}
                                "
                         template="{{> template}}">
@@ -561,9 +561,8 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
           </semantic-query>
       </template>
     </semantic-table>
-    
-    
-[[/if]]
+
+    [[/if]]
 
 [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P14i_performed ?occ .  ?occ rdf:type frbroo:F51_Pursuit} LIMIT 1}}")]]            
 <h4>Professional Occupation</h4>

@@ -103,43 +103,59 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
     </semantic-table>
     
     <!-- Biographical Events -->
-   [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P98i_was_born | crm:P100i_died_in) ?event} LIMIT 1}}")]]
+   <!-- Biographical Events -->
+    [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P98i_was_born | crm:P100i_died_in) ?event} LIMIT 1}}")]]
+  
     <h4>Biographical Events</h4>
-    <semantic-table
-                    
-  query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-         
-      
-select ?eventLabel ?eventDate ?eventPlace ?graph
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person (crm:P98i_was_born | crm:P100i_died_in) ?event .
-    ?event rdfs:label ?eventLabel .
-    optional {
-      #date
-      ?event crm:P4_has_time-span/rdfs:label ?eventDate .
-        }
-    optional {
-      #place
-      ?event crm:P7_took_place_at ?eventPlace .
-    }    
-  }
-}
-         "
+    <semantic-table              
+			query="
+          SELECT ?event
+          WHERE {
+          { SELECT ?event WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P100i_died_in ?event . } LIMIT 1  }
+        	UNION
+          { SELECT ?event WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P98i_was_born ?event . } LIMIT 1 }
+          UNION
+          { SELECT DISTINCT ?event ?type WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?? crm:P12i_was_present_at ?event. ?event crm:P2_has_type ?type . } }
+         }"
          
   column-configuration='[
-    {"variableName": "eventLabel"}, 
-    {"variableName": "eventDate"}, 
-    {"variableName": "eventPlace"},  
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"variableName": "event"}, 
+    {"cellTemplate": "{{> date}}"}, 
+    {"cellTemplate": "{{> place}}"}
   ]'
   options='{"showFilter": false}'
-></semantic-table>
+>
+      <template id="date">
+        <semantic-query
+                        query="
+                               SELECT DISTINCT ?graph ?date
+                               WHERE { GRAPH ?graph {
+                               <{{event.value}}> crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
+                               }}
+                               "
+                        template="{{> template}}">
+          <template id="template">
+            {{#each bindings}}<div>{{date.value}} (<semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+          </template>
+          </semantic-query>
+      </template>
+      <template id="place">
+        <semantic-query
+                        query="
+                               SELECT DISTINCT ?graph ?place
+                               WHERE { GRAPH ?graph {
+                               <{{event.value}}> crm:P7_took_place_at ?place .
+                               }}
+                               "
+                        template="{{> template}}">
+          <template id="template">
+            {{#each bindings}}<div><semantic-link iri={{place.value}}></semantic-link> (<semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+          </template>
+          </semantic-query>
+      </template>
+    </semantic-table>
+    
+    
 [[/if]]
 
 [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P14i_performed ?occ .  ?occ rdf:type frbroo:F51_Pursuit} LIMIT 1}}")]]            
@@ -496,42 +512,57 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
     
     <!-- Biographical Events -->
     [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P98i_was_born | crm:P100i_died_in) ?event} LIMIT 1}}")]]
+  
     <h4>Biographical Events</h4>
-    <semantic-table
-                    
-  query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-         
-      
-select ?eventLabel ?eventDate ?eventPlace ?graph
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person (crm:P98i_was_born | crm:P100i_died_in) ?event .
-    ?event rdfs:label ?eventLabel .
-    optional {
-      #date
-      ?event crm:P4_has_time-span/rdfs:label ?eventDate .
-        }
-    optional {
-      #place
-      ?event crm:P7_took_place_at ?eventPlace .
-    }    
-  }
-}
-         "
+    <semantic-table              
+			query="
+          SELECT ?event
+          WHERE {
+          { SELECT ?event WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P100i_died_in ?event . } LIMIT 1  }
+        	UNION
+          { SELECT ?event WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P98i_was_born ?event . } LIMIT 1 }
+          UNION
+          { SELECT DISTINCT ?event ?type WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?? crm:P12i_was_present_at ?event. ?event crm:P2_has_type ?type . } }
+         }"
          
   column-configuration='[
-    {"variableName": "eventLabel"}, 
-    {"variableName": "eventDate"}, 
-    {"variableName": "eventPlace"},  
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"variableName": "event"}, 
+    {"cellTemplate": "{{> date}}"}, 
+    {"cellTemplate": "{{> place}}"}
   ]'
   options='{"showFilter": false}'
-></semantic-table>
+>
+      <template id="date">
+        <semantic-query
+                        query="
+                               SELECT DISTINCT ?graph ?date
+                               WHERE { GRAPH ?graph {
+                               <{{event.value}}> crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
+                               }}
+                               "
+                        template="{{> template}}">
+          <template id="template">
+            {{#each bindings}}<div>{{date.value}} (<semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+          </template>
+          </semantic-query>
+      </template>
+      <template id="place">
+        <semantic-query
+                        query="
+                               SELECT DISTINCT ?graph ?place
+                               WHERE { GRAPH ?graph {
+                               <{{event.value}}> crm:P7_took_place_at ?place .
+                               }}
+                               "
+                        template="{{> template}}">
+          <template id="template">
+            {{#each bindings}}<div><semantic-link iri={{place.value}}></semantic-link> (<semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+          </template>
+          </semantic-query>
+      </template>
+    </semantic-table>
+    
+    
 [[/if]]
 
 [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P14i_performed ?occ .  ?occ rdf:type frbroo:F51_Pursuit} LIMIT 1}}")]]            

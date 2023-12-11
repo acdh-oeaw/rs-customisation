@@ -35,8 +35,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
           SELECT ?wording
           WHERE {
             GRAPH ?graph {
-             ?? (owl:sameAs | ^owl:sameAs)* ?passage .
-              ?passage intro:R44_has_wording ?wording . } } 
+              ?? intro:R44_has_wording ?wording . } } 
               '
               template='{{> template}}'
                         >
@@ -48,14 +47,13 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 SELECT DISTINCT ?text ?author ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate ?location ?locationURL
 WHERE {
   GRAPH ?graph {
-   ?? (owl:sameAs | ^owl:sameAs)* ?passage .
-      ?text intro:R10_has_Text_Passage ?passage .
+      ?text intro:R10_has_Text_Passage ?? .
       OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text . 
       OPTIONAL { ?textCreation  crm:P4_has_time-span / rdfs:label ?creationDate . }
       OPTIONAL { ?textCreation crm:P14_carried_out_by ?author . } }}
       OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span / rdfs:label ?performanceDate .}
-			OPTIONAL { ?passage intro:R41_has_location ?location . FILTER (!REGEX(?location, "http")) . }
-  		OPTIONAL { ?passage intro:R41_has_location ?locationURL . FILTER (REGEX(?location, "http")) . } 
+			OPTIONAL { ?? intro:R41_has_location ?location . FILTER (!CONTAINS(?location, "http")) . }
+  		OPTIONAL { ?? intro:R41_has_location ?locationURL . FILTER (CONTAINS(?location, "http")) . } 
                                
     # text title(s)
     ?text crm:P102_has_title ?title .
@@ -114,16 +112,15 @@ WHERE {
                         query='SELECT ?person ?targetPassage ?targetText ?refPassage ?refText ?graph
 WHERE {
 GRAPH ?graph {
-	  ?? (owl:sameAs | ^owl:sameAs)* ?passage .
-    OPTIONAL { ?passage ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?person .}
-    OPTIONAL { ?passage intro:R13_is_referring_entity ?relation .
+    OPTIONAL { ?? ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?person .}
+    OPTIONAL { ?? intro:R13_is_referring_entity ?relation .
       { ?relation intro:R12_has_referred_to_entity ?targetText .
       FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . } }
       UNION
       { ?relation intro:R12_has_referred_to_entity ?targetPassage .
       ?targetPassage a intro:INT1_TextPassage ;
                      ^intro:R10_has_Text_Passage ?targetText .}}
-      OPTIONAL { ?passage intro:R12_is_referred_to_entity ?relation2 .
+      OPTIONAL { ?? intro:R12_is_referred_to_entity ?relation2 .
         { ?relation2 intro:R13_has_referring_entity ?refText . 
         FILTER NOT EXISTS { ?refText a intro:INT1_TextPassage . } }
               UNION
@@ -154,16 +151,13 @@ GRAPH ?graph {
                         query='
 						SELECT ?segLocation ?segURL ?publication ?publDate ?graph
 						WHERE { GRAPH ?graph{
-            ?? (owl:sameAs | ^owl:sameAs)* ?passage .
-            
-            OPTIONAL {?passage intro:R16_is_incorporated_in ?seg . 
+              ?? intro:R16_is_incorporated_in ?seg . 
               OPTIONAL { ?seg intro:R41_has_location ?segLocation .
-              FILTER (!REGEX(?segLocation, "http")) . }
+              FILTER (!CONTAINS(?segLocation, "http")) . }
               OPTIONAL { ?seg intro:R41_has_location ?segURL .
-              FILTER (REGEX(?segURL, "http")) . }
+              FILTER (CONTAINS(?segURL, "http")) . }
               OPTIONAL { ?seg intro:R25_is_segment_of|crm:P128i_is_carried_by ?publication . } 
             }
-            }  
             }'
                         column-configuration='[
     {"displayName": "In Publication / on Carrier:", "cellTemplate": "{{> publication}}"},
@@ -178,14 +172,13 @@ GRAPH ?graph {
           <template id="URL"><a href="{{segURL.value}}">{{segURL.value}}</a></template>
         </semantic-table>
 				
-        [[#if (ask "ASK {SELECT ?id WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?passage . ?passage crm:P1_is_identified_by ?id .}  LIMIT 1 }")]]<h3>Identifiers</h3>
+        [[#if (ask "ASK {SELECT ?id WHERE { ?? crm:P1_is_identified_by ?id .}  LIMIT 1 }")]]<h3>Identifiers</h3>
 				<semantic-table 
 query='
-SELECT ?passage ?id ?idValue ?idURL ?idType ?graph
+SELECT ?id ?idValue ?idURL ?idType ?graph
 WHERE {
 GRAPH ?graph {
-?? (owl:sameAs | ^owl:sameAs)* ?passage .
-?passage crm:P1_is_identified_by ?id .
+?? crm:P1_is_identified_by ?id .
 ?id rdf:value ?idValue .
     OPTIONAL { 
         FILTER (CONTAINS(STR(?idValue), "http"))

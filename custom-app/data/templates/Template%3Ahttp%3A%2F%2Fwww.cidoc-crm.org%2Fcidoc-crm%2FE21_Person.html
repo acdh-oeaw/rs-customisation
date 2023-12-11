@@ -102,7 +102,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
       
     </semantic-table>
     
-    <!-- Biographical Events -->
+    
    <!-- Biographical Events -->
     [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P98i_was_born | crm:P100i_died_in) ?event} LIMIT 1}}")]]
   
@@ -130,9 +130,9 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                         query="
                                SELECT DISTINCT ?graph ?date
                                WHERE { GRAPH ?graph {
-                               { <{{person.value}}> (crm:P100i_died_in|crm:P98i_was_born) ?event. ?event a <{{eventType.value}}> . }
+                               { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P100i_died_in|crm:P98i_was_born) ?event. ?event a <{{eventType.value}}> . }
                                UNION
-                               { <{{person.value}}> crm:P12i_was_present_at ?event. ?event crm:P2_has_type <{{eventType.value}}> . }
+                               { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P12i_was_present_at ?event. ?event crm:P2_has_type <{{eventType.value}}> . }
                                ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
                                }}
                                "
@@ -147,9 +147,9 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                         query="
                                SELECT DISTINCT ?graph ?place
                                WHERE { GRAPH ?graph {
-                               { <{{person.value}}> (crm:P100i_died_in|crm:P98i_was_born) ?event. ?event a <{{eventType.value}}> . }
+                               { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P100i_died_in|crm:P98i_was_born) ?event. ?event a <{{eventType.value}}> . }
                                UNION
-                               { <{{person.value}}> crm:P12i_was_present_at ?event. ?event crm:P2_has_type <{{eventType.value}}> . }
+                               { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P12i_was_present_at ?event. ?event crm:P2_has_type <{{eventType.value}}> . }
                                ?event crm:P7_took_place_at ?place .
                                }} 
                                "
@@ -543,9 +543,9 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                         query="
                                SELECT DISTINCT ?graph ?date
                                WHERE { GRAPH ?graph {
-                               { <{{person.value}}> (crm:P100i_died_in|crm:P98i_was_born) ?event. ?event a <{{eventType.value}}> . }
+                               { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person (crm:P100i_died_in|crm:P98i_was_born) ?event. ?event a <{{eventType.value}}> . }
                                UNION
-                               { <{{person.value}}> crm:P12i_was_present_at ?event. ?event crm:P2_has_type <{{eventType.value}}> . }
+                               { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P12i_was_present_at ?event. ?event crm:P2_has_type <{{eventType.value}}> . }
                                ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
                                }}
                                "

@@ -33,13 +33,14 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 
         <semantic-table
                         query="
-SELECT DISTINCT  ?author ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate
+SELECT DISTINCT  ?textCreation ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate
 WHERE {
   GRAPH ?graph {
    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-      OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
-      OPTIONAL { ?textCreation  crm:P4_has_time-span ?creationDate . }
-      OPTIONAL { ?author ^crm:P14_carried_out_by ?textCreation . } }
+      OPTIONAL { 
+                               ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+                               OPTIONAL { ?textCreation crm:P4_has_time-span ?creationDate . }
+                               }
       OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span ?performanceDate .}
     # text title(s)
     ?text crm:P102_has_title ?title .
@@ -61,19 +62,35 @@ WHERE {
     
   }
 }
-                               
-                               "
+"
                         column-configuration='[
-    {"variableName": "author", "displayName": "Author"}, 
-    {"variableName": "titleValue", "displayName": "Title"}, 
-    {"variableName": "subtitleValue", "displayName": "Subtitle"},  
-    {"variableName": "creationDate", "displayName": "Created"},
-    {"variableName": "performanceDate", "displayName": "First Performed"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"displayName": "Author(s)",  "cellTemplate": "{{> author}}"}, 
+    {"displayName": "Title", "cellTemplate": "{{> title}}"},
+    {"displayName": "Date", "cellTemplate": "{{> date}}"},
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
   ]'
   options='{"showFilter": false}'
                         >
+          <template id="author">
+            {{#if textCreation}}<semantic-query
+                            query="SELECT ?author 
+                                   WHERE { GRAPH <{{graph.value}}> {
+                                   <{{textCreation.value}}> crm:P14_carried_out_by ?author . } }
+                                   "
+                            template="{{> template}}">
+              <template id="template">
+            {{#each bindings}}<div><semantic-link iri=author.value></semantic-link></div>{{/each}}
+              </template>
+              </semantic-query>{{/if}}
+          </template>
+          <template id="title">
+            <div>{{titleValue.value}}{{#if subtitleValue}}. {{subtitleValue.value}}{{/if}}</div>
+          </template>
+          <template id="date">
+            <div>{{#if creationDate}}{{creationDate.value}} (created){{#if performanceDate}}, {{performanceDate.value}} (first performed){{/if}}{{else}}{{#if performanceDate}}{{performanceDate.value}} (first performed){{/if}}{{/if}}</div>
+          </template>
+          
           </semantic-table>
         
         [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ / rdf:type frbroo:F24_Publication_Expression } LIMIT 1 }")]]
@@ -108,7 +125,7 @@ where {
     {"variableName": "publText", "displayName": "Published in"},
     {"variableName": "pagination", "displayName": "Pagination"},
     {"variableName": "publDate", "displayName": "Publication Date"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
   ]'
   options='{"showFilter": false}'
@@ -332,7 +349,7 @@ WHERE {
     {"displayName": "Position", "cellTemplate": "{{> position}}"},
     {"displayName": "Reference Target", "cellTemplate": "{{> target}}"},
     {"variableName": "source", "displayName": "Source"},
-    {"variableName": "graph", "displayName": "Named Graph"}
+    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
                                                   ]'
                                    >
               <template id="passage">

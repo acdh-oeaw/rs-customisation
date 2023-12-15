@@ -85,7 +85,7 @@ WHERE {
                                    "
                             template="{{> template}}">
               <template id="template">
-            {{#each bindings}}<div><semantic-link iri=author.value></semantic-link></div>{{/each}}
+            {{#each bindings}}<div><semantic-link iri={{author.value}}></semantic-link></div>{{/each}}
               </template>
               </semantic-query>{{/if}}
           </template>

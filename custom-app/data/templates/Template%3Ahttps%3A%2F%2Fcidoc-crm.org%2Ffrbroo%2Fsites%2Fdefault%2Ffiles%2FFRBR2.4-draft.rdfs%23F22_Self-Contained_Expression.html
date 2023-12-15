@@ -33,15 +33,17 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 
         <semantic-table
                         query="
-SELECT DISTINCT  ?textCreation ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate
+SELECT DISTINCT  ?textCreation ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate ?creationDateType ?performanceDateType
 WHERE {
   GRAPH ?graph {
    ?? (owl:sameAs | ^owl:sameAs)* ?text .
       OPTIONAL { 
                                ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
-                               OPTIONAL { ?textCreation crm:P4_has_time-span ?creationDate . }
+                               OPTIONAL { ?textCreation crm:P4_has_time-span / rdfs:label ?creationDate . 
+                               OPTIONAL{ ?textCreation crm:P4_has_time-span / crm:P2_has_type ?creationDateType }}
                                }
-      OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span ?performanceDate .}
+      OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span / rdfs:label ?performanceDate .
+                               OPTIONAL{ ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span / crm:P2_has_type ?performanceDateType }}
     # text title(s)
     ?text crm:P102_has_title ?title .
     {                               
@@ -93,7 +95,7 @@ WHERE {
             <div>{{titleValue.value}}{{#if subtitleValue}}. {{subtitleValue.value}}{{/if}}</div>
           </template>
           <template id="date">
-            <div>{{#if creationDate}}{{creationDate.value}} (created){{#if performanceDate}}, {{performanceDate.value}} (first performed){{/if}}{{else}}{{#if performanceDate}}{{performanceDate.value}} (first performed){{/if}}{{/if}}</div>
+            <div>{{#if creationDate}}{{creationDate.value}} (created{{#if creationDateType}} – {{creationDateType.value}}{{/if}}){{#if performanceDate}}, {{performanceDate.value}} (first performed{{#if performanceDateType}} – {{performanceDateType.value}}{{/if}}){{/if}}{{else}}{{#if performanceDate}}{{performanceDate.value}} (first performed{{#if performanceDateType}} – {{performanceDateType.value}}{{/if}}){{/if}}{{/if}}</div>
           </template>
           
           </semantic-table>

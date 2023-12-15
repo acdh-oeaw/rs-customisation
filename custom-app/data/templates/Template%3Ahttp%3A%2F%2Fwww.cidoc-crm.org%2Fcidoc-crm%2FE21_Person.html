@@ -128,18 +128,19 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
       <template id="date">
         <semantic-query
                         query="
-                               SELECT DISTINCT ?graph ?date
+                               SELECT DISTINCT ?graph ?date ?type
                                WHERE { GRAPH ?graph {
                                ?? (owl:sameAs | ^owl:sameAs)* ?person .
                                { ?person (crm:P100i_died_in|crm:P98i_was_born) ?event. ?event a <{{eventType.value}}> . }
                                UNION
                                { ?person crm:P12i_was_present_at ?event. ?event crm:P2_has_type <{{eventType.value}}> . }
-                               ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
+                               ?event crm:P4_has_time-span ?timespan. ?timespan crm:P82a_begin_of_the_begin ?date .
+                               OPTIONAL { ?timespan crm:P2_has_type / rdfs:label ?type .}
                                }}
                                "
                         template="{{> template}}">
           <template id="template">
-            {{#each bindings}}<div>{{date.value}} (<semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+            {{#each bindings}}<div>{{date.value}} ({{#if type}}{{type.value}}; {{/if}}from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
           </template>
           </semantic-query>
       </template>
@@ -543,18 +544,19 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
       <template id="date">
         <semantic-query
                         query="
-                               SELECT DISTINCT ?graph ?date
+                               SELECT DISTINCT ?graph ?date ?type
                                WHERE { GRAPH ?graph {
                                ?? (owl:sameAs | ^owl:sameAs)* ?person .
                                { ?person (crm:P100i_died_in|crm:P98i_was_born) ?event. ?event a <{{eventType.value}}> . }
                                UNION
                                { ?person crm:P12i_was_present_at ?event. ?event crm:P2_has_type <{{eventType.value}}> . }
-                               ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
+                               ?event crm:P4_has_time-span ?timespan. ?timespan crm:P82a_begin_of_the_begin ?date .
+                               OPTIONAL { ?timespan crm:P2_has_type /rdfs:label ?type . }
                                }}
                                "
                         template="{{> template}}">
           <template id="template">
-            {{#each bindings}}<div>{{date.value}} (<semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+            {{#each bindings}}<div>{{date.value}} ({{#if type}}{{type.value}}; {{/if}}from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
           </template>
           </semantic-query>
       </template>

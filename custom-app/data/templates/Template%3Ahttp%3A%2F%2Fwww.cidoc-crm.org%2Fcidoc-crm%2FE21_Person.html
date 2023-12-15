@@ -738,7 +738,7 @@ where {
                    tuple-template-height="42">
             <template id="template">
                 <semantic-link iri={{event.value}}><b>{{subject.value}}</b></semantic-link>
-                <div>{{start.value}}</div>
+                <div>{{start.value}}{{#if end}} – {{end.value}}{{/if}}</div>
             </template>
           </semantic-timeline>
 

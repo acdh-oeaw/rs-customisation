@@ -73,16 +73,16 @@ WHERE {
   options='{"showFilter": false}'
                         >
           <template id="author">
-            <semantic-query
+            {{#if textCreation}}<semantic-query
                             query="SELECT ?author 
                                    WHERE { GRAPH <{{graph.value}}> {
                                    <{{textCreation.value}}> crm:P14_carried_out_by ?author . } }
                                    "
                             template="{{> template}}">
               <template id="template">
-            {{#each bindings}}<div><semantic-link iri={{author.value}}></semantic-link></div>{{/each}}
+            {{#each bindings}}<div><semantic-link iri=author.value></semantic-link></div>{{/each}}
               </template>
-              </semantic-query>
+              </semantic-query>{{/if}}
           </template>
           <template id="title">
             <div>{{titleValue.value}}{{#if subtitleValue}}. {{subtitleValue.value}}{{/if}}</div>

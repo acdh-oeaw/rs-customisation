@@ -122,16 +122,17 @@ where {
           <!-- periodical -->
         <h3>[[this]]</h3>
 
+        [[#if (ask "ASK { SELECT ?oCount WHERE { SELECT (COUNT(?o) AS ?oCount) WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?publ .  ?publ frbroo:R5_has_component ?o . } HAVING (?oCount < 51)}}")]]
+        
         <h4>Publication Timeline</h4>
-        <semantic-timeline query="
+        <semantic-timeline query='
                           SELECT DISTINCT ?event ?subject ?start
-  WHERE {
-        ?? frbroo:R5_has_component ?component.
+  WHERE {?? frbroo:R5_has_component ?component.
         ?component rdfs:label ?subject ;
           frbroo:R24i_was_created_through ?event . 
-          ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start .
-      }
-"
+        ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start .
+             }
+'
                    tuple-template="{{> template}}" 
                    tuple-template-height="42">
             <template id="template">
@@ -139,20 +140,49 @@ where {
                 <div>{{start.value}}</div>
             </template>
           </semantic-timeline>
-        <h4>Publication Tree</h4>
-        <semantic-tree query="
-                              SELECT DISTINCT ?node ?parent
-WHERE {
-  ?parent frbroo:R5_has_component* / crm:P165_incorporates* / intro:R10_has_Text_Passage* ?? . 
-
-  ?parent (frbroo:R5_has_component / crm:P165_incorporates) | crm:P165_incorporates ?node .
-  
-  { ?parent a frbroo:F22_Self-Contained_Expression . }
-  UNION
-  { ?parent frbroo:R5_has_component ?issueF24 . }
-}
-
-                              "/>
+        
+        [[else]]
+        
+        <h4>Publication Chart</h4>
+         <semantic-chart
+            type='line'
+            query="
+                   SELECT DISTINCT ?year (COUNT(?year) AS ?publSum)
+                   WHERE {
+                   ?? (owl:sameAs | ^owl:sameAs)* ?periodical .
+                   ?periodical frbroo:R5_has_component / frbroo:R24i_was_created_through / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
+                   
+                   BIND(STR(?date) AS ?date2)
+                   BIND(SUBSTR(?date2, 1, 4) AS ?year)
+                   }
+                   GROUP BY ?year
+                   ORDER BY ?year
+                   "
+                         sets='[
+            {"category": "year", "value": "publSum"}
+          ]'
+>
+          </semantic-chart>
+                         
+                  
+        [[/if]]
+        <h4>Published Issues / Volumes</h4>
+       <semantic-table query="SELECT ?publ ?date ?graph
+                              WHERE { GRAPH ?graph {
+                              ?? (owl:sameAs | ^owl:sameAs)* ?periodical .
+                              ?periodical frbroo:R5_has_component ?publ .
+                              ?publ frbroo:R24i_was_created_through / 
+                              	crm:P4_has_time-span /
+                              	crm:P82a_begin_of_the_begin ?date .
+                              }}
+                              ORDER BY ?date
+                              "
+                        column-configuration='[
+    {"variableName": "publ", "displayName": " "},
+    {"variableName": "date", "displayName": " "}, 
+    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+  ]'
+                       />-->
         
           [[else]]
 					<!-- monograph publication -->

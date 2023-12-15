@@ -45,11 +45,11 @@ WHERE {
     # text title(s)
     ?text crm:P102_has_title ?title .
     {                               
-    ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/main> .
+    ?title (crm:P2_has_type|crm:P2_has_Type) <https://sk.acdh.oeaw.ac.at/types/title/main> .
     }
     UNION
     {                               
-    ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/prov> .
+    ?title (crm:P2_has_type|crm:P2_has_Type) <https://sk.acdh.oeaw.ac.at/types/title/prov> .
     }
     
     ?title rdf:value ?titleValue .

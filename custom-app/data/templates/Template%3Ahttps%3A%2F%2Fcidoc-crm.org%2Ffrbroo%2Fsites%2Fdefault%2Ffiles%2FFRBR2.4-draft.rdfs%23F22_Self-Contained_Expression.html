@@ -33,10 +33,11 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 
         <semantic-table
                         query="
-SELECT DISTINCT  ?textCreation ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate ?creationDateType ?performanceDateType
+SELECT DISTINCT  ?text ?textCreation ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate ?creationDateType ?performanceDateType
 WHERE {
   GRAPH ?graph {
    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+      
       OPTIONAL { 
                                ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
                                OPTIONAL { ?textCreation crm:P4_has_time-span / rdfs:label ?creationDate . 
@@ -73,6 +74,7 @@ WHERE {
                         column-configuration='[
     {"displayName": "Author(s)",  "cellTemplate": "{{> author}}"}, 
     {"displayName": "Title", "cellTemplate": "{{> title}}"},
+    {"displayName": " ", "cellTemplate": "{{> rubric}}"},
     {"displayName": "Date", "cellTemplate": "{{> date}}"},
     {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
@@ -91,8 +93,19 @@ WHERE {
               </template>
               </semantic-query>{{/if}}
           </template>
+          <template id="rubric">
+            <semantic-query
+                            query="SELECT ?textType 
+                                   WHERE { <{{text.value}}> crm:P2_has_type ?textType . }
+                                   "
+                            template="{{> template}}">
+              <template id="template">
+								<div>({{#each bindings}}<semantic-link iri={{textType.value}}></semantic-link>{{/each}})</div>
+              </template>
+              </semantic-query>
+              </template>
           <template id="title">
-            <div>{{titleValue.value}}{{#if subtitleValue}}. {{subtitleValue.value}}{{/if}}</div>
+            <div>{{titleValue.value}}{{#if subtitleValue}}. {{subtitleValue.value}}{{/if}}{{#if textType}} ({{#each bindings}}<semantic-link iri={{textType.value}}></semantic-link>{{/each}}){{/if}}</div>
           </template>
           <template id="date">
             <div>{{#if creationDate}}{{creationDate.value}} (created{{#if creationDateType}} – {{creationDateType.value}}{{/if}}){{#if performanceDate}}, {{performanceDate.value}} (first performed{{#if performanceDateType}} – {{performanceDateType.value}}{{/if}}){{/if}}{{else}}{{#if performanceDate}}{{performanceDate.value}} (first performed{{#if performanceDateType}} – {{performanceDateType.value}}{{/if}}){{/if}}{{/if}}</div>

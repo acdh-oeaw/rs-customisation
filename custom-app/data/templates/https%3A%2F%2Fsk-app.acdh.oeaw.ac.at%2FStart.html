@@ -99,9 +99,8 @@
   -->
 
   <section class="page-section">
-	  <h2 class="page-section__title">
-		  <semantic-link iri="rsp:Search">Search (Beta Stage)</semantic-link>
-	  </h2>
+	  <h2 class="page-section__title">Search</h2>
+	  <div>Search for Persons, Texts, or Places.</div>
   <semantic-search limit=[[#if searchLimit]][[searchLimit]][[else]]10[[/if]]>
 	[[!-- heuristics to check whether we have a blazegraph instance and can apply bds search --]]
 	[[#if (ask "ASK {  <http://www.bigdata.com/queryHints#Query> <http://www.bigdata.com/queryHints#optimizer> 'None' . ?x ?y ?z . }") ]]

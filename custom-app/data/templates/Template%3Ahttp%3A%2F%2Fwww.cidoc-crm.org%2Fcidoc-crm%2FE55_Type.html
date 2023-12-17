@@ -49,7 +49,7 @@ WHERE { GRAPH ?graph { ?? rdfs:comment ?desc . }}'
         [[#if (ask "ASK { {SELECT * WHERE {?? crm:P127i_has_broader_term <https://sk.acdh.oeaw.ac.at/types/text/rubric> . } LIMIT 1}}")]]
         <semantic-table
                         query='
-SELECT ?entity ?issue ?graph
+SELECT DISTINCT ?entity ?issue ?graph
 WHERE { GRAPH ?graph { ?entity crm:P2_has_type ?? ; ^crm:P165_incorporates+ ?issue . ?issue ^crm:P165_incorporates / frbroo:R5i_is_component_of ?periodical .} }'
                         column-configuration='[
                                               {"displayName": "Texts", "variableName": "entity"},

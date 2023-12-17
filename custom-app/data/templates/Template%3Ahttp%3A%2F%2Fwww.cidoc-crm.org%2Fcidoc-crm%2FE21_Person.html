@@ -158,7 +158,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                                "
                         template="{{> template}}">
           <template id="template">
-            {{#each bindings}}<div><semantic-link iri={{place.value}}></semantic-link> (<semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+            {{#each bindings}}<div><semantic-link iri={{place.value}}></semantic-link> (from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
           </template>
           </semantic-query>
       </template>
@@ -706,9 +706,9 @@ where {
 
       <bs-tab event-key="19" title="Timeline">
 <semantic-timeline query="
-                          SELECT DISTINCT ?event ?subject ?start ?end
+                          SELECT DISTINCT ?target ?subject ?start ?end
   WHERE {
-    GRAPH ?g {
+    
       
       ?? (owl:sameAs | ^owl:sameAs)* ?person .
      
@@ -718,28 +718,28 @@ where {
       }
       UNION
       { ?event crm:P14_carried_out_by ?person ;
-        rdfs:label ?subject .
+            rdfs:label ?subject ;
+            frbroo:R17_created ?target .
       }
       UNION
       {
-        ?event frbroo:R24_created /
-                 crm:P165_incorporates+ /
-                 frbroo:R17i_was_created_by /
-                 crm:P14_carried_out_by ?person ;
-                 rdfs:label ?subject .
+        ?event frbroo:R24_created ?target ;
+            rdfs:label ?subject .
+        ?target crm:P165_incorporates+ /
+            frbroo:R17i_was_created_by /
+            crm:P14_carried_out_by ?person .
       }
       
       ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start .
                           OPTIONAL {?event crm:P4_has_time-span / crm:P82b_end_of_the_end ?end .
                             FILTER ( ?end != ?start )}
-    }
+    
   }
-
 "
                    tuple-template="{{> template}}" 
                    tuple-template-height="42">
             <template id="template">
-                <semantic-link iri={{event.value}}><b>{{subject.value}}</b></semantic-link>
+                {{#if target}}<semantic-link iri={{target.value}}><b>{{subject.value}}</b></semantic-link>{{else}}<b>{{subject.value}}</b>{{/if}}
                 <div>{{start.value}}{{#if end}} – {{end.value}}{{/if}}</div>
             </template>
           </semantic-timeline>

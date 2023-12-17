@@ -24,7 +24,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 <div class="page">
 	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
     
-  [[#if (ask "ASK { {SELECT (COUNT(*) AS ?count) WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person ?p ?o . } } }  FILTER (?count > 9999)}")]]
+  [[#if (ask "ASK { {SELECT (COUNT(*) AS ?count) WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person ?p ?o . } } }  FILTER (?count > 999)}")]]
   <div class='page__body'>
     
     <div class='page__header-navtabs'>

@@ -975,49 +975,38 @@ column-configuration='[
         <h3>Mention Chart</h3>
         <semantic-chart
             type='bar'
-            query='
-              SELECT distinct ?year (COUNT(distinct ?faMention) as ?faMentionSum) (COUNT(distinct ?lkMention) as ?lkMentionSum)
-WHERE {
-  OPTIONAL { SELECT ?year ?lkMention WHERE {
-  graph <https://sk.acdh.oeaw.ac.at/project/legal-kraus> {
-    
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?lkMention crm:P67_refers_to ?person .
-    
-    ?lkMention intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of ?text .
-    
-    
-    ?text a crm:E73_Information_Object ;
-                crm:P94i_was_created_by / crm:P4_has_time-span ?timeSpan .
-    
-    
-    ?timeSpan crm:P82a_begin_of_the_begin ?date .
-    
-    BIND ( YEAR(?date) AS ?year )
-  }
-  }
-}
-  OPTIONAL { 
-    SELECT ?year ?faMention WHERE {
-  graph <https://sk.acdh.oeaw.ac.at/project/fackel> {
-    
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?faMention crm:P67_refers_to ?person .
-    
-    ?faMention intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of ?text .
-    
-    # publYear of F24
-    ?text crm:P165i_is_incorporated_in* / frbroo:R24i_was_created_through / crm:P4_has_time-span ?timeSpan .
-    
-    ?timeSpan crm:P82a_begin_of_the_begin ?date .
-    
-    BIND ( YEAR(?date) AS ?year )
-  }
-  }
-  }
-}
+            query="
+              SELECT DISTINCT ?year (COUNT(distinct ?faMention) as ?faMentionSum) (COUNT(distinct ?lkMention) as ?lkMentionSum)
+                   WHERE {
+                   OPTIONAL { SELECT ?year ?lkMention 
+                   WHERE {
+                     graph <https://sk.acdh.oeaw.ac.at/project/legal-kraus> {
+                     ?? (owl:sameAs | ^owl:sameAs)* ?person .
+                     ?lkMention crm:P67_refers_to ?person .
+                     ?lkMention intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of ?text .
+                     ?text a crm:E73_Information_Object ;
+                       crm:P94i_was_created_by / crm:P4_has_time-span ?timeSpan .
+                     ?timeSpan crm:P82a_begin_of_the_begin ?date .
+                     BIND(SUBSTR(?date, 1, 4) AS ?year)
+                     }
+                   }
+                }
+                  OPTIONAL { 
+                    SELECT ?year ?faMention WHERE {
+                      graph <https://sk.acdh.oeaw.ac.at/project/fackel> {
+                        ?? (owl:sameAs | ^owl:sameAs)* ?person .
+                        ?faMention crm:P67_refers_to ?person .
+                        ?faMention intro:R17_feature_actualized_in / intro:R18_actualization_found_on / intro:R10_is_Text_Passage_of ?text .
+                        ?text crm:P165i_is_incorporated_in+ / frbroo:R24i_was_created_through / crm:P4_has_time-span ?timeSpan .
+
+                        ?timeSpan crm:P82a_begin_of_the_begin ?date .
+                        BIND(SUBSTR(?date, 1, 4) AS ?year)
+                      }
+                  	}
+                  }
+                }
               GROUP BY ?year
-              ORDER BY ?year' 
+              ORDER BY ?year"
 sets='[
             {"dataSetName": "Die Fackel", "category": "year", "value": "faMentionSum"},
             {"dataSetName": "Legal Files", "category": "year", "value": "lkMentionSum"}

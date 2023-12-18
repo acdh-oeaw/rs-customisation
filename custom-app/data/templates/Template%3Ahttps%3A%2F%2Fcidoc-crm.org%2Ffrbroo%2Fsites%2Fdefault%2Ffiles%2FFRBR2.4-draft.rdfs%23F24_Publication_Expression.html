@@ -76,7 +76,8 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
                         template='{{> template}}'>
           <template id="template">
             {{#each bindings}}
-            <h3>{{tMain.value}}{{#if tSub}}. {{tSub.value}}{{/if}}{{#if place}}. {{place.value}}{{/if}}{{#if ni}}. {{ni.value}}{{/if}}{{#if nv}} ({{nv.value}}){{/if}}{{#if date}}, {{date.value}}{{/if}}{{#if ed}} ({{ed.value}}){{/if}} <small>From Graph: {{graph.value}}</small></h3>
+            <h2>{{tMain.value}}{{#if tSub}}. {{tSub.value}}{{/if}}{{#if place}}. {{place.value}}{{/if}}{{#if ni}}. {{ni.value}}{{/if}}{{#if nv}} ({{nv.value}}){{/if}}{{#if date}}, {{date.value}}{{/if}}{{#if ed}} ({{ed.value}}){{/if}}</h2>
+            <div><small> From Graph: {{graph.value}}</small></div>
               {{/each}}
           </template>
           </semantic-query>
@@ -93,7 +94,8 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
                                '
                         template='{{> template}}'>
           <template id="template">
-            {{#each bindings}}<h4>Part of Series / Periodical: <semantic-link iri={{per.value}}></semantic-link> <small>From Graph: {{graph.value}}</small></h4>{{/each}}
+            {{#each bindings}}<h3>Part of Series / Periodical: <semantic-link iri={{per.value}}></semantic-link></h3>
+            <div><small>From Graph: {{graph.value}}</small></div>{{/each}}
           </template>
           </semantic-query>
         
@@ -120,7 +122,7 @@ where {
           [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?publ . ?publ frbroo:R5_has_component ?o}LIMIT 1}}")]]
 
           <!-- periodical -->
-        <h3>[[this]]</h3>
+        
 
         [[#if (ask "ASK { SELECT ?oCount WHERE { SELECT (COUNT(?o) AS ?oCount) WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?publ .  ?publ frbroo:R5_has_component ?o . } HAVING (?oCount < 51)}}")]]
         

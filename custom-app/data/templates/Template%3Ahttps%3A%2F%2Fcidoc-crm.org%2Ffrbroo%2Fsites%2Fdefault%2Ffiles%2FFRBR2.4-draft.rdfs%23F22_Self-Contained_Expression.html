@@ -179,7 +179,7 @@ query='
 SELECT ?incText ?graph WHERE { 
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    ?text crm:P165_incorporates ?incText .
+    ?text crm:P165_incorporates+ ?incText .
   }
 }
 '

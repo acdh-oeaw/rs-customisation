@@ -320,31 +320,9 @@ where {
         </bs-tab>
       [[/if]]
       <!-- Mentions: -->
-      <bs-tab event-key="3" title="Mentioned and Was Mentioned">
+      <bs-tab event-key="3" title="Was Mentioned">
         
-        [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) / intro:R10_has_Text_Passage / intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference . }} LIMIT 1 }")]]
         
-                    <semantic-table
-                        query="select distinct ?text ?refPerson
-where {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?textCreation crm:P14_carried_out_by  ?person ;
-    (crm:P94_has_created | frbroo:R17_created) ?text .
-		?text intro:R10_has_Text_Passage /
-    intro:R18_shows_actualization / 
-    intro:R17_actualizes_feature / 
-    crm:P67_refers_to ?refPerson .
-}
-}
-                               "
-                        column-configuration='[
-    {"variableName": "refPerson", "displayName": "Mentioned Person"}, 
-    {"variableName": "text", "displayName": "Text"}
-  ]'>
-                    </semantic-table>
-        [[/if]]
-      
         <semantic-table
                         query="
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

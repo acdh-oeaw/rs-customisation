@@ -173,7 +173,23 @@ WHERE {
       </bs-tab>
 [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates|intro:R10_has_Text_Passage ?content . } LIMIT 1 }")]]
 <bs-tab event-key="22" title="Textual Contents">
-<semantic-table
+
+      <semantic-table
+query='
+SELECT ?incText ?graph WHERE { 
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+    ?text crm:P165_incorporates ?incText .
+  }
+}
+'
+column-configuration='[
+{"displayName": "Incorporated Texts", "variableName": "incText"},
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+]'
+></semantic-table>
+      
+      <semantic-table
 query='
 SELECT ?passage ?wording ?graph WHERE { 
   GRAPH ?graph {
@@ -200,23 +216,6 @@ column-configuration='[
   </div>
 </template>
 </semantic-table>
-
-      <semantic-table
-query='
-SELECT ?incText ?graph WHERE { 
-  GRAPH ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-    ?text crm:P165_incorporates ?incText .
-  }
-}
-'
-column-configuration='[
-{"displayName": "Incorporated Texts", "variableName": "incText"},
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
-]'
-></semantic-table>
-      
-      
       
       </bs-tab>
 [[/if]]

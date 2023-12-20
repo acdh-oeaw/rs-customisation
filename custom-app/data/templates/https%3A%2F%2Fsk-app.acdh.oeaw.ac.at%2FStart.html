@@ -20,65 +20,54 @@
 		<div class="home-page__grid">
 			<div class="home-page__grid-item">
 				<semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb11988">
-					Sample:<br>Karl Kraus
+          <h3>Karl Kraus</h3>
+          <div>The entity at the center of our knowledge graphs.</div>
 				</semantic-link>
 			</div>
-			<div class="home-page__grid-item">
-				<semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb39331">
-					Sample:<br>Oscar Pollak
-				</semantic-link>
-			</div>
-			<div class="home-page__grid-item">
-				<semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb61389">
-					Sample:<br>Newspaper Article
-				</semantic-link>
-			</div>
-			<div class="home-page__grid-item">
+      <div class="home-page__grid-item">
 				<semantic-link uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000">
-					Sample:<br>Court File
+          <h3>File 68.62</h3>
+          <div>The 78-page pleading submitted to court by Kraus in a legal dispute with Alfred Kerr – and later on turned into an issue of Die Fackel</div>
 				</semantic-link>
 			</div>
 			<div class="home-page__grid-item">
-				<semantic-link
-					uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000/passage/771"
-				>
-					Sample:<br>Text Passage (Intertextual Relation)
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/DWpers0042">
+          <h3>Bernhard Diebold</h3>
+          <div>One of the many opponents of Kraus in cultural, moral, and, later on, political matters.</div>
 				</semantic-link>
 			</div>
-			<div class="home-page__grid-item">
-				<semantic-link
-					uri="https://sk.acdh.oeaw.ac.at/D_000068-062-000/passage/854"
-				>
-					Sample:<br>Text Passage (Person Mention)
-				</semantic-link>
-			</div>
-			<div class="home-page__grid-item">
+      <div class="home-page__grid-item">
 				<semantic-link uri="https://sk.acdh.oeaw.ac.at/DWbibl00000">
-					Sample:<br>Dritte Walpurgisnacht
+          <h3>Dritte Walpurgisnacht</h3>
+          <div>The eventually unpublished major work of Kraus’ later years – a stunning analysis of the rule of Adolf Hitler in 1933.</div>
 				</semantic-link>
 			</div>
-			<div class="home-page__grid-item">
-				<semantic-link uri="https://sk.acdh.oeaw.ac.at/DWpers0125">
-					Sample:<br>Alfred Kerr
-				</semantic-link>
-			</div>
-			<div class="home-page__grid-item">
-				<semantic-link uri="https://sk.acdh.oeaw.ac.at/DWbibl00000/passage/2092">
-					Sample:<br>Text Passage (Person Mention)
-				</semantic-link>
-			</div>
-			<div class="home-page__grid-item">
+      <div class="home-page__grid-item">
 				<semantic-link uri="https://sk.acdh.oeaw.ac.at/p_46460">
-					Sample:<br>Imre Békessy
+          <h3>Imre Békessy</h3>
+          <div>The Viennese press tsar, whose reign was brought down not least by Kraus’ publicist and legal actions.</div>
 				</semantic-link>
 			</div>
 			<div class="home-page__grid-item">
-				<semantic-link uri="https://sk.acdh.oeaw.ac.at/text10013">
-					Sample:<br>Das technoromantische Abenteuer
+				<semantic-link uri="https://sk.acdh.oeaw.ac.at/text15069">
+          <h3>Wichtiges von Wichten (In verständlicher Sprache)</h3>
+          <div>The last text ever published in Die Fackel.</div>
 				</semantic-link>
 			</div>
+      
+			
 		</div>
 	</section>
+  
+  <section class="page-section">
+		<h2 class="page-section__title">The SemanticKraus Project</h2>
+    <semantic-query query="SELECT ?comment WHERE {<https://sk.acdh.oeaw.ac.at/general> rdfs:comment ?comment .}" template="{{> template}}">
+      <template id="template">
+        <div>{{comment.value}}</div>
+      </template>
+      </semantic-query>
+      
+  </section>
 
 <!--
   <h2>
@@ -99,7 +88,7 @@
   -->
 
   <section class="page-section">
-	  <h2 class="page-section__title">Search</h2>
+	  <h2>Search</h2>
 	  <div>Search for Persons, Texts, or Places.</div>
   <semantic-search limit=[[#if searchLimit]][[searchLimit]][[else]]10[[/if]]>
 	[[!-- heuristics to check whether we have a blazegraph instance and can apply bds search --]]

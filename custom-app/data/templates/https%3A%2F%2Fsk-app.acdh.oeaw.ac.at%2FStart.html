@@ -61,9 +61,9 @@
   
   <section class="page-section">
 		<h2 class="page-section__title">The SemanticKraus Project</h2>
-    <semantic-query query="SELECT ?comment WHERE {<https://sk.acdh.oeaw.ac.at/general> rdfs:comment ?comment .}" template="{{> template}}">
+    <semantic-query query="SELECT DISTINCT ?comment WHERE {<https://sk.acdh.oeaw.ac.at/general> rdfs:comment ?comment .}" template="{{> template}}">
       <template id="template">
-        <div>{{comment.value}}</div>
+        {{#each bindings}}<div>{{comment.value}}</div>{{/each}}
       </template>
       </semantic-query>
       
@@ -88,7 +88,7 @@
   -->
 
   <section class="page-section">
-	  <h2>Search</h2>
+	  <h2>Search (beta)</h2>
 	  <div>Search for Persons, Texts, or Places.</div>
   <semantic-search limit=[[#if searchLimit]][[searchLimit]][[else]]10[[/if]]>
 	[[!-- heuristics to check whether we have a blazegraph instance and can apply bds search --]]

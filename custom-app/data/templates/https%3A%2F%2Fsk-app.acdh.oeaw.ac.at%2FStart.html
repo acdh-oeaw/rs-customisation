@@ -66,8 +66,16 @@
         {{#each bindings}}<div>{{comment.value}}</div>{{/each}}
       </template>
       </semantic-query>
-      
   </section>
+    <section class="page-section">
+		<h2 class="page-section__title">Data Sets Included</h2>
+    <semantic-query query="SELECT DISTINCT ?citation WHERE { ?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ; <http://purl.org/dc/terms/bibliographicCitation> ?citation . }" template="{{> template}}">
+      <template id="template">
+        {{#each bindings}}<div>{{citation.value}}</div>{{/each}}
+      </template>
+      </semantic-query>
+  </section>
+  
 
 <!--
   <h2>

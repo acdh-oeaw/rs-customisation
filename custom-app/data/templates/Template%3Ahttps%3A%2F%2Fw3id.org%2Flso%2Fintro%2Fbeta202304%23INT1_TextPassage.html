@@ -78,7 +78,7 @@ WHERE {
                                '
                         column-configuration='[
     {"displayName": "From Text:", "cellTemplate": "{{> text}}" },
-    {"variableName": "graph", "displayName": "Source Graph"}
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
   options='{"showFilter": false}'
                         >
@@ -109,11 +109,14 @@ WHERE {
           </semantic-table>
         
         <semantic-table
-                        query='SELECT ?person ?targetPassage ?targetText ?refPassage ?refText ?graph
+                        query='SELECT ?person ?targetPassage ?targetText ?refPassage ?refText ?graph ?source
 WHERE {
 GRAPH ?graph {
-    OPTIONAL { ?? ^intro:R18_actualization_found_on / intro:R17_actualizes_feature / crm:P67_refers_to ?person .}
+    OPTIONAL { ?? ^intro:R18_actualization_found_on / intro:R17_actualizes_feature ?reference.
+              ?reference crm:P67_refers_to ?person .
+             OPTIONAL { ?reference prov:wasDerivedFrom ?source . }}
     OPTIONAL { ?? intro:R13_is_referring_entity ?relation .
+              OPTIONAL { ?relation prov:wasDerivedFrom ?source . }
       { ?relation intro:R12_has_referred_to_entity ?targetText .
       FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . } }
       UNION
@@ -121,6 +124,7 @@ GRAPH ?graph {
       ?targetPassage a intro:INT1_TextPassage ;
                      ^intro:R10_has_Text_Passage ?targetText .}}
       OPTIONAL { ?? intro:R12_is_referred_to_entity ?relation2 .
+                OPTIONAL { ?relation2 prov:wasDerivedFrom ?source . }
         { ?relation2 intro:R13_has_referring_entity ?refText . 
         FILTER NOT EXISTS { ?refText a intro:INT1_TextPassage . } }
               UNION
@@ -133,7 +137,7 @@ GRAPH ?graph {
                         '
                         column-configuration='[
     {"displayName": "Relation / Reference:", "cellTemplate": "{{> ref}}" },
-    {"variableName": "graph", "displayName": "Source Graph"}
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>{{#if source}} – <semantic-link iri={{source.value}}></semantic-link>{{/if}})</div>"}
   ]'
                         options='{"showFilter": false}'
                         >
@@ -163,7 +167,7 @@ GRAPH ?graph {
     {"displayName": "In Publication / on Carrier:", "cellTemplate": "{{> publication}}"},
 		{"displayName": "Location", "cellTemplate": "{{> segLocation}}"},
 		{"displayName": "URL", "cellTemplate": "{{> URL}}"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         options='{"showFilter": false}'
                         >
@@ -195,7 +199,7 @@ optional {
 column-configuration='[
 {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
 {"variableName": "idType", "displayName": "ID Type"}, 
-{"variableName": "graph", "displayName": "Source Graph"}
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 ]'
 options='{"showFilter": false}'
                         >

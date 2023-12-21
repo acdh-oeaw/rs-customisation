@@ -284,6 +284,16 @@ where {
 [[else]]
 [[/if]]
 
+    [[#if (ask "ASK {SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* / prov:wasDerivedFrom ?source .}}")]]
+    <h4>Sources Provided</h4>
+    <semantic-query
+                    query="SELECT ?graph ?source WHERE { GRAPH ?graph { ?? (owl:sameAs | ^owl:sameAs)* / prov:wasDerivedFrom ?source . } }"
+                    template="{{> template}}">
+      <template id="template">
+        {{#each bindings}}<div><semantic-link iri={{source.value}}></semantic-link>  (from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+      </template>
+      </semantic-query>
+    [[/if]]
     
     </bs-tab>
 
@@ -679,7 +689,16 @@ where {
 [[else]]
 [[/if]]
 
-    
+    [[#if (ask "ASK {SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* / prov:wasDerivedFrom ?source .}}")]]
+    <h4>Sources Provided</h4>
+    <semantic-query
+                    query="SELECT ?graph ?source WHERE { GRAPH ?graph { ?? (owl:sameAs | ^owl:sameAs)* / prov:wasDerivedFrom ?source . } }"
+                    template="{{> template}}">
+      <template id="template">
+        {{#each bindings}}<div><semantic-link iri={{source.value}}></semantic-link>  (from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+      </template>
+      </semantic-query>
+    [[/if]]
     </bs-tab>
 
       <bs-tab event-key="19" title="Timeline">

@@ -255,11 +255,12 @@ column-configuration='[
                                   # refWording
                                     OPTIONAL {?refPassage intro:R44_has_wording ?refWording .}
                                   # refPosition
-                                    OPTIONAL {?refPassage intro:R41_has_location ?refPosition .}
+                                    OPTIONAL {?refPassage (schema:pagination|intro:R41_has_location) ?refPosition .}
                                   # refSegPosition
 				             					    optional {?refPassage ^intro:R16_incorporates ?segment .
                     							?segment a intro:INT16_Segment .
-                        					  OPTIONAL {?segment schema:pagination ?refSegPosition .}
+                        					  OPTIONAL {?segment (schema:pagination|intro:R41_has_location) ?refSegPosition .
+                                             FILTER (!CONTAINS(?refSegPosition, "http")) . }
                                     OPTIONAL {?segment ^intro:R25_has_segment|crm:P128i_is_carried_by ?wit .
                                              OPTIONAL { ?wit frbroo:R24i_was_created_through / crm:P4_has_time-span ?witDate .}} }
 
@@ -271,9 +272,8 @@ column-configuration='[
                             
                              column-configuration='[    
 {"displayName": "Passage", "cellTemplate": "{{> passage}}"},
-{"displayName": "Position", "cellTemplate": "{{> position}}"},
-{"variableName": "source", "displayName": "Source"},
-{"variableName": "graph", "displayName": "Named Graph"}
+{"displayName": " ", "cellTemplate": "{{> position}}"},
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>{{#if source}} / <semantic-link iri={{source.value}}></semantic-link>{{/if}})</div>"}
   ]'
                             >
               <template id="passage">

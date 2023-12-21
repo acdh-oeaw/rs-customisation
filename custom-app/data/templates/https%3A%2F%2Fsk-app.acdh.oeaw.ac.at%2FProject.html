@@ -24,7 +24,9 @@
         <li>text passages and mentions resp. intertextual references on texts</li>
       </ul>
       <p>
-The source projects the data is derived from are:
+      <h3>Source Projects</h3>
+      <p>
+        The source projects the date is derived from are:
       </p>
       <semantic-query
       query="SELECT DISTINCT ?citation ?contributor ?comment ?URL WHERE { 
@@ -37,12 +39,12 @@ The source projects the data is derived from are:
       "
       template="{{> template}}">
     <template id="template">
-      {{#each bindings}}<div>
+      {{#each bindings}}<p>
         <strong>{{citation.value}}</strong><br/>
         {{#if contributor}}<div>{{contributor.value}}</div>{{/if}}
         {{#if comment}}<div>{{comment.value}}</div>{{/if}}
         {{#if URL}}<a href="{{URL.value}}">{{URL.value}}</a>{{/if}}
-      </div>
+      </p>
       {{/each}}
     </template>
     </semantic-query>

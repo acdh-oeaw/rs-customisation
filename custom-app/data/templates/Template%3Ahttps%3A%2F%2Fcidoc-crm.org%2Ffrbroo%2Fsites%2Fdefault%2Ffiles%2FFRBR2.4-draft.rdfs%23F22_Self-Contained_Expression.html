@@ -246,7 +246,7 @@ column-configuration='[
               <summary>Click for more information</summary>
             <semantic-table
                             query='
-																	SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph
+																	SELECT DISTINCT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph
                                   WHERE {
                                   GRAPH ?graph {
                                   ?reference crm:P67_refers_to <{{mentioned.value}}> .

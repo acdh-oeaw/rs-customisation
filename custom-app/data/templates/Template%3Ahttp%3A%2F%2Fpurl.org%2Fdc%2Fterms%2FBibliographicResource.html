@@ -1,0 +1,84 @@
+<!-- template (in by now very small parts) copied from X1_Corpus in CLScor
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+2023-04-21
+--> 
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri='[[this]]'></mp-label>
+  </li>
+</ol>
+
+<style>
+  #tabs .tab-ontodia {
+    margin: 0px;
+    padding: 2px 0px 0px;
+    width: 100%;
+    height: calc(100vh - 300px);
+  }
+</style>
+
+<div class="page">
+	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
+    <div class='page__header-navtabs'>
+      [[> Platform:DefaultResourceHeader]]
+    </div>
+  	
+    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+      
+      <bs-tab event-key="0" title="Source Information">
+        
+        <semantic-table
+                        query="SELECT ?citation ?graph 
+                               WHERE {
+                               GRAPH ?graph {
+                               ?? <http://purl.org/dc/terms/bibliographicCitation> ?citation .
+                               } 
+                               }
+                               "
+                        column-configuration='[
+{"variableName": "citation", "displayName": "Bibliographic Citation"},
+{"cellTemplate": "{{> usedFor}}", "displayName": "Used For Entity"}, 
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+]'
+          options='{"showFilter": false}'>
+          <template id="usedFor">
+            <semantic-query
+                            query="SELECT ?usedFor WHERE {?? ^prov:wasDerivedFrom ?usedFor .}"
+                            template="{{> template}}">
+              <template id="template">
+                {{#each bindings}}<div><semantic-link iri={{usedFor.value}}></semantic-link></div>{{/each}}
+                </template>
+              </semantic-query>
+          </template>
+          </semantic-table>
+                        
+        
+      </bs-tab>
+      
+       <!-- Source -->
+      <bs-tab event-key="1" title="Source">
+        [[> Platform:SourceStatements]]
+      </bs-tab>
+      
+      <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
+        <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
+      </bs-tab>
+      
+    
+    </bs-tabs>
+  
+  [[else]]
+  <div class='page__body'>
+    <p>
+      It seems that no entity with IRI <code>"[[this]]"</code> in any subject, predicate or object position is known in the knowledge graph. Also no static application page with this identifier can be found.
+    </p>
+    <p>
+      Click on the edit button (<i class="fa fa-pencil"></i>) in the top right of this page (<i>only visibile if the respective ACL permissions are being granted to you</i>) to create a new, static application page with this identifier.
+    </p>
+  </div>
+  [[/if]]
+</div>
+      

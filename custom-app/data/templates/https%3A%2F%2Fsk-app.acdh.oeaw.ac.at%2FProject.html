@@ -43,7 +43,7 @@
         {{#if contributor}}<div>{{contributor.value}}</div>{{/if}}
         {{#if comment}}<div>{{comment.value}}</div>{{/if}}
       
-      <semantic-query query="SELECT ?URL WHERE {?s <http://purl.org/dc/terms/bibliographicCitation> <{{citation.value}}> ; <http://purl.org/dc/terms/source> ?URL . }"
+      <semantic-query query="SELECT ?URL WHERE {?s <http://purl.org/dc/terms/bibliographicCitation> '{{citation.value}}' ; <http://purl.org/dc/terms/source> ?URL . }"
                       template="template2">
         <template id="template2">
         {{#each bindings}}<a href="{{URL.value}}">{{URL.value}}</a>{{/each}}

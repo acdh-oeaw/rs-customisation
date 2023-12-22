@@ -26,15 +26,14 @@
       <p>
       <h3>Source Projects</h3>
       <p>
-        The source projects the date is derived from are:
+        The source projects the SemanticKraus data is derived from are:
       </p>
       <semantic-query
-      query="SELECT DISTINCT ?citation ?contributor ?comment ?URL WHERE { 
+      query="SELECT DISTINCT ?citation ?contributor ?comment WHERE { 
         ?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ;
             <http://purl.org/dc/terms/bibliographicCitation> ?citation .
         OPTIONAL { ?s <http://purl.org/dc/terms/contributor> ?contributor . }
         OPTIONAL { ?s rdfs:comment ?comment . }
-        OPTIONAL { ?s <http://purl.org/dc/terms/source> ?URL . }
       }
       "
       template="{{> template}}">
@@ -43,7 +42,13 @@
         <strong>{{citation.value}}</strong><br/>
         {{#if contributor}}<div>{{contributor.value}}</div>{{/if}}
         {{#if comment}}<div>{{comment.value}}</div>{{/if}}
-        {{#if URL}}<a href="{{URL.value}}">{{URL.value}}</a>{{/if}}
+      
+      <semantic-query query="SELECT ?URL WHERE {?s <http://purl.org/dc/terms/bibliographicCitation> <{{citation.value}}> ; <http://purl.org/dc/terms/source> ?URL . }"
+                      template="template2">
+        <template id="template2">
+        {{#each bindings}}<a href="{{URL.value}}">{{URL.value}}</a>{{/each}}
+        </template>
+        </semantic-query>
       </p>
       {{/each}}
     </template>

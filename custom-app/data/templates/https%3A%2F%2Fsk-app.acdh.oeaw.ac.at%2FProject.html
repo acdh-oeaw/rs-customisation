@@ -43,8 +43,8 @@
         {{#if contributor}}<div>{{contributor.value}}</div>{{/if}}
         {{#if comment}}<div>{{comment.value}}</div>{{/if}}
       
-      <semantic-query query='SELECT ?URL WHERE {?s <http://purl.org/dc/terms/bibliographicCitation> "{{citation.value}}" ; <http://purl.org/dc/terms/source> ?URL . }'
-                      template="{{> template2}}">
+      <semantic-query query="SELECT ?URL WHERE {?s <http://purl.org/dc/terms/bibliographicCitation> <{{citation.value}}> ; <http://purl.org/dc/terms/source> ?URL . }"
+                      template="template2">
         <template id="template2">
         {{#each bindings}}<a href="{{URL.value}}">{{URL.value}}</a>{{/each}}
         </template>
@@ -58,6 +58,20 @@ All of these projects – which are in one way or another linked to the ACDH-CH 
 <p>All of this data, although overlapping to a high degree, had been mostly uncorrelated so far. It was transformed to RDF, ingested into a triple store and provided with a user interface based on ResearchSpace as well as a SPARQL endpoint. The result is both a research platform and a reference resource offering users the opportunity for manual exploration as well as automated data retrieval – thus ensuring the integration of Kraus research into the LOD Cloud and serving the frequently expressed demand for open, reusable, and interlinked edition data.</p>
   <p>The project is accompanied by a HowTo-Blog: <a href="https://howto.acdh.oeaw.ac.at/de/curriculum/semantickraus-a-blogpost-series">SemanticKraus - A Blogpost Series</a></p>
   </div>
+  
+  <div>
+    <h4>Contributors</h4>
+    Bernhard Oberreither – PI<br />
+    Daniel Elsner, Andreas Basch, Peter Andorfer, Carl Friedrich Haak – Data Transformation<br />
+		Astrid Hauer, Johanna Unterholzner – Data Enrichment<br />
+    Lukas Plank – SPARQL<br />
+    Stefan Probst – Frontend<br />
+		Ruth Pfosser – Intern<br />
+    Laura Untner – Preliminary Work<br />
+    Constance Quinlan – Preliminary Work (as an Intern)<br />
+    <h5>Special Thanks to</h5>
+    Matej Ďurčo, Dalibor Pančić, Matthias Schlögl, Martin Anton Müller
+    </div>
     
   </section>
   

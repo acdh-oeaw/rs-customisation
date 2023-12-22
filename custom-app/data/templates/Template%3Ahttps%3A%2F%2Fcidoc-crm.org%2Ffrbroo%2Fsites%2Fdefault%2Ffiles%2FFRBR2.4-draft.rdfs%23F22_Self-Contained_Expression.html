@@ -153,22 +153,6 @@ where {
           </semantic-table>
         [[/if]]
         
-        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . {?text crm:P165i_is_incorporated_in / rdf:type frbroo:F22_Self-Contained_Expression . } UNION { ?text crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?o . }  } LIMIT 1 }")]]
-        <h4>Publication Context</h4>
-        <semantic-tree query="
-                              SELECT DISTINCT ?node ?parent
-WHERE {
-  ?parent frbroo:R5_has_component* / crm:P165_incorporates* / intro:R10_has_Text_Passage* ?? . 
-
-  ?parent (frbroo:R5_has_component / crm:P165_incorporates) | crm:P165_incorporates ?node .
-  
-  { ?parent a frbroo:F22_Self-Contained_Expression . }
-  UNION
-  { ?parent frbroo:R5_has_component ?issueF24 . }
-}
-
-                              "/>
-        [[/if]]
         
       </bs-tab>
 [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates|intro:R10_has_Text_Passage ?content . } LIMIT 1 }")]]

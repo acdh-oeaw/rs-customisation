@@ -316,7 +316,7 @@ WHERE {
                <summary>Click for more information</summary>
             <semantic-table
                             query='
-                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?graph
+                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?relation
                                    WHERE { GRAPH ?graph {
                                     <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation.
                                     <{{text.value}}> crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
@@ -351,8 +351,7 @@ WHERE {
     {"displayName": "Passage", "cellTemplate": "{{> passage}}"},
     {"displayName": "Position", "cellTemplate": "{{> position}}"},
     {"displayName": "Reference Target", "cellTemplate": "{{> target}}"},
-    {"variableName": "source", "displayName": "Source"},
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "{{> graph}}"}
                                                   ]'
                                    >
               <template id="passage">
@@ -377,6 +376,17 @@ WHERE {
               <template id="target">
               Target: {{#if targetPassage}}<semantic-link uri={{targetPassage.value}}>{{targetPassage.value}}</semantic-link>{{#if targetPosition}} – Position: {{targetPosition.value}}{{/if}}{{else}}<semantic-link uri={{targetText.value}}>{{targetText.value}}</semantic-link>{{/if}}
               </template>
+              <template id="graph">
+                <semantic-query query="SELECT ?graph WHERE { GRAPH ?graph {
+                  <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity <{{relation.value}}> .
+                }}"
+                template="{{> template}}">
+              <template id="template">
+                <div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>
+              </template>
+            </semantic-query>
+              </template>
+
              </semantic-table>
              </details>
           </template>

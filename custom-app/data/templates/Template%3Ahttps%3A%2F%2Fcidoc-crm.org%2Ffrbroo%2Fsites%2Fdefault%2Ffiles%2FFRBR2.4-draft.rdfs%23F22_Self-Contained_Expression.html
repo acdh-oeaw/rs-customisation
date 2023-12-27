@@ -257,7 +257,7 @@ column-configuration='[
                              column-configuration='[    
 {"displayName": "Passage", "cellTemplate": "{{> passage}}"},
 {"displayName": " ", "cellTemplate": "{{> position}}"},
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link uri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                             >
               <template id="passage">
@@ -351,6 +351,7 @@ WHERE {
     {"displayName": "Passage", "cellTemplate": "{{> passage}}"},
     {"displayName": "Position", "cellTemplate": "{{> position}}"},
     {"displayName": "Reference Target", "cellTemplate": "{{> target}}"},
+    {"displayName": " ", "cellTemplate": "{{> source}}"},
     {"displayName": " ", "cellTemplate": "{{> graph}}"}
                                                   ]'
                                    >
@@ -376,8 +377,11 @@ WHERE {
               <template id="target">
               Target: {{#if targetPassage}}<semantic-link uri={{targetPassage.value}}>{{targetPassage.value}}</semantic-link>{{#if targetPosition}} – Position: {{targetPosition.value}}{{/if}}{{else}}<semantic-link uri={{targetText.value}}>{{targetText.value}}</semantic-link>{{/if}}
               </template>
+              <template id="target">
+                {{#if source}}<semantic-link uri={{source.value}}>{{source.value}}</semantic-link>{{/if}}
+                </template>
               <template id="graph">
-                <semantic-query query="SELECT ?graph WHERE { GRAPH ?graph {
+                <semantic-query query="SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                   <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity <{{relation.value}}> .
                 }}"
                 template="{{> template}}">

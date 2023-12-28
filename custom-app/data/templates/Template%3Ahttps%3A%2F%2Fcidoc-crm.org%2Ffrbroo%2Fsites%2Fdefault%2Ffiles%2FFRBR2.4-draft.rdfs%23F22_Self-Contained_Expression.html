@@ -317,14 +317,14 @@ WHERE {
                <summary>Click for more information</summary>
             <semantic-table
                             query='
-                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?source ?relation
+                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?relation ?graph
                                    WHERE { GRAPH ?graph {
                                     <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation.
                                     <{{text.value}}> crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
 
                                   
                                    ?relation a intro:INT3_IntertextualRelationship .
-                                   OPTIONAL { ?relation prov:wasDerivedFrom ?source . }
+                                   
                                    OPTIONAL { ?relation intro:R13_has_referring_entity ?refPassage .
                                       ?refPassage a intro:INT1_TextPassage . 
                                       OPTIONAL { ?refPassage intro:R41_has_location ?refPosition . }
@@ -379,7 +379,12 @@ WHERE {
               Target: {{#if targetPassage}}<semantic-link uri={{targetPassage.value}}>{{targetPassage.value}}</semantic-link>{{#if targetPosition}} – Position: {{targetPosition.value}}{{/if}}{{else}}<semantic-link uri={{targetText.value}}>{{targetText.value}}</semantic-link>{{/if}}
               </template>
               <template id="source">
-                {{#if source}}<semantic-link uri={{source.value}}>{{source.value}}</semantic-link>{{/if}}
+                <semantic-query query='SELECT ?source WHERE {GRAPH ?graph { <{{relation.value}}> prov:wasDerivedFrom ?source . }}' template="{{> sources}}">
+                  <template id="sources">
+                    {{#each bindings}}<semantic-link uri={{source.value}}>{{source.value}}</semantic-link>{{/each}}
+                  </template>
+                </semantic-query>
+                
                 </template>
 
              </semantic-table>

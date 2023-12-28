@@ -86,11 +86,11 @@ WHERE {
             {{#if author}}<semantic-link uri={{author.value}}>{{author.value}}</semantic-link>: {{/if}}
             <semantic-link uri={{text.value}}>{{#if subtitleValue}}{{titleValue.value}}. {{subtitleValue.value}}{{else}}{{titleValue.value}}{{/if}}</semantic-link>
             {{#if location}}
-                {{#if performanceDate}}, 
-                  {{#if creationDate}}created {{creationDate.value}}, {{/if}}
+                {{#if performanceDate}} 
+                  {{#if creationDate}}, created {{creationDate.value}} {{/if}},
                   first performed / recited {{performanceDate.value}}
-                {{else}}, 
-                  {{#if creationDate}}created {{creationDate.value}}{{else}}{{/if}}
+                {{else}} 
+                  {{#if creationDate}}, created {{creationDate.value}}{{else}}{{/if}}
                 {{/if}}
               {{#if locationURL}}, 
               	<semantic-link uri={{locationURL.value}}>{{location.value}}</semantic-link>.
@@ -98,11 +98,11 @@ WHERE {
 								{{location.value}}.
             {{/if}}
             {{else}}
-              {{#if performanceDate}}, 
-                {{#if creationDate}}created {{creationDate.value}}, {{/if}}
+              {{#if performanceDate}} 
+                {{#if creationDate}}, created {{creationDate.value}} {{/if}},
                 first performed / recited {{performanceDate.value}}
-                {{else}}, 
-                  {{#if creationDate}}created {{creationDate.value}}{{/if}}
+                {{else}} 
+                  {{#if creationDate}}, created {{creationDate.value}}{{/if}}
               {{/if}}
             {{/if}}
           </template>

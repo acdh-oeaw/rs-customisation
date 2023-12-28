@@ -302,7 +302,8 @@ WHERE {
     ?text crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
     
     ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* ?targetText .
-    FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }
+    ?targetText rdfs:label ?label .
+    FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }                           
   }
 }          
                                '
@@ -317,7 +318,7 @@ WHERE {
                <summary>Click for more information</summary>
             <semantic-table
                             query='
-                                   SELECT DISTINCT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?relation ?targetPassage ?targetPosition ?graph
+                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?relation ?graph
                                    WHERE { GRAPH ?graph {
                                     <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation.
                                     <{{text.value}}> crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
@@ -358,8 +359,11 @@ WHERE {
                                    >
               <template id="passage">
                 <div>
-                
-                <semantic-link uri={{refPassage.value}}>{{#if refWording}}"{{refWording.value}}"{{else}}{{refPassage.value}}{{/if}}</semantic-link>
+                {{#if refWording}}
+                <semantic-link uri={{refPassage.value}}>"{{refWording.value}}"</semantic-link>
+                {{else}}
+								<semantic-link uri={{refPassage.value}}>"{{refPassage.value}}"</semantic-link>
+                {{/if}}
                 {{#if refPosition}}
                 , {{refPosition.value}}
                 {{/if}}
@@ -378,7 +382,7 @@ WHERE {
               <template id="source">
                 <semantic-query query='SELECT ?source WHERE {GRAPH ?graph { <{{relation.value}}> prov:wasDerivedFrom ?source . }}' template="{{> sources}}">
                   <template id="sources">
-                    {{#each bindings}}<div><semantic-link uri={{source.value}}>{{source.value}}</semantic-link></div>{{/each}}
+                    {{#each bindings}}<semantic-link uri={{source.value}}>{{source.value}}</semantic-link>{{/each}}
                   </template>
                 </semantic-query>
                 

@@ -300,12 +300,12 @@ WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
     ?text crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
-    
     ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage* ?targetText .
+    ?targetText rdfs:label ?label .
     FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }
   }
-}          
-                               '
+}
+'
                         
                         column-configuration='[
     {"variableName": "targetText", "displayName": "Referenced Text"},

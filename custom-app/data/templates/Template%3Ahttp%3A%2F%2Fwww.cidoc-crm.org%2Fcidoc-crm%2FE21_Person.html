@@ -970,8 +970,11 @@ column-configuration='[
         
       </bs-tab>
       
+      
       <bs-tab title="Mention Charts" event-key="27">
         <!-- MENTION CHART -->
+        
+        [[#if (ask "ASK {SELECT * WHERE { GRAPH <https://sk.acdh.oeaw.ac.at/project/fackel> { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P67i_is_referred_to_by ?mention .}} LIMIT 1 }")]]
         <h3>Fackel Mention Chart</h3>
         <semantic-chart
             type='bar'
@@ -1029,7 +1032,9 @@ sets='[
           }]'
 >
           </semantic-chart>
+        [[/if]]
         
+        [[#if (ask "ASK {SELECT * WHERE { GRAPH <https://sk.acdh.oeaw.ac.at/project/legal-kraus> { ?? (owl:sameAs | ^owl:sameAs)* ?person . ?person crm:P67i_is_referred_to_by ?mention .}} LIMIT 1 }")]]
         <h3>Legal Files Mention Chart</h3>
         <semantic-chart
             type='bar'
@@ -1086,8 +1091,9 @@ sets='[
           }]'
 >
           </semantic-chart>
+        [[/if]]
         </bs-tab>
-  
+
       
   <!-- IDs, Links - Table -->
   <bs-tab title="Entity IDs" event-key="10">

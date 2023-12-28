@@ -60,7 +60,7 @@ WHERE {
                                '
                         column-configuration='[
     {"displayName": "From Text:", "cellTemplate": "{{> text}}" },
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
   options='{"showFilter": false}'
                         >
@@ -119,7 +119,7 @@ GRAPH ?graph {
                         '
                         column-configuration='[
     {"displayName": "Relation / Reference:", "cellTemplate": "{{> ref}}" },
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>{{#if source}} – <semantic-link iri={{source.value}}></semantic-link>{{/if}})</div>"}
+{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>{{#if source}} – <semantic-link iri={{source.value}}></semantic-link>{{/if}})</div>"}
   ]'
                         options='{"showFilter": false}'
                         >
@@ -149,7 +149,7 @@ GRAPH ?graph {
     {"displayName": "In Publication / on Carrier:", "cellTemplate": "{{> publication}}"},
 		{"displayName": "Location", "cellTemplate": "{{> segLocation}}"},
 		{"displayName": "URL", "cellTemplate": "{{> URL}}"},
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         options='{"showFilter": false}'
                         >
@@ -181,7 +181,7 @@ optional {
 column-configuration='[
 {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
 {"variableName": "idType", "displayName": "ID Type"}, 
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 ]'
 options='{"showFilter": false}'
                         >

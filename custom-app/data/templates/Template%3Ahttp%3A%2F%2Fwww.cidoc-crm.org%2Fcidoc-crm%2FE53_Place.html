@@ -45,7 +45,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
                          column-configuration='[
                                                {"displayName": "Place Name", "variableName": "name" },
                                                {"displayName": "Name Type(s)", "cellTemplate": "{{> nameType}}"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
   options='{"showFilter": false}'>
           <template id="nameType">
@@ -81,7 +81,7 @@ SELECT DISTINCT ?nameType WHERE {
                          column-configuration='[
                                                {"displayName": "Events Witnessed", "variableName": "event" },
 																								{"displayName": "Date", "variableName": "timeSpan"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 >
           </semantic-table>
@@ -112,7 +112,7 @@ WHERE {
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
     {"variableName": "idType", "displayName": "ID Type"}, 
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 >
 

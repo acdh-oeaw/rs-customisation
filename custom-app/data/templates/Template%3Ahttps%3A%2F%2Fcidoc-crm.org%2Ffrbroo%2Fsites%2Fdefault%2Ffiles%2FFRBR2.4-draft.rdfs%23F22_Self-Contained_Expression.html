@@ -76,7 +76,7 @@ WHERE {
     {"displayName": "Title", "cellTemplate": "{{> title}}"},
     {"displayName": " ", "cellTemplate": "{{> rubric}}"},
     {"displayName": "Date", "cellTemplate": "{{> date}}"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
   ]'
   options='{"showFilter": false}'
@@ -145,7 +145,7 @@ where {
     {"variableName": "publText", "displayName": "Published in"},
     {"variableName": "pagination", "displayName": "Pagination"},
     {"variableName": "publDate", "displayName": "Publication Date"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
   ]'
   options='{"showFilter": false}'
@@ -169,7 +169,7 @@ SELECT ?incText ?graph WHERE {
 '
 column-configuration='[
 {"displayName": "Incorporated Texts", "variableName": "incText"},
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 ]'
 ></semantic-table>
       
@@ -187,7 +187,7 @@ SELECT ?passage ?wording ?graph WHERE {
 '
 column-configuration='[
 {"displayName": "Recorded Text Passages", "cellTemplate": "{{> passage}}"},
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 ]'
 >
 <template id="passage">
@@ -258,7 +258,7 @@ column-configuration='[
 {"displayName": "Passage", "cellTemplate": "{{> passage}}"},
 {"displayName": " ", "cellTemplate": "{{> position}}"},
 {"variableName": "source", "displayName": "Source"},
-{"variableName": "graph", "displayName": "Named Graph"}
+{"variableName": "graph", "displayName": "Project Graph"}
   ]'
                             >
               <template id="passage">
@@ -353,7 +353,7 @@ WHERE {
     {"displayName": "Position", "cellTemplate": "{{> position}}"},
     {"displayName": "Reference Target", "cellTemplate": "{{> target}}"},
     {"displayName": " ", "cellTemplate": "{{> source}}"},
-    {"displayName": " ", "cellTemplate": "{{> graph}}"}
+    {"displayName": "Project Graph", "variableName": "graph"}
                                                   ]'
                                    >
               <template id="passage">
@@ -381,16 +381,6 @@ WHERE {
               <template id="source">
                 {{#if source}}<semantic-link uri={{source.value}}>{{source.value}}</semantic-link>{{/if}}
                 </template>
-              <template id="graph">
-                <semantic-query query="SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
-                  <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity <{{relation.value}}> .
-                }}"
-                template="{{> template}}">
-              <template id="template">
-                <div>(from graph: <semantic-link uri={{graph.value}}></semantic-link>)</div>
-              </template>
-            </semantic-query>
-              </template>
 
              </semantic-table>
              </details>
@@ -422,7 +412,7 @@ where {
                         
                         column-configuration='[
     {"variableName": "quotingText", "displayName": "Referenced by Text"},
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"variableName": "graph", "displayName": "Project Graph"}
   ]'
                         >
           </semantic-table>
@@ -460,7 +450,7 @@ WHERE {
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
     {"variableName": "idType", "displayName": "ID Type"}, 
-    {"variableName": "graph", "displayName": "Source Graph"}
+    {"variableName": "graph", "displayName": "Project Graph"}
   ]'
 >
 

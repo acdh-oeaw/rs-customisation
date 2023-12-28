@@ -52,7 +52,7 @@ SELECT DISTINCT ?subtype ?graph
 WHERE { GRAPH ?graph { ?? crm:P127i_has_narrower_term ?subtype .} }'
                         column-configuration='[
                                               {"displayName": "Subtype", "variableName": "subtype"},
-                                              {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+                                              {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
                                               ]'>
         </semantic-table>
         [[/if]]
@@ -64,7 +64,7 @@ WHERE { GRAPH ?graph { ?entity crm:P2_has_type ?? ; ^crm:P165_incorporates+ ?iss
                         column-configuration='[
                                               {"displayName": "Texts", "variableName": "entity"},
                                               {"displayName": "Issue", "variableName": "issue"},
-                                              {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+                                              {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
                                               ]'
                         options='{"showFilter": false}'>
         </semantic-table>
@@ -84,7 +84,7 @@ WHERE { GRAPH ?graph { ?entity crm:P2_has_type ??; a ?class .} } LIMIT 10'
                         column-configuration='[
                                               {"displayName": "Example Entities", "variableName": "entity"},
                                               {"displayName": "Class", "variableName": "class"},
-                                              {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+                                              {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
                                               ]'
                         options='{"showFilter": false}'>
         </semantic-table>

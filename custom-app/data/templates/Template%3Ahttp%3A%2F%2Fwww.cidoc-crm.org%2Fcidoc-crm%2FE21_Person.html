@@ -140,7 +140,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                                "
                         template="{{> template}}">
           <template id="template">
-            {{#each bindings}}<div>{{date.value}} ({{#if type}}{{type.value}}; {{/if}}from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+            {{#each bindings}}<div>{{date.value}} ({{#if type}}{{type.value}}; {{/if}}Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
           </template>
           </semantic-query>
       </template>
@@ -158,7 +158,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                                "
                         template="{{> template}}">
           <template id="template">
-            {{#each bindings}}<div><semantic-link iri={{place.value}}></semantic-link> (from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+            {{#each bindings}}<div><semantic-link iri={{place.value}}></semantic-link> (Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
           </template>
           </semantic-query>
       </template>
@@ -202,7 +202,7 @@ where {
     {"variableName": "occupation"},
 		{"variableName": "time"},
 		{"cellTemplate": "{{#if employer}}<div>Employer: <semantic-link iri={{employer.value}}></semantic-link></div>{{/if}}"}, 
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
   options='{"showFilter": false}'
 ></semantic-table>
@@ -238,7 +238,7 @@ where {
     column-configuration='[
     {"variableName": "party"}, 
 		{"cellTemplate": "{{> fromto}}"}, 
-		{"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+		{"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
   options='{"showFilter": false}'
 >
@@ -278,7 +278,7 @@ where {
   column-configuration='[
     {"variableName": "legalCase"},
     {"cellTemplate": "<div>Involved as: <semantic-link iri={{legalActType.value}}></semantic-link></div>"},
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 ></semantic-table>
 [[else]]
@@ -290,7 +290,7 @@ where {
                     query="SELECT ?graph ?source WHERE { GRAPH ?graph { ?? (owl:sameAs | ^owl:sameAs)* / prov:wasDerivedFrom ?source . } }"
                     template="{{> template}}">
       <template id="template">
-        {{#each bindings}}<div><semantic-link iri={{source.value}}></semantic-link>  (from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+        {{#each bindings}}<div><semantic-link iri={{source.value}}></semantic-link>  (Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
       </template>
       </semantic-query>
     [[/if]]
@@ -318,7 +318,7 @@ where {
 "
                         column-configuration='[
     {"variableName": "text", "displayName": "Text"}, 
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         >
         </semantic-table>
@@ -357,7 +357,7 @@ WHERE {
                         
                         '[
                         {"displayName": "Was Mentioned in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         
                         ></semantic-table>
@@ -400,7 +400,7 @@ WHERE {
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
     {"variableName": "idType", "displayName": "ID Type"}, 
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 >
 
@@ -544,7 +544,7 @@ SELECT DISTINCT ?graph WHERE { GRAPH ?graph {
                                "
                         template="{{> template}}">
           <template id="template">
-            {{#each bindings}}<div>{{date.value}} ({{#if type}}{{type.value}}; {{/if}}from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+            {{#each bindings}}<div>{{date.value}} ({{#if type}}{{type.value}}; {{/if}}Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
           </template>
           </semantic-query>
       </template>
@@ -607,7 +607,7 @@ where {
     {"variableName": "occupation"},
 		{"variableName": "time"},
 		{"cellTemplate": "{{#if employer}}<div>Employer: <semantic-link iri={{employer.value}}></semantic-link></div>{{/if}}"}, 
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
   options='{"showFilter": false}'
 ></semantic-table>
@@ -643,7 +643,7 @@ where {
     column-configuration='[
     {"variableName": "party"}, 
 		{"cellTemplate": "{{> fromto}}"}, 
-		{"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+		{"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
   options='{"showFilter": false}'
 >
@@ -683,7 +683,7 @@ where {
   column-configuration='[
     {"variableName": "legalCase"},
     {"cellTemplate": "<div>Involved as: <semantic-link iri={{legalActType.value}}></semantic-link></div>"},
-    {"cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 ></semantic-table>
 [[else]]
@@ -695,7 +695,7 @@ where {
                     query="SELECT ?graph ?source WHERE { GRAPH ?graph { ?? (owl:sameAs | ^owl:sameAs)* / prov:wasDerivedFrom ?source . } }"
                     template="{{> template}}">
       <template id="template">
-        {{#each bindings}}<div><semantic-link iri={{source.value}}></semantic-link>  (from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
+        {{#each bindings}}<div><semantic-link iri={{source.value}}></semantic-link>  (Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>{{/each}}
       </template>
       </semantic-query>
     [[/if]]
@@ -785,7 +785,7 @@ where {
                         column-configuration='[
     {"variableName": "text", "displayName": "Text"}, 
     {"displayName": " ", "cellTemplate": "{{> textData}}"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         >
           <template id="textData">
@@ -933,7 +933,7 @@ WHERE {
                         '[
                         {"displayName": "Mentioned in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
     {"variableName": "issue", "displayName": "Published in"},
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         
                         ></semantic-table>
@@ -959,7 +959,7 @@ SELECT DISTINCT ?author ?refText ?graph WHERE
 "
 column-configuration='[
 {"displayName": "Quoted in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{refText.value}}></semantic-link></div>"},
-{"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 ]'>
 </semantic-table>
 
@@ -1116,7 +1116,7 @@ WHERE {
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
     {"variableName": "idType", "displayName": "ID Type"}, 
-    {"displayName": " ", "cellTemplate": "<div>(from graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 >
 

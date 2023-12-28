@@ -703,7 +703,7 @@ where {
 
       <bs-tab event-key="19" title="Timeline">
 <semantic-timeline query="
-                          SELECT DISTINCT ?target ?subject ?start ?end
+                          SELECT DISTINCT ?target ?subject ?start ?end ?spanLabel
   WHERE {
     
       
@@ -728,9 +728,12 @@ where {
             crm:P14_carried_out_by ?person .
       }
       
-      ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start .
+      ?event crm:P4_has_time-span ?span .
+                          ?span rdfs:label ?spanLabel;
+                          crm:P82a_begin_of_the_begin ?start .
                           OPTIONAL {?event crm:P4_has_time-span / crm:P82b_end_of_the_end ?end .
-                            FILTER ( ?end != ?start )}
+                            FILTER ( ?end != ?start )
+                          FILTER ( STR(?end) != 'undefined' ) }
     
   }
 "
@@ -738,7 +741,7 @@ where {
                    tuple-template-height="42">
             <template id="template">
                 {{#if target}}<semantic-link iri={{target.value}}><b>{{subject.value}}</b></semantic-link>{{else}}<b>{{subject.value}}</b>{{/if}}
-                <div>{{start.value}}{{#if end}} – {{end.value}}{{/if}}</div>
+                <div>{{spanLabel.value}}</div>
             </template>
           </semantic-timeline>
 

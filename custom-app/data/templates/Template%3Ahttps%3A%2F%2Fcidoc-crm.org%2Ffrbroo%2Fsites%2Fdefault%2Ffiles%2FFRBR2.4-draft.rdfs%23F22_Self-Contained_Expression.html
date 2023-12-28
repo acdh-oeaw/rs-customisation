@@ -317,7 +317,7 @@ WHERE {
                <summary>Click for more information</summary>
             <semantic-table
                             query='
-                                   SELECT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?relation ?targetPassage ?targetPosition ?graph
+                                   SELECT DISTINCT ?refPassage ?refWording ?refPosition ?refSegPosition ?wit ?witDate ?relation ?targetPassage ?targetPosition ?graph
                                    WHERE { GRAPH ?graph {
                                     <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation.
                                     <{{text.value}}> crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .

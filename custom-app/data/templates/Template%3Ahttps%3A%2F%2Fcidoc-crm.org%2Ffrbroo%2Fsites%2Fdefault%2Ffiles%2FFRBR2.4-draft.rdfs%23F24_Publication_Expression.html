@@ -188,15 +188,15 @@ where {
         
           [[else]]
 					<!-- monograph publication -->
-					<h3>[[this]]</h3>
         
         <semantic-query
                         query='
-                               select distinct ?publ ?date ?place ?graph
+                               select distinct ?pubLabel ?date ?place ?graph
                                where {
                                graph ?graph {
                                ?? (owl:sameAs | ^owl:sameAs)* ?publ .
-                               ?publ frbroo:R24i_was_created_through ?publEvent .
+                               ?publ rdfs:label ?pubLabel;
+                                     frbroo:R24i_was_created_through ?publEvent .
                                  OPTIONAL { ?publEvent crm:P4_has_time-span ?date .}
                                  OPTIONAL { ?publEvent crm:P7_took_place_at ?place .}
                                }
@@ -204,7 +204,7 @@ where {
                                '
                         template='{{> template}}'>
           <template id="template">
-            {{#each bindings}}<h4>{{#if date}}{{publ.value}} ({{#if place}}<semantic-link iri={{place.value}}></semantic-link>, {{/if}}{{date.value}}){{/if}} <small>From Graph: {{graph.value}}</small></h4>{{/each}}
+            {{#each bindings}}<h2>{{#if date}}{{pubLabel.value}} ({{#if place}}<semantic-link iri={{place.value}}></semantic-link>, {{/if}}{{date.value}}){{else}}{{pubLabel.value}}{{/if}} <small>From Graph: {{graph.value}}</small></h2>{{/each}}
           </template>
           </semantic-query>
         

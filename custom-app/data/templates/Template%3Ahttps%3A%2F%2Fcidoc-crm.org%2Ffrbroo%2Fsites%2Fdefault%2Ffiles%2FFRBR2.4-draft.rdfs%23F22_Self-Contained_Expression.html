@@ -30,7 +30,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
       
     <!-- Bibliographical Data --> 
       <bs-tab event-key="0" class="tab-overview" title="Bibliographical Data">
-
+        <h1>Text Data</h1>
         <semantic-table
                         query="
 SELECT DISTINCT  ?text ?textCreation ?titleValue ?subtitleValue ?creationDate ?graph ?performanceDate ?creationDateType ?performanceDateType
@@ -113,25 +113,36 @@ WHERE {
           
           </semantic-table>
         
-        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ / rdf:type frbroo:F24_Publication_Expression } LIMIT 1 }")]]
-
+        <!-- Text Tree -->
+        
+        [[#if (ask "ASK { {SELECT (COUNT(?texts) AS ?count) WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ ?parent . ?parent a frbroo:F22_Self-Contained_Expression ; crm:P165_incorporates+ ?texts .} }  FILTER (?count > 2)}")]]
+        <h1>Textual Context</h1>
+        <semantic-tree
+  query="
+        SELECT ?parent ?node WHERE {
+         ?? (owl:sameAs | ^owl:sameAs)* ?text .
+         ?parent crm:P165_incorporates+ ?text ;
+             crm:P165_incorporates ?node ;
+             a frbroo:F22_Self-Contained_Expression . }
+         "></semantic-tree>
+        
+        [[/if]]
+        
+        [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ / a frbroo:F24_Publication_Expression } LIMIT 1 }")]]
+        <h1>Publication Data</h1>
         <semantic-table
                         query="
 select distinct  ?publText ?publDate ?graph ?pagination
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
-
-    OPTIONAL { ?text crm:P165i_is_incorporated_in+ ?publText .
-      ?publText rdf:type frbroo:F22_Self-Contained_Expression ;
-              crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical . }
-      
+     ?text crm:P165i_is_incorporated_in+ ?publText .
+      ?publText a frbroo:F24_Publication_Expression .
       
     optional {
     # publication date                          
-      ?text crm:P165i_is_incorporated_in+ / ^frbroo:R24_created / crm:P4_has_time-span ?publDate .
+      ?publText ^frbroo:R24_created / crm:P4_has_time-span ?publDate .
     }                 
-    
     optional {
     # pagination
     ?text ^intro:R16_incorporates ?segment .
@@ -139,11 +150,11 @@ where {
      ( <https://schema.org/pagination> | intro:R41_has_location ) ?pagination .
                                }
   }
-}       
+}
                                "
                         column-configuration='[
     {"variableName": "publText", "displayName": "Published in"},
-    {"variableName": "pagination", "displayName": "Pagination"},
+    {"variableName": "pagination", "displayName": "Location"},
     {"variableName": "publDate", "displayName": "Publication Date"},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     

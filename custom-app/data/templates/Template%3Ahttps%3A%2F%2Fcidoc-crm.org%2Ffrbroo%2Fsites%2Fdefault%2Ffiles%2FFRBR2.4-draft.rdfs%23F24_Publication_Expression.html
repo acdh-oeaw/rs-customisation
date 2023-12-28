@@ -214,7 +214,7 @@ where {
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?publ .
-		?publ crm:P165_incorporates/crm:P165_incorporates+ ?text .
+		?publ crm:P165_incorporates? ?text .
   }
 }
                                "

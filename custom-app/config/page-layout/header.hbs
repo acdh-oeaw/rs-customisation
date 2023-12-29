@@ -14,19 +14,46 @@
       </div>
     </mp-link>
 
-		<ul class="app-header__links" role="list">
-			<li>
-				<mp-link url="/about">About the project</mp-link>
-			</li>
-			<li>
-				<mp-link url="/sources">Source projects</mp-link>
-			</li>
-			<li>
-				<mp-link url="/sparql">SPARQL</mp-link>
-			</li>
-			<li>
-				<mp-link url="/contact">Contact</mp-link>
-			</li>
-		</ul>
+    <ul class="app-header__links" role="list">
+      <li>
+        <mp-link url="/about">About the project</mp-link>
+      </li>
+      <li>
+        <mp-link url="/sources">Source projects</mp-link>
+      </li>
+      <li>
+        <mp-link url="/sparql">SPARQL</mp-link>
+      </li>
+      <li>
+        <mp-link url="/contact">Contact</mp-link>
+      </li>
+    </ul>
+
+    <button class="app-header__menu-btn" onclick="document.getElementById('main-nav-menu')?.showModal()">
+      <span class="sr-only">Menu</span>
+			<img alt="" height="24" src="/assets/icons/menu.svg" width="24">
+    </button>
+		<dialog id="main-nav-menu" class="app-header__menu">
+			<form method="dialog">
+				<button class="app-header__menu-close-btn">
+					<span class="sr-only">Close</span>
+					<img alt="" height="24" src="/assets/icons/x.svg" width="24">
+				</button>
+			</form>
+			<ul class="app-header__mobile-links" role="list" onclick="document.getElementById('main-nav-menu')?.close()">
+				<li>
+					<mp-link url="/about">About the project</mp-link>
+				</li>
+				<li>
+					<mp-link url="/sources">Source projects</mp-link>
+				</li>
+				<li>
+					<mp-link url="/sparql">SPARQL</mp-link>
+				</li>
+				<li>
+					<mp-link url="/contact">Contact</mp-link>
+				</li>
+			</ul>
+		</dialog>
   </nav>
 </header>

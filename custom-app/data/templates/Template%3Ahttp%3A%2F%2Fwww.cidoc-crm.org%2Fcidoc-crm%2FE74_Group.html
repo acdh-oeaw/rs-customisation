@@ -1,15 +1,17 @@
 <!-- template (in by now very small parts) copied from X1_Corpus in CLScor
-https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
 2023-04-21
---> 
-<ol class="page-breadcrumb">
-  <li>
-    <mp-link title="Home" url="/">Home</mp-link>
-  </li>
-  <li class="active">
-    <mp-label iri='[[this]]'></mp-label>
-  </li>
-</ol>
+-->
+<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
+	<ol class="page-breadcrumb">
+		<li>
+			<mp-link title="Home" url="/">Home</mp-link>
+		</li>
+		<li class="active">
+			<mp-label iri="[[this]]"></mp-label>
+		</li>
+	</ol>
+</nav>
 
 <style>
   #tabs .tab-ontodia {
@@ -25,15 +27,15 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
-  	
+
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      
-    <!-- Bibliographical Data --> 
+
+    <!-- Bibliographical Data -->
       <bs-tab event-key="0" class="tab-overview" title="Group Data">
-        
+
         <h4>Names</h4>
     <semantic-table
-                    
+
   query="
 
 SELECT ?appellation ?name ?graph
@@ -43,13 +45,13 @@ WHERE {
     ?group crm:P1_is_identified_by ?appellation .
     ?appellation a crm:E33_E41_Linguistic_Appellation ;
                  rdf:value ?name.
-    
+
   }
   }
          "
-         
+
   column-configuration='[
-    {"variableName": "name"}, 
+    {"variableName": "name"},
     {"variableName": "appellation", "cellTemplate": "{{> type}}"},
     {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
@@ -72,9 +74,9 @@ SELECT ?type WHERE { GRAPH ?g {
           </template>
         </semantic-query>
       </template>
-    
+
     </semantic-table>
-        
+
         <semantic-table
                         query="
                                SELECT ?person ?from ?to ?graph
@@ -85,21 +87,21 @@ SELECT ?type WHERE { GRAPH ?g {
                                OPTIONAL { ?join crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?from . }
                                OPTIONAL { ?group crm:P146i_lost_member_by ?leave .
                                ?leave crm:P145_separated ?person ;
-                               crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?to . } 
+                               crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?to . }
                                }
                                }
                                "
                         column-configuration='[
     {"variableName": "person", "displayName": "Member"},
-    {"displayName": " ", "template": "{{> template}}"}, 
+    {"displayName": " ", "template": "{{> template}}"},
     {"variableName": "graph", "displayName": "Project Graph"}
   ]'>
           <template id="template">
             {{#if from}}From {{from.value}}{{#if to}} to {{to.value}}{{/if}}{{/if}}
           </template>
           </semantic-table>
-      
-      
+
+
       </bs-tab>
       [[#if (ask "ASK { {SELECT ?id WHERE {?? (owl:sameAs | ^owl:sameAs)* ?entity . ?entity crm:P1_is_identified_by ?id .}LIMIT 1}}")]]
       <bs-tab title="IDs, URIs, URLs" event-key="10">
@@ -109,14 +111,14 @@ prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
-         
+
 SELECT ?entity ?id ?idValue ?idURL ?idType ?graph
 WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?entity .
     ?entity crm:P1_is_identified_by ?id .
     ?id rdf:value ?idValue .
-        OPTIONAL { 
+        OPTIONAL {
             FILTER (CONTAINS(STR(?idValue), 'http'))
             BIND(?idValue AS ?idURL)
         }
@@ -130,7 +132,7 @@ WHERE {
          "
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
-    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"variableName": "idType", "displayName": "ID Type"},
     {"variableName": "graph", "displayName": "Project Graph"}
   ]'
 >
@@ -150,14 +152,14 @@ WHERE {
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]
       </bs-tab>
-      
+
       <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
         <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
       </bs-tab>
-      
-    
+
+
     </bs-tabs>
-  
+
   [[else]]
   <div class='page__body'>
     <p>

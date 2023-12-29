@@ -1,5 +1,5 @@
 <header class="app-header">
-  <nav class="content-container">
+  <nav aria-label="Main" class="content-container">
     <mp-link title="Home" url="/">
       <div class="app-header__title">
         <span class="sr-only">Home</span>
@@ -10,8 +10,23 @@
           src="/assets/images/logo.svg"
           width="48"
         />
-        <span aria-hidden class="app-header__title-text">Semantic Kraus</span>
+        <span aria-hidden class="app-header__title-text">SemanticKraus</span>
       </div>
     </mp-link>
+
+		<ul class="app-header__links" role="list">
+			<li>
+				<mp-link url="/about">About the project</mp-link>
+			</li>
+			<li>
+				<mp-link url="/sources">Source projects</mp-link>
+			</li>
+			<li>
+				<mp-link url="/sparql">SPARQL</mp-link>
+			</li>
+			<li>
+				<mp-link url="/contact">Contact</mp-link>
+			</li>
+		</ul>
   </nav>
 </header>

@@ -1,15 +1,17 @@
 <!-- template (in by now very small parts) copied from X1_Corpus in CLScor
-https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
 2023-04-21
---> 
-<ol class="page-breadcrumb">
-  <li>
-    <mp-link title="Home" url="/">Home</mp-link>
-  </li>
-  <li class="active">
-    <mp-label iri='[[this]]'></mp-label>
-  </li>
-</ol>
+-->
+<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
+	<ol class="page-breadcrumb">
+		<li>
+			<mp-link title="Home" url="/">Home</mp-link>
+		</li>
+		<li class="active">
+			<mp-label iri="[[this]]"></mp-label>
+		</li>
+	</ol>
+</nav>
 
 <style>
   #tabs .tab-ontodia {
@@ -25,20 +27,20 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
-  	
+
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      
-    <!-- Place Data --> 
+
+    <!-- Place Data -->
       <bs-tab event-key="0" class="tab-overview" title="Place Data">
 				<!-- Place Names -->
         <semantic-table
             query='
-            SELECT DISTINCT ?graph ?name WHERE { 
+            SELECT DISTINCT ?graph ?name WHERE {
                         GRAPH ?graph {
                           ?? (owl:sameAs | ^owl:sameAs)* ?place .
                           ?place crm:P1_is_identified_by ?name .
                           ?name a crm:E33_E41_Linguistic_Appellation .
-                          
+
               }
               }
             '
@@ -62,13 +64,13 @@ SELECT DISTINCT ?nameType WHERE {
               </semantic-query>
           </template>
         </semantic-table>
-        
+
         <!-- Witnessed Events -->
-        
+
 
         <semantic-table
             query='
-            SELECT DISTINCT ?graph ?event ?timeSpan WHERE { 
+            SELECT DISTINCT ?graph ?event ?timeSpan WHERE {
                         GRAPH ?graph {
                           ?? (owl:sameAs | ^owl:sameAs)* ?place .
                           ?place crm:P7i_witnessed ?event .
@@ -97,7 +99,7 @@ WHERE {
     ?? (owl:sameAs | ^owl:sameAs)* ?place .
     ?place crm:P1_is_identified_by ?id .
     ?id rdf:value ?idValue .
-        OPTIONAL { 
+        OPTIONAL {
             FILTER (CONTAINS(STR(?idValue), 'http'))
             BIND(?idValue AS ?idURL)
         }
@@ -111,7 +113,7 @@ WHERE {
          "
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
-    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"variableName": "idType", "displayName": "ID Type"},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 >
@@ -126,8 +128,8 @@ WHERE {
 
 </semantic-table>
   </bs-tab>
-      
-      
+
+
       <!-- Source -->
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]
@@ -136,9 +138,9 @@ WHERE {
       <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
         <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
       </bs-tab>
-      
+
     </bs-tabs>
-  
+
   [[else]]
   <div class='page__body'>
     <p>

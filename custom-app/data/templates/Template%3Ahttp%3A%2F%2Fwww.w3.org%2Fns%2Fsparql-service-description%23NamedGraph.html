@@ -1,7 +1,8 @@
-<!-- template (in by now very small parts) copied from X1_Corpus in CLScor
+<!-- template copied from X1_Corpus in CLScor
 https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
 2023-04-21
 -->
+
 <nav aria-label="Breadcrumbs" class="page-breadcrumbs">
 	<ol class="page-breadcrumb">
 		<li>
@@ -24,46 +25,49 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
 
 <div class="page">
 	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
+
+  <div class='page__body'>
+
     <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
 
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
 
-    <!-- Relation Data -->
-      <bs-tab event-key="0" class="tab-overview" title="Relation Data">
-				<!-- From and To -->
-        <semantic-table
-                            query='
-SELECT DISTINCT ?from ?to ?fromText ?toText ?graph WHERE { GRAPH ?graph {
-?? intro:R13_has_referring_entity ?from ;
-intro:R12_has_referred_to_entity ?to .
-  OPTIONAL { ?from intro:R10_is_Text_Passage_of ?fromText .}
-  OPTIONAL { ?to intro:R10_is_Text_Passage_of ?toText .}
-}
-                                 }
-'
-                            column-configuration='[
-                                               {"displayName": "From", "cellTemplate": "<div>{{#if fromText}}<semantic-link iri={{from.value}}>Passage</semantic-link> from <semantic-link iri={{fromText.value}}>{{fromText.value}}</semantic-link>{{else}}<semantic-link iri={{from.value}}>{{from.value}}</semantic-link>{{/if}}</div>"},
-                                              {"displayName": "To", "cellTemplate": "<div>{{#if toText}}<semantic-link iri={{to.value}}>Passage</semantic-link> from <semantic-link iri={{toText.value}}>{{toText.value}}</semantic-link>{{else}}<semantic-link iri={{to.value}}>{{to.value}}</semantic-link>{{/if}}</div>"},
-    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
-  ]'
-                            >
-              </semantic-table>
-        </bs-tab>
+      <bs-tab title="Project Named Graph Information" event-key="9">
+        
+        <semantic-query
+                        query="SELECT DISTINCT ?comment ?contr ?title ?label 
+                               WHERE { 
+                               ?? rdfs:comment ?comment ;
+                               <http://purl.org/dc/terms/contributor> ?contr .
+                               {?? rdfs:label ?label .}
+                               UNION
+                               {?? <http://purl.org/dc/terms/title> ?title .}
+                               }"
+                        template="{{> template}}">
+          <template id="template">
+            {{#each bindings}}<h2><div>{{label.value}}{{#if title}} – {{title.value}}{{/if}}</div></h2>
+            <p>{{comment.value}}</p>
+            <p>{{contr.value}}</p>
+          {{/each}}
+          </template>
+          </semantic-query>
 
+        
+      </bs-tab>
 
       <!-- Source -->
-      <bs-tab event-key="1" title="Source">
+      <bs-tab event-key="6" title="Source">
         [[> Platform:SourceStatements]]
       </bs-tab>
-      <!-- Ontodia -->
+
       <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
         <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
       </bs-tab>
 
-    </bs-tabs>
 
+    </bs-tabs>
   [[else]]
   <div class='page__body'>
     <p>

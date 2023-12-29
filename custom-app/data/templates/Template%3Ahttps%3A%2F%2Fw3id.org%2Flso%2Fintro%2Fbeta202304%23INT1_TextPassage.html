@@ -1,15 +1,17 @@
 <!-- template (in by now very small parts) copied from X1_Corpus in CLScor
-https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
 2023-04-21
---> 
-<ol class="page-breadcrumb">
-  <li>
-    <mp-link title="Home" url="/">Home</mp-link>
-  </li>
-  <li class="active">
-    <mp-label iri='[[this]]'></mp-label>
-  </li>
-</ol>
+-->
+<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
+	<ol class="page-breadcrumb">
+		<li>
+			<mp-link title="Home" url="/">Home</mp-link>
+		</li>
+		<li class="active">
+			<mp-label iri="[[this]]"></mp-label>
+		</li>
+	</ol>
+</nav>
 
 <style>
   #tabs .tab-ontodia {
@@ -25,12 +27,12 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
-  	
+
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      
-    <!-- Text Passage Data --> 
+
+    <!-- Text Passage Data -->
       <bs-tab event-key="0" class="tab-overview" title="Text Passage Data">
-					<semantic-query 
+					<semantic-query
                         query='
           SELECT ?wording
           WHERE {
@@ -41,22 +43,22 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
                         >
             <template id='template'>{{#each bindings}}{{#if wording}}<h2>Text Passage: "{{wording.value}}"</h2>{{/if}}{{/each}}</template>
         </semantic-query>
-        
+
         <semantic-table
                         query='
 SELECT DISTINCT ?text ?author ?creationDate ?graph ?performanceDate ?location ?locationURL
 WHERE {
   GRAPH ?graph {
       ?text intro:R10_has_Text_Passage ?? .
-      OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text . 
+      OPTIONAL { ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
       OPTIONAL { ?textCreation  crm:P4_has_time-span / rdfs:label ?creationDate . }
       OPTIONAL { ?textCreation crm:P14_carried_out_by ?author . } }}
       OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span / rdfs:label ?performanceDate .}
 			OPTIONAL { ?? intro:R41_has_location ?location . FILTER (!CONTAINS(?location, "http")) . }
-  		OPTIONAL { ?? intro:R41_has_location ?locationURL . FILTER (CONTAINS(?location, "http")) . } 
-                               
+  		OPTIONAL { ?? intro:R41_has_location ?locationURL . FILTER (CONTAINS(?location, "http")) . }
+
   }
-                               
+
                                '
                         column-configuration='[
     {"displayName": "From Text:", "cellTemplate": "{{> text}}" },
@@ -68,28 +70,28 @@ WHERE {
             {{#if author}}<semantic-link uri={{author.value}}>{{author.value}}</semantic-link>: {{/if}}
             <semantic-link uri={{text.value}}>{{text.value}}</semantic-link>
             {{#if location}}
-                {{#if performanceDate}} 
+                {{#if performanceDate}}
                   {{#if creationDate}}, created {{creationDate.value}} {{/if}},
                   first performed / recited {{performanceDate.value}}
-                {{else}} 
+                {{else}}
                   {{#if creationDate}}, created {{creationDate.value}}{{else}}{{/if}}
                 {{/if}}
-              {{#if locationURL}}, 
+              {{#if locationURL}},
               	<semantic-link uri={{locationURL.value}}>{{location.value}}</semantic-link>.
               {{else}},
 								{{location.value}}.
             {{/if}}
             {{else}}
-              {{#if performanceDate}} 
+              {{#if performanceDate}}
                 {{#if creationDate}}, created {{creationDate.value}} {{/if}},
                 first performed / recited {{performanceDate.value}}
-                {{else}} 
+                {{else}}
                   {{#if creationDate}}, created {{creationDate.value}}{{/if}}
               {{/if}}
             {{/if}}
           </template>
           </semantic-table>
-        
+
         <semantic-table
                         query='SELECT ?person ?targetPassage ?targetText ?refPassage ?refText ?graph ?source
 WHERE {
@@ -107,14 +109,14 @@ GRAPH ?graph {
                      ^intro:R10_has_Text_Passage ?targetText .}}
       OPTIONAL { ?? intro:R12_is_referred_to_entity ?relation2 .
                 OPTIONAL { ?relation2 prov:wasDerivedFrom ?source . }
-        { ?relation2 intro:R13_has_referring_entity ?refText . 
+        { ?relation2 intro:R13_has_referring_entity ?refText .
         FILTER NOT EXISTS { ?refText a intro:INT1_TextPassage . } }
               UNION
               {?relation2 intro:R13_has_referring_entity ?refPassage .
         ?refPassage a intro:INT1_TextPassage ;
                      ^intro:R10_has_Text_Passage ?refText .}
       }
-  }    
+  }
 }
                         '
                         column-configuration='[
@@ -130,19 +132,19 @@ GRAPH ?graph {
           </template>
           </semantic-table>
 
-        
-        
+
+
 
         <semantic-table
                         query='
 						SELECT ?segLocation ?segURL ?publication ?publDate ?graph
 						WHERE { GRAPH ?graph{
-              ?? intro:R16_is_incorporated_in ?seg . 
+              ?? intro:R16_is_incorporated_in ?seg .
               OPTIONAL { ?seg intro:R41_has_location ?segLocation .
               FILTER (!CONTAINS(?segLocation, "http")) . }
               OPTIONAL { ?seg intro:R41_has_location ?segURL .
               FILTER (CONTAINS(?segURL, "http")) . }
-              OPTIONAL { ?seg intro:R25_is_segment_of|crm:P128i_is_carried_by ?publication . } 
+              OPTIONAL { ?seg intro:R25_is_segment_of|crm:P128i_is_carried_by ?publication . }
             }
             }'
                         column-configuration='[
@@ -157,16 +159,16 @@ GRAPH ?graph {
           <template id="segLocation">{{segLocation.value}}</template>
           <template id="URL"><a href="{{segURL.value}}">{{segURL.value}}</a></template>
         </semantic-table>
-				
+
         [[#if (ask "ASK {SELECT ?id WHERE { ?? crm:P1_is_identified_by ?id .}  LIMIT 1 }")]]<h3>Identifiers</h3>
-				<semantic-table 
+				<semantic-table
 query='
 SELECT ?id ?idValue ?idURL ?idType ?graph
 WHERE {
 GRAPH ?graph {
 ?? crm:P1_is_identified_by ?id .
 ?id rdf:value ?idValue .
-    OPTIONAL { 
+    OPTIONAL {
         FILTER (CONTAINS(STR(?idValue), "http"))
         BIND(?idValue AS ?idURL)
     }
@@ -196,24 +198,24 @@ options='{"showFilter": false}'
 
 </semantic-table>
           [[/if]]
-          
-        
-        </bs-tab> 
-       
 
-  
+
+        </bs-tab>
+
+
+
       <!-- Source -->
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]
       </bs-tab>
-      
+
       <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
         <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
       </bs-tab>
-      
-    
+
+
     </bs-tabs>
-  
+
   [[else]]
   <div class='page__body'>
     <p>

@@ -11,7 +11,7 @@
 
 <main class="page">
 <div class="page__hero">
-  <!-- <img alt="" src="/assets/images/hero.png" > -->
+  <img alt="" src="/assets/images/hero.png">
   <h1>SemanticKraus - Exploration Platform</h1>
 </div>
 
@@ -38,23 +38,23 @@
       <div class="home-page__grid-item">
 				<semantic-link uri="https://sk.acdh.oeaw.ac.at/DWbibl00000">
           <h3>Dritte Walpurgisnacht</h3>
-          <div>The major work of Kraus’ later years – a stunning analysis of the rule of Adolf Hitler in 1933, unpublished within the author’s lifetime.</div>
+          <div>The major work of Kraus' later years – a stunning analysis of the rule of Adolf Hitler in 1933, unpublished within the author's lifetime.</div>
 				</semantic-link>
 			</div>
       <div class="home-page__grid-item">
 				<semantic-link uri="https://sk.acdh.oeaw.ac.at/p_46460">
           <h3>Imre Békessy</h3>
-          <div>The Viennese press tsar whose reign was brought down not least by Kraus’ publicist and legal actions.</div>
+          <div>The Viennese press tsar whose reign was brought down not least by Kraus' publicist and legal actions.</div>
 				</semantic-link>
 			</div>
 			<div class="home-page__grid-item">
 				<semantic-link uri="https://sk.acdh.oeaw.ac.at/text15069">
           <h3>Wichtiges von Wichten (In verständlicher Sprache)</h3>
-          <div>The last text ever published in ‘Die Fackel’.</div>
+          <div>The last text ever published in 'Die Fackel'.</div>
 				</semantic-link>
 			</div>
-      
-			
+
+
 		</div>
 	</section>
 
@@ -64,8 +64,8 @@
 	<semantic-search limit=[[#if searchLimit]][[searchLimit]][[else]]10[[/if]]>
 	  [[!-- heuristics to check whether we have a blazegraph instance and can apply bds search --]]
 	  [[#if (ask "ASK {  <http://www.bigdata.com/queryHints#Query> <http://www.bigdata.com/queryHints#optimizer> 'None' . ?x ?y ?z . }") ]]
-		<semantic-search-query-keyword 
-		  [[#if searchPlaceholder]]placeholder='[[searchPlaceholder]]'[[/if]]                                 
+		<semantic-search-query-keyword
+		  [[#if searchPlaceholder]]placeholder='[[searchPlaceholder]]'[[/if]]
 		  domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
 		  query='
 			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -73,11 +73,11 @@
 						PREFIX bds: <http://www.bigdata.com/rdf/search#>
 						PREFIX frbr: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
 						PREFIX intro: <https://w3id.org/lso/intro/beta202304#>
-  
+
 			SELECT ?subject WHERE {
 			  [[#if searchPattern]]
 				[[searchPattern]]
-			  [[else]]                      
+			  [[else]]
 				{?subject rdfs:label|skos:prefLabel ?label .}
 				UNION
 				{?subject crm:P1_is_identified_by ?appellation.
@@ -102,8 +102,8 @@
 		  '
 		></semantic-search-query-keyword>
 	  [[else]]
-		<semantic-search-query-keyword 
-		  [[#if searchPlaceholder]]placeholder='[[searchPlaceholder]]'[[/if]]                          
+		<semantic-search-query-keyword
+		  [[#if searchPlaceholder]]placeholder='[[searchPlaceholder]]'[[/if]]
 		  domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
 		  escape-lucene-syntax='false'
 		  query='
@@ -113,7 +113,7 @@
 			  [[#if searchPattern]]
 				[[searchPattern]]
 			  [[else]]
-				?subject rdfs:label|skos:prefLabel ?label .                
+				?subject rdfs:label|skos:prefLabel ?label .
 				FILTER(REGEX(?label, ?__token__, "i"))
 				BIND(STRLEN(?label) as ?length)
 			  [[/if]]
@@ -129,7 +129,7 @@
 					query='SELECT DISTINCT ?subject (SAMPLE(?rawDesc) as ?description) WHERE {
 								  OPTIONAL { ?subject rdfs:comment ?rawDesc . }
 							} GROUP BY ?subject LIMIT [[#if searchLimit]][[searchLimit]][[else]]100[[/if]]'
-  
+
 					number-of-displayed-rows='10'
 					column-configuration='[
 						{"variableName":"subject", "displayName":"Result", "cellTemplate":"{{> subjectCellTemplate }}"}
@@ -146,7 +146,7 @@
 						  <h4><semantic-link uri="{{subject.value}}"></semantic-link></h4>
 						</div>
 					  </div>
-					  
+
 					</div>
 				  </mp-panel-body>
 				  <mp-panel-footer>
@@ -158,14 +158,14 @@
 				  </mp-panel-footer>
 				</mp-panel>
 			</template>
-					</semantic-table>          
+					</semantic-table>
 				</semantic-search-result>
 	  </div>
 	</semantic-search-result-holder>
   </div>
   </semantic-search>
 	</section>
-  
+
   <section class="page-section">
 		<h2 class="page-section__title">The SemanticKraus Project</h2>
     <div>The Austrian satirist Karl Kraus shaped Viennese culture from the Fin de Siècle to the end of the First Republic and has had a lasting impact ever since; research on him – ‘traditional’ as well as digital – is rich and growing. In the course of the CLARIAH-AT funded research project SemanticKraus (October 2022 to December 2023), research data gained from different edition projects on Karl Kraus was accumulated and transformed to RDF. This platform allows the exploration of this data. You may start your exploration by chosing one of our selected samples, or you can just use the search bar below. This platform also provides a SPARQL interface (see the SPARQL page). The SemanticKraus project invites other digital research and/or edition projects to contribute to a Linked Data Cloud centered around Karl Kraus, his work and his era (see Contact Page).</div>
@@ -180,7 +180,7 @@
       </template>
       </semantic-query>
   </section>
-  
+
 
 <!--
   <h2>
@@ -200,5 +200,5 @@
   </h2>
   -->
 
-  
+
 </main>

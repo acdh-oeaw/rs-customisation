@@ -472,6 +472,7 @@ h4 {
 .page__header-body h1 {
   font-size: 2rem;
   margin-bottom: 16px;
+	max-width: 40ch;
 }
 
 .page__header-body dl {

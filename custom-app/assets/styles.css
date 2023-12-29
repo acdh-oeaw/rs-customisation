@@ -486,7 +486,7 @@ h4 {
 }
 
 .page__header-navtabs {
-	padding-bottom: 32px;
+	padding-bottom: 32px !important;
 }
 
 .page__body-navtabs {

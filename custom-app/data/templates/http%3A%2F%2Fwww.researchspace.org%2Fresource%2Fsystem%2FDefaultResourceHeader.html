@@ -1,16 +1,18 @@
-<div class='page__header-body'>
-  <h1>
-    <mp-label iri='[[this]]'></mp-label>
-  </h1>
+<div class="page__header-body content-container">
+	<div>
+		<h1>
+			<mp-label iri='[[this]]'></mp-label>
+		</h1>
 
-	<dl>
-		<dt>URI:</dt>
-		<dd>
-			<a href='[[this]]' target='_blank'><span>[[this]]</span>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
-		</dd>
-		<dt>Type:</dt>
-		<dd>
-			<semantic-query query="SELECT DISTINCT ?type WHERE { ?? a ?type }"></semantic-query>
-		</dd>
-	</dl>
+		<dl>
+			<dt>URI:</dt>
+			<dd>
+				<a href='[[this]]' target='_blank'><span>[[this]]</span>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a>
+			</dd>
+			<dt>Type:</dt>
+			<dd>
+				<semantic-query query="SELECT DISTINCT ?type WHERE { ?? a ?type }"></semantic-query>
+			</dd>
+		</dl>
+	</div>
 </div>

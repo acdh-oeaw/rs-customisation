@@ -132,7 +132,7 @@ WHERE {
         <h1>Publication Data</h1>
         <semantic-table
                         query="
-select distinct  ?publText ?publDate ?graph ?pagination
+select distinct  ?publText ?publDate ?graph ?pagination ?text
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
@@ -142,25 +142,35 @@ where {
     optional {
     # publication date                          
       ?publText ^frbroo:R24_created / crm:P4_has_time-span ?publDate .
-    }                 
-    optional {
-    # pagination
-    ?text ^intro:R16_incorporates ?segment .
-    ?segment a intro:INT16_Segment ;
-     ( <https://schema.org/pagination> | intro:R41_has_location ) ?pagination .
-                               }
+    }                          
   }
 }
                                "
                         column-configuration='[
     {"variableName": "publText", "displayName": "Published in"},
-    {"variableName": "pagination", "displayName": "Location"},
+    {"displayName": "Location", "cellTemplate": "{{> location}}"},
     {"variableName": "publDate", "displayName": "Publication Date"},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
   ]'
   options='{"showFilter": false}'
                         >
+                        <template id="location">
+                          <semantic-query
+                          query="SELECT DISTINCT ?pagination ?from ?to
+                          WHERE {
+                            <{{text.value}}> ^intro:R16_incorporates ?segment .
+                            ?segment a intro:INT16_Segment .
+                            OPTIONAL { ?segment ( schema:pagination | intro:R41_has_location ) ?pagination . 
+                              FILTER (!CONTAINS(?pagination, 'http')) }
+                            OPTIONAL { ?segment schema:pageStart ?from ; schema:pageEnd ?to . }
+                          }"
+                          template="{{> locations}}">
+                          <template id="locations">
+                            {{#if pagination}}{{pagination.value}}{{else}}{{#if from}}{{from.value}}–{{to.value}}{{/if}}{{/if}}
+                          </template>
+                        </semantic-query>
+                        </template>
           </semantic-table>
         [[/if]]
         

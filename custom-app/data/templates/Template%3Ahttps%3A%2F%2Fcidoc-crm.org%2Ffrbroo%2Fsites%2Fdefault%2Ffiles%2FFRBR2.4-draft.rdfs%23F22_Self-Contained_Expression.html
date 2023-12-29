@@ -132,15 +132,14 @@ WHERE {
         <h1>Publication Data</h1>
         <semantic-table
                         query="
-select distinct  ?publText ?publDate ?graph ?pagination ?text
+select distinct  ?publText ?publDate ?graph ?text
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
      ?text crm:P165i_is_incorporated_in+ ?publText .
       ?publText a frbroo:F24_Publication_Expression .
       
-    optional {
-    # publication date                          
+    optional {                        
       ?publText ^frbroo:R24_created / crm:P4_has_time-span ?publDate .
     }                          
   }
@@ -155,6 +154,7 @@ where {
   options='{"showFilter": false}'
                         >
                         <template id="publText">
+                          <div><semantic-link uri={{publText.value}}></semantic-link>
                           <semantic-query
                           query="SELECT DISTINCT ?pagination ?from ?to
                           WHERE {
@@ -166,9 +166,9 @@ where {
                           }"
                           template="{{> location}}">
                           <template id="location">
-                            <div><semantic-link uri={{publText.value}}></semantic-link>{{#each bindings}}{{#if pagination}}, {{pagination.value}}{{else}}{{#if from}}, {{from.value}}–{{to.value}}{{/if}}{{/if}}{{/each}}</div>
+                            <span>{{#each bindings}}{{#if pagination}}, {{pagination.value}}{{else}}{{#if from}}, {{from.value}}–{{to.value}}{{/if}}{{/if}}{{/each}}</span>
                           </template>
-                        </semantic-query>
+                            </semantic-query></div>
                         </template>
           </semantic-table>
         [[/if]]

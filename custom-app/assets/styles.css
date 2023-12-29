@@ -250,6 +250,12 @@ h4 {
   padding: 32px 32px;
 }
 
+@media (min-width: 640px) {
+	.app-footer__top {
+		margin-top: 64px;
+	}
+}
+
 .app-footer__blog-link {
   padding-bottom: 32px;
   border-bottom: 1px solid var(--color-neutral-200);

@@ -147,15 +147,14 @@ where {
 }
                                "
                         column-configuration='[
-    {"variableName": "publText", "displayName": "Published in"},
-    {"displayName": "Location", "cellTemplate": "{{> location}}"},
+    {"displayName": "Published in", "cellTemplate": "{{> publText}}"},
     {"variableName": "publDate", "displayName": "Publication Date"},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
     
   ]'
   options='{"showFilter": false}'
                         >
-                        <template id="location">
+                        <template id="publText">
                           <semantic-query
                           query="SELECT DISTINCT ?pagination ?from ?to
                           WHERE {
@@ -165,9 +164,9 @@ where {
                               FILTER (!CONTAINS(?pagination, 'http')) }
                             OPTIONAL { ?segment schema:pageStart ?from ; schema:pageEnd ?to . }
                           }"
-                          template="{{> locations}}">
-                          <template id="locations">
-                            {{#each bindings}}<div>{{#if pagination}}{{pagination.value}}{{else}}{{#if from}}{{from.value}}–{{to.value}}{{/if}}{{/if}}</div>{{/each}}
+                          template="{{> location}}">
+                          <template id="location">
+                            <div><semantic-link uri={{publText.value}}></semantic-link>{{#each bindings}}{{#if pagination}}, {{pagination.value}}{{else}}{{#if from}}, {{from.value}}–{{to.value}}{{/if}}{{/if}}{{/each}}</div>
                           </template>
                         </semantic-query>
                         </template>

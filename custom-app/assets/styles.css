@@ -144,6 +144,28 @@ h4 {
   font-size: 1.25rem;
 }
 
+.app-header__links {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	column-gap: 16px;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-weight: 500;
+}
+
+.app-header__links a {
+	opacity: 75%;
+	transition: all 200ms ease-in-out;
+	border-bottom: 1px solid transparent;
+}
+
+.app-header__links a:hover {
+	opacity: 100%;
+	border-bottom-color: currentColor;
+}
+
 /* App footer */
 .app-footer__top {
   margin-top: 32px;
@@ -191,20 +213,26 @@ h4 {
   color: var(--color-neutral-100);
 }
 
-/* Breadcrumb navigation (built-in class) */
-/* .page-breadcrumb {} */
-
 /* Main page container (built-in class) */
 /* .page {} */
 
 .content-container {
+	display: flex;
+	column-gap: 32px;
+	align-items: center;
+	justify-content: space-between;
   margin-inline: auto;
   max-width: var(--container-width);
   width: 100%;
 }
 
+.container-width-small {
+	--container-width: 1024px;
+}
+
 .page-breadcrumbs {
   position: fixed;
+	padding-inline: 32px;
   left: 0;
   right: 0;
   z-index: 1000;
@@ -223,15 +251,20 @@ h4 {
   box-shadow: none !important;
 }
 
+.page-breadcrumb a {
+	font-weight: 500;
+}
+
 .page__hero {
   display: grid;
   position: relative;
   padding: 128px 32px;
   background: linear-gradient(
     to right,
-    var(--color-accent-100),
-    var(--color-accent-50)
+    var(--color-accent-600),
+    var(--color-accent-300)
   );
+	color: var(--color-accent-50);
   border-top: 1px solid var(--color-accent-200);
   border-bottom: 1px solid var(--color-accent-200);
 }

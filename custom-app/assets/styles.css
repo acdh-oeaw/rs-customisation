@@ -474,7 +474,7 @@ h4 {
   margin-bottom: 16px;
 }
 
-.page__header-body dl div {
+.page__header-body dl {
   display: grid;
 	align-items: center;
 	column-gap: 16px;

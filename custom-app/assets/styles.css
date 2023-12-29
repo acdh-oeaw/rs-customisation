@@ -106,7 +106,7 @@ h4 {
 
 /* Button */
 .btn {
-  transition: background-color border-color color opacity 150ms ease-out;
+  transition: all 150ms ease-out;
 }
 
 /* Client side transition overlay */
@@ -161,7 +161,7 @@ h4 {
 
 .app-header__links a {
   opacity: 75%;
-  transition: background-color border-color color opacity 150ms ease-out;
+  transition: all 150ms ease-out;
   border-bottom: 1px solid transparent;
 }
 
@@ -176,7 +176,10 @@ h4 {
 	align-items: center;
 	appearance: none;
 	opacity: 75%;
-  transition: background-color border-color color opacity 150ms ease-out;
+  transition: all 150ms ease-out;
+	border: none;
+	background: none;
+	column-gap: 8px;
 }
 
 .app-header__menu-btn:hover,
@@ -194,7 +197,10 @@ h4 {
 	align-items: center;
 	appearance: none;
 	opacity: 75%;
-  transition: background-color border-color color opacity 150ms ease-out;
+  transition: all 150ms ease-out;
+	border: none;
+	background: none;
+	column-gap: 8px;
 }
 
 .app-header__menu-close-btn:hover,
@@ -213,7 +219,7 @@ h4 {
 
 .app-header__mobile-links a {
   opacity: 75%;
-  transition: background-color border-color color opacity 150ms ease-out;
+  transition: all 150ms ease-out;
   border-bottom: 1px solid transparent;
 }
 
@@ -426,7 +432,7 @@ h4 {
 .home-page__grid-item {
   border-radius: var(--rounded-md);
   border: 1px solid var(--color-neutral-200);
-  transition: background-color border-color color opacity 150ms ease-out;
+  transition: all 150ms ease-out;
 }
 
 .home-page__grid-item a {
@@ -436,7 +442,7 @@ h4 {
   text-align: center;
   width: 100%;
   height: 100%;
-  transition: background-color border-color color opacity 150ms ease-out;
+  transition: all 150ms ease-out;
 }
 
 .home-page__grid-item h3 {

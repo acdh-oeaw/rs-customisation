@@ -10,12 +10,12 @@
 </nav>
 
 <main class="page">
-<div class="page__hero">
-  <img alt="" src="/assets/images/hero.png">
-  <h1>SemanticKraus - Exploration Platform</h1>
-</div>
+	<div class="page__hero">
+		<img alt="" src="/assets/images/hero.png">
+		<h1>SemanticKraus - Exploration Platform</h1>
+	</div>
 
-	<section class="page-section">
+	<section class="page-section" style="--container-width: 1100px;">
 		<div class="home-page__grid">
 			<div class="home-page__grid-item">
 				<semantic-link uri="https://sk.acdh.oeaw.ac.at/pmb11988">
@@ -58,131 +58,140 @@
 		</div>
 	</section>
 
-	<section class="page-section">
+	<section class="page-section container-width-small">
 		<h2 class="page-section__title">Search (beta)</h2>
+
 		<div>Search for Persons, Texts, or Places.</div>
-	<semantic-search limit=[[#if searchLimit]][[searchLimit]][[else]]10[[/if]]>
-	  [[!-- heuristics to check whether we have a blazegraph instance and can apply bds search --]]
-	  [[#if (ask "ASK {  <http://www.bigdata.com/queryHints#Query> <http://www.bigdata.com/queryHints#optimizer> 'None' . ?x ?y ?z . }") ]]
-		<semantic-search-query-keyword
-		  [[#if searchPlaceholder]]placeholder='[[searchPlaceholder]]'[[/if]]
-		  domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
-		  query='
-			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-						PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-						PREFIX bds: <http://www.bigdata.com/rdf/search#>
-						PREFIX frbr: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
-						PREFIX intro: <https://w3id.org/lso/intro/beta202304#>
 
-			SELECT ?subject WHERE {
-			  [[#if searchPattern]]
-				[[searchPattern]]
-			  [[else]]
-				{?subject rdfs:label|skos:prefLabel ?label .}
-				UNION
-				{?subject crm:P1_is_identified_by ?appellation.
-				 ?appellation a crm:E33_E41_Linguistic_Appellation;
-								rdfs:label ?label .}
-				?subject a ?type .
-				# filter for E21, E33, E35, E41, E42, E52, E73, E90; F22
-				filter (?type in (
-				  crm:E21_Person,
-				  crm:E53_Place,
-				  frbr:F22_Self-Contained_Expression,
-				  frbr:F24_Publication_Expression,
-				  crm:E73_Information_Object
-				))
-				?label bds:search ?__token__ ;
-				  bds:minRelevance "0.5" ;
-				  bds:relevance ?score ;
-				  bds:matchAllTerms "true" .
-				BIND(STRLEN(?label) as ?length)
-			   [[/if]]
-			} ORDER BY DESC(?score) ?length
-		  '
-		></semantic-search-query-keyword>
-	  [[else]]
-		<semantic-search-query-keyword
-		  [[#if searchPlaceholder]]placeholder='[[searchPlaceholder]]'[[/if]]
-		  domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
-		  escape-lucene-syntax='false'
-		  query='
-			PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-						PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-			SELECT ?subject WHERE {
-			  [[#if searchPattern]]
-				[[searchPattern]]
-			  [[else]]
-				?subject rdfs:label|skos:prefLabel ?label .
-				FILTER(REGEX(?label, ?__token__, "i"))
-				BIND(STRLEN(?label) as ?length)
-			  [[/if]]
-			} ORDER BY DESC(?score) ?length
-		  '
-		></semantic-search-query-keyword>
-	  [[/if]]
-  <div data-flex-layout="row stretch-stretch">
-	<semantic-search-result-holder>
-	  <div data-flex-self="md-full">
-		<semantic-search-result>
-		  <semantic-table id='grid-result'
-					query='SELECT DISTINCT ?subject (SAMPLE(?rawDesc) as ?description) WHERE {
-								  OPTIONAL { ?subject rdfs:comment ?rawDesc . }
-							} GROUP BY ?subject LIMIT [[#if searchLimit]][[searchLimit]][[else]]100[[/if]]'
+		<semantic-search limit=[[#if searchLimit]][[searchLimit]][[else]]10[[/if]]>
+			[[!-- heuristics to check whether we have a blazegraph instance and can apply bds search --]]
+			[[#if (ask "ASK {  <http://www.bigdata.com/queryHints#Query> <http://www.bigdata.com/queryHints#optimizer> 'None' . ?x ?y ?z . }") ]]
+			<semantic-search-query-keyword
+				[[#if searchPlaceholder]]placeholder='[[searchPlaceholder]]'[[/if]]
+				domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
+				query='
+				PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+							PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+							PREFIX bds: <http://www.bigdata.com/rdf/search#>
+							PREFIX frbr: <https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#>
+							PREFIX intro: <https://w3id.org/lso/intro/beta202304#>
 
-					number-of-displayed-rows='10'
-					column-configuration='[
-						{"variableName":"subject", "displayName":"Result", "cellTemplate":"{{> subjectCellTemplate }}"}
-				   ]'
-					options='{"showTableHeading": false, "showFilter":false}'
-					no-result-template='<div style="text-align: center;">No results. Please refine your keyword.</div>'>
-			<template id="subjectCellTemplate">
-				 <mp-panel>
-				  <mp-panel-body>
-					<div>
-					  <div>
-						<mp-resource-thumbnail iri="{{subject.value}}" class="res-img-thumbnail"></mp-resource-thumbnail>
-						<div class="res-label">
-						  <h4><semantic-link uri="{{subject.value}}"></semantic-link></h4>
+				SELECT ?subject WHERE {
+					[[#if searchPattern]]
+					[[searchPattern]]
+					[[else]]
+					{?subject rdfs:label|skos:prefLabel ?label .}
+					UNION
+					{?subject crm:P1_is_identified_by ?appellation.
+					?appellation a crm:E33_E41_Linguistic_Appellation;
+									rdfs:label ?label .}
+					?subject a ?type .
+					# filter for E21, E33, E35, E41, E42, E52, E73, E90; F22
+					filter (?type in (
+						crm:E21_Person,
+						crm:E53_Place,
+						frbr:F22_Self-Contained_Expression,
+						frbr:F24_Publication_Expression,
+						crm:E73_Information_Object
+					))
+					?label bds:search ?__token__ ;
+						bds:minRelevance "0.5" ;
+						bds:relevance ?score ;
+						bds:matchAllTerms "true" .
+					BIND(STRLEN(?label) as ?length)
+					[[/if]]
+				} ORDER BY DESC(?score) ?length
+				'
+			></semantic-search-query-keyword>
+			[[else]]
+			<semantic-search-query-keyword
+				[[#if searchPlaceholder]]placeholder='[[searchPlaceholder]]'[[/if]]
+				domain='<http://www.w3.org/2000/01/rdf-schema#Resource>'
+				escape-lucene-syntax='false'
+				query='
+				PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+							PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+				SELECT ?subject WHERE {
+					[[#if searchPattern]]
+					[[searchPattern]]
+					[[else]]
+					?subject rdfs:label|skos:prefLabel ?label .
+					FILTER(REGEX(?label, ?__token__, "i"))
+					BIND(STRLEN(?label) as ?length)
+					[[/if]]
+				} ORDER BY DESC(?score) ?length
+				'
+			></semantic-search-query-keyword>
+			[[/if]]
+		<div data-flex-layout="row stretch-stretch">
+		<semantic-search-result-holder>
+			<div data-flex-self="md-full">
+			<semantic-search-result>
+				<semantic-table id='grid-result'
+						query='SELECT DISTINCT ?subject (SAMPLE(?rawDesc) as ?description) WHERE {
+										OPTIONAL { ?subject rdfs:comment ?rawDesc . }
+								} GROUP BY ?subject LIMIT [[#if searchLimit]][[searchLimit]][[else]]100[[/if]]'
+
+						number-of-displayed-rows='10'
+						column-configuration='[
+							{"variableName":"subject", "displayName":"Result", "cellTemplate":"{{> subjectCellTemplate }}"}
+						]'
+						options='{"showTableHeading": false, "showFilter":false}'
+						no-result-template='<div style="text-align: center;">No results. Please refine your keyword.</div>'>
+				<template id="subjectCellTemplate">
+					<mp-panel>
+						<mp-panel-body>
+						<div>
+							<div>
+							<mp-resource-thumbnail iri="{{subject.value}}" class="res-img-thumbnail"></mp-resource-thumbnail>
+							<div class="res-label">
+								<h4><semantic-link uri="{{subject.value}}"></semantic-link></h4>
+							</div>
+							</div>
+
 						</div>
-					  </div>
-
-					</div>
-				  </mp-panel-body>
-				  <mp-panel-footer>
-					<div>
-					  <div><b>URI: </b><i>{{subject.value}}</i></div>
-					  <div class="res-comment">{{description.value}}</div>
-					  <div><b>Types: </b><semantic-query style='display:inline;' query='SELECT ?type WHERE { <{{subject.value}}> a ?type}' no-result-template='-'></semantic-query></div>
-					</div>
-				  </mp-panel-footer>
-				</mp-panel>
-			</template>
-					</semantic-table>
-				</semantic-search-result>
-	  </div>
-	</semantic-search-result-holder>
-  </div>
-  </semantic-search>
+						</mp-panel-body>
+						<mp-panel-footer>
+						<div>
+							<div><b>URI: </b><i>{{subject.value}}</i></div>
+							<div class="res-comment">{{description.value}}</div>
+							<div><b>Types: </b><semantic-query style='display:inline;' query='SELECT ?type WHERE { <{{subject.value}}> a ?type}' no-result-template='-'></semantic-query></div>
+						</div>
+						</mp-panel-footer>
+					</mp-panel>
+				</template>
+						</semantic-table>
+					</semantic-search-result>
+			</div>
+		</semantic-search-result-holder>
+		</div>
+		</semantic-search>
 	</section>
 
-  <section class="page-section">
+  <section class="page-section container-width-small">
 		<h2 class="page-section__title">The SemanticKraus Project</h2>
-    <div>The Austrian satirist Karl Kraus shaped Viennese culture from the Fin de Siècle to the end of the First Republic and has had a lasting impact ever since; research on him – ‘traditional’ as well as digital – is rich and growing. In the course of the CLARIAH-AT funded research project SemanticKraus (October 2022 to December 2023), research data gained from different edition projects on Karl Kraus was accumulated and transformed to RDF. This platform allows the exploration of this data. You may start your exploration by chosing one of our selected samples, or you can just use the search bar below. This platform also provides a SPARQL interface (see the SPARQL page). The SemanticKraus project invites other digital research and/or edition projects to contribute to a Linked Data Cloud centered around Karl Kraus, his work and his era (see Contact Page).</div>
 
-    <div><small><strong>License Information:</strong> The contents of SemanticKraus are available under <a href="https://creativecommons.org/licenses/by/4.0/">CC_BY_4.0</a>; this includes project texts, the project ontology, the project data model, and the cross-project type definitions. For the licenses of data from our source projects see their respective website (see the Project and Source Projects page).</small></div>
+		<p>The Austrian satirist Karl Kraus shaped Viennese culture from the Fin de Siècle to the end of the First Republic and has had a lasting impact ever since; research on him – ‘traditional’ as well as digital – is rich and growing. In the course of the CLARIAH-AT funded research project SemanticKraus (October 2022 to December 2023), research data gained from different edition projects on Karl Kraus was accumulated and transformed to RDF. This platform allows the exploration of this data. You may start your exploration by chosing one of our selected samples, or you can just use the search bar below. This platform also provides a SPARQL interface (see the SPARQL page). The SemanticKraus project invites other digital research and/or edition projects to contribute to a Linked Data Cloud centered around Karl Kraus, his work and his era (see Contact Page).</p>
+
+		<div>
+			<small>
+				<strong>License Information:</strong>
+				The contents of SemanticKraus are available under <a href="https://creativecommons.org/licenses/by/4.0/">CC_BY_4.0</a>; this includes project texts, the project ontology, the project data model, and the cross-project type definitions. For the licenses of data from our source projects see their respective website (see the Project and Source Projects page).
+			</small>
+		</div>
   </section>
-    <section class="page-section">
+
+  <section class="page-section container-width-small">
 		<h2 class="page-section__title">Data Sets Included</h2>
+
     <semantic-query query="SELECT DISTINCT ?citation WHERE { ?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ; <http://purl.org/dc/terms/bibliographicCitation> ?citation . }" template="{{> template}}">
       <template id="template">
         {{#each bindings}}<div>{{citation.value}}</div>{{/each}}
       </template>
-      </semantic-query>
+		</semantic-query>
   </section>
 
-
-<!--
+	<!--
   <h2>
 	  <mp-link url="sk:model">
 		  Model
@@ -198,7 +207,6 @@
 		  Data Overview
 	  </semantic-link>
   </h2>
-  -->
-
+	-->
 
 </main>

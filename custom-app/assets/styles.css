@@ -474,14 +474,26 @@ h4 {
   margin-bottom: 16px;
 }
 
-.page__header-body b {
-  font-weight: 600;
+.page__header-body dl div {
+  display: grid;
+	align-items: center;
+	column-gap: 16px;
+	grid-template-columns: auto 1fr;
+}
+
+.page__header-body dt {
+	font-weight: 500;
+}
+
+.page__header-navtabs {
+	padding-bottom: 32px;
 }
 
 .page__body-navtabs {
   max-width: var(--container-width);
   width: 100%;
   margin-inline: auto;
+	padding-bottom: 32px;
 }
 
 .page__body-navtabs li.active {

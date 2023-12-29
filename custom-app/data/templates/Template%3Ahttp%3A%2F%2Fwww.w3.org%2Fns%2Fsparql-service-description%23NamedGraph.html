@@ -35,6 +35,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
 
       <bs-tab title="Project Named Graph Information" event-key="9">
+        <div>
         <semantic-query query="SELECT * WHERE {?? <http://purl.org/dc/terms/title> ?title } LIMIT 1"
                         template="{{> template}}">
           <template id="template">
@@ -44,24 +45,26 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
         <semantic-query query="SELECT ?source WHERE {?? <http://purl.org/dc/terms/source> ?source } "
                         template="{{> template}}">
           <template id="template">
-            <h3>Project URL(s)</h3>
+            <h4>Project URL(s)</h4>
             {{#each bindings}}<a href={{{source.value}}}>{{source.value}}</a>{{/each}}
           </template>
           </semantic-query>
+        </div>
         
-        
+        <div>
         <semantic-table
-                        query="SELECT DISTINCT ?key ?value 
+                        query="SELECT DISTINCT ?value 
                                WHERE { ?? ?key ?value . 
                                FILTER ( ?key IN (<http://purl.org/dc/terms/contributor>, rdfs:comment, <http://purl.org/dc/terms/bibliographicCitation>) )
                                }
-                               
                                "
                         column-configuration='[
-    {"variableName": "key", "displayName": " "},
     {"variableName": "value", "displayName": " "}
-  ]'></semantic-table>
-
+  ]'
+                         options='{"showFilter": false}'
+                        ></semantic-table>
+        </div>
+        
         
       </bs-tab>
 

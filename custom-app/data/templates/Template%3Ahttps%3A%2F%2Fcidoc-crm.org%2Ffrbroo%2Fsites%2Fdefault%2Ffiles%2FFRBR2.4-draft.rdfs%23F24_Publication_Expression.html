@@ -1,15 +1,17 @@
 <!-- template (in by now very small parts) copied from X1_Corpus in CLScor
-https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
 2023-04-21
---> 
-<ol class="page-breadcrumb">
-  <li>
-    <mp-link title="Home" url="/">Home</mp-link>
-  </li>
-  <li class="active">
-    <mp-label iri='[[this]]'></mp-label>
-  </li>
-</ol>
+-->
+<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
+	<ol class="page-breadcrumb">
+		<li>
+			<mp-link title="Home" url="/">Home</mp-link>
+		</li>
+		<li class="active">
+			<mp-label iri="[[this]]"></mp-label>
+		</li>
+	</ol>
+</nav>
 
 <style>
   #tabs .tab-ontodia {
@@ -25,15 +27,15 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
-  	
+
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      
-     
+
+
       <bs-tab event-key="2" title="Bibliographical Data">
         [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?publ . ?publ ^frbroo:R5_has_component ?o}LIMIT 1}}")]]
-        
+
         <!-- Issue -->
-        
+
         <semantic-query
                         query="
                                select distinct  ?tMain ?tSub ?ni ?nv ?place ?date ?ed ?graph
@@ -81,7 +83,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
               {{/each}}
           </template>
           </semantic-query>
-        
+
         <semantic-query
                         query='
                                select distinct  ?per ?graph
@@ -98,7 +100,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
             <div><small>From Graph: {{graph.value}}</small></div>{{/each}}
           </template>
           </semantic-query>
-        
+
         <semantic-table
                         query="
                                select distinct ?text ?graph
@@ -112,39 +114,39 @@ where {
                         column-configuration='[
 		{"variableName": "text", "displayName": "Incorporated Texts"},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
-    
+
   ]'
-    options='{"showFilter": false}'                    
+    options='{"showFilter": false}'
                         >
           </semantic-table>
-        
+
         [[else]]
           [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?publ . ?publ frbroo:R5_has_component ?o}LIMIT 1}}")]]
 
           <!-- periodical -->
-        
+
 
         [[#if (ask "ASK { SELECT ?oCount WHERE { SELECT (COUNT(?o) AS ?oCount) WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?publ .  ?publ frbroo:R5_has_component ?o . } HAVING (?oCount < 51)}}")]]
-        
+
         <h4>Publication Timeline</h4>
         <semantic-timeline query='
                           SELECT DISTINCT ?event ?subject ?start
   WHERE {?? frbroo:R5_has_component ?component.
         ?component rdfs:label ?subject ;
-          frbroo:R24i_was_created_through ?event . 
+          frbroo:R24i_was_created_through ?event .
         ?event crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?start .
              }
 '
-                   tuple-template="{{> template}}" 
+                   tuple-template="{{> template}}"
                    tuple-template-height="42">
             <template id="template">
                 <semantic-link iri={{subject.value}}><b>{{subject.value}}</b></semantic-link>
                 <div>{{start.value}}</div>
             </template>
           </semantic-timeline>
-        
+
         [[else]]
-        
+
         <h4>Publication Chart</h4>
          <semantic-chart
             type='line'
@@ -153,7 +155,7 @@ where {
                    WHERE {
                    ?? (owl:sameAs | ^owl:sameAs)* ?periodical .
                    ?periodical frbroo:R5_has_component / frbroo:R24i_was_created_through / crm:P4_has_time-span / crm:P82a_begin_of_the_begin ?date .
-                   
+
                    BIND(STR(?date) AS ?date2)
                    BIND(SUBSTR(?date2, 1, 4) AS ?year)
                    }
@@ -165,15 +167,15 @@ where {
           ]'
 >
           </semantic-chart>
-                         
-                  
+
+
         [[/if]]
         <h4>Published Issues / Volumes</h4>
        <semantic-table query="SELECT ?publ ?date ?graph
                               WHERE { GRAPH ?graph {
                               ?? (owl:sameAs | ^owl:sameAs)* ?periodical .
                               ?periodical frbroo:R5_has_component ?publ .
-                              ?publ frbroo:R24i_was_created_through / 
+                              ?publ frbroo:R24i_was_created_through /
                               	crm:P4_has_time-span /
                               	crm:P82a_begin_of_the_begin ?date .
                               }}
@@ -181,14 +183,14 @@ where {
                               "
                         column-configuration='[
     {"variableName": "publ", "displayName": " "},
-    {"variableName": "date", "displayName": " "}, 
+    {"variableName": "date", "displayName": " "},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                        />-->
-        
+
           [[else]]
 					<!-- monograph publication -->
-        
+
         <semantic-query
                         query='
                                select distinct ?pubLabel ?date ?place ?graph
@@ -207,7 +209,7 @@ where {
             {{#each bindings}}<h2>{{#if date}}{{pubLabel.value}} ({{#if place}}<semantic-link iri={{place.value}}></semantic-link>, {{/if}}{{date.value}}){{else}}{{pubLabel.value}}{{/if}} <small>From Graph: {{graph.value}}</small></h2>{{/each}}
           </template>
           </semantic-query>
-        
+
         <semantic-table
                         query="
                                select distinct ?text ?graph
@@ -221,37 +223,37 @@ where {
                         column-configuration='[
 		{"variableName": "text", "displayName": "Incorporated Texts"},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
-    
+
   ]'
-    options='{"showFilter": false}'                    
+    options='{"showFilter": false}'
                         >
           </semantic-table>
 
           [[/if]]
 
-        
+
         [[/if]]
-        
-        
-        
-        
+
+
+
+
       </bs-tab>
-  
+
       <bs-tab title="Entity IDs" event-key="10">
-        <semantic-table 
+        <semantic-table
   query="
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
-         
+
 SELECT ?entity ?id ?idValue ?idURL ?idType ?graph
 WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?entity .
     ?entity crm:P1_is_identified_by ?id .
     ?id rdf:value ?idValue .
-        OPTIONAL { 
+        OPTIONAL {
             FILTER (CONTAINS(STR(?idValue), 'http'))
             BIND(?idValue AS ?idURL)
         }
@@ -265,7 +267,7 @@ WHERE {
          "
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
-    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"variableName": "idType", "displayName": "ID Type"},
     {"variableName": "graph", "displayName": "Source Graph"}
   ]'
 >
@@ -280,19 +282,19 @@ WHERE {
 
 </semantic-table>
   </bs-tab>
-      
+
       <!-- Source -->
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]
       </bs-tab>
-      
+
       <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
         <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
       </bs-tab>
-      
-    
+
+
     </bs-tabs>
-  
+
   [[else]]
   <div class='page__body'>
     <p>

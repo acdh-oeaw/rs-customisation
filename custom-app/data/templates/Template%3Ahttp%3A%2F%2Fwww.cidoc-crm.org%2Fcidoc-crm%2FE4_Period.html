@@ -1,16 +1,18 @@
 <!-- template (in by now very small parts) copied from X1_Corpus in CLScor
-https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
 2023-04-21
---> 
-<ol class="page-breadcrumb">
-    <li>
-      <mp-link title="Home" url="/">Home</mp-link>
-    </li>
-    <li class="active">
-      <mp-label iri='[[this]]'></mp-label>
-    </li>
-  </ol>
-  
+-->
+<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
+	<ol class="page-breadcrumb">
+		<li>
+			<mp-link title="Home" url="/">Home</mp-link>
+		</li>
+		<li class="active">
+			<mp-label iri="[[this]]"></mp-label>
+		</li>
+	</ol>
+</nav>
+
   <style>
     #tabs .tab-ontodia {
       margin: 0px;
@@ -19,18 +21,18 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
       height: calc(100vh - 300px);
     }
   </style>
-  
+
   <div class="page">
       [[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
       <div class='page__header-navtabs'>
         [[> Platform:DefaultResourceHeader]]
       </div>
-        
+
       <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-        
-      <!-- Bibliographical Data --> 
+
+      <!-- Bibliographical Data -->
         <bs-tab event-key="0" class="tab-overview" title="Employer Data">
-          
+
           <semantic-table
                           query="
                                  SELECT ?person ?timesp ?graph
@@ -44,29 +46,29 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
                                  "
                           column-configuration='[
       {"variableName": "person", "displayName": "Employee"},
-      {"variableName": "timesp", "displayName": "From – To"}, 
+      {"variableName": "timesp", "displayName": "From – To"},
       {"variableName": "graph", "displayName": "Project Graph"}
     ]'>
             </semantic-table>
-        
-        
+
+
         </bs-tab>
         [[#if (ask "ASK { {SELECT ?id WHERE {?? (owl:sameAs | ^owl:sameAs)* ?entity . ?entity crm:P1_is_identified_by ?id .}LIMIT 1}}")]]
         <bs-tab title="Entity IDs" event-key="10">
-          <semantic-table 
+          <semantic-table
     query="
   prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
   prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
   prefix owl: <http://www.w3.org/2002/07/owl#>
-           
+
   SELECT ?entity ?id ?idValue ?idURL ?idType ?graph
   WHERE {
     GRAPH ?graph {
       ?? (owl:sameAs | ^owl:sameAs)* ?entity .
       ?entity crm:P1_is_identified_by ?id .
       ?id rdf:value ?idValue .
-          OPTIONAL { 
+          OPTIONAL {
               FILTER (CONTAINS(STR(?idValue), 'http'))
               BIND(?idValue AS ?idURL)
           }
@@ -80,11 +82,11 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
            "
     column-configuration='[
       {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
-      {"variableName": "idType", "displayName": "ID Type"}, 
+      {"variableName": "idType", "displayName": "ID Type"},
       {"variableName": "graph", "displayName": "Project Graph"}
     ]'
   >
-  
+
   <template id="idValue">
     {{#if idURL}}
     <a href="{{{idURL.value}}}">{{idValue.value}}</a>
@@ -92,7 +94,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <div>{{idValue.value}}</div>
     {{/if}}
   </template>
-  
+
   </semantic-table>
     </bs-tab>
         [[/if]]
@@ -100,14 +102,14 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
         <bs-tab event-key="1" title="Source">
           [[> Platform:SourceStatements]]
         </bs-tab>
-        
+
         <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
           <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
         </bs-tab>
-        
-      
+
+
       </bs-tabs>
-    
+
     [[else]]
     <div class='page__body'>
       <p>

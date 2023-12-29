@@ -1,15 +1,17 @@
 <!-- template (in by now very small parts) copied from X1_Corpus in CLScor
-https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
 2023-04-21
---> 
-<ol class="page-breadcrumb">
-  <li>
-    <mp-link title="Home" url="/">Home</mp-link>
-  </li>
-  <li class="active">
-    <mp-label iri='[[this]]'></mp-label>
-  </li>
-</ol>
+-->
+<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
+	<ol class="page-breadcrumb">
+		<li>
+			<mp-link title="Home" url="/">Home</mp-link>
+		</li>
+		<li class="active">
+			<mp-label iri="[[this]]"></mp-label>
+		</li>
+	</ol>
+</nav>
 
 <style>
   #tabs .tab-ontodia {
@@ -25,15 +27,15 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
-  	
+
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      
-    <!-- Type Data --> 
+
+    <!-- Type Data -->
       <bs-tab event-key="0" class="tab-overview" title="Type Information">
 				<!-- From and To -->
         <semantic-query
                         query='
-SELECT DISTINCT ?desc ?graph 
+SELECT DISTINCT ?desc ?graph
 WHERE { GRAPH ?graph { ?? rdfs:comment ?desc . }}'
                         template='{{> template}}'
                             >
@@ -44,7 +46,7 @@ WHERE { GRAPH ?graph { ?? rdfs:comment ?desc . }}'
             {{/each}}
           </template>
         </semantic-query>
-        
+
         [[#if (ask "ASK { {SELECT * WHERE {?? crm:P127i_has_narrower_term ?subtype . } LIMIT 1}}")]]
         <semantic-table
                         query='
@@ -68,7 +70,7 @@ WHERE { GRAPH ?graph { ?entity crm:P2_has_type ?? ; ^crm:P165_incorporates+ ?iss
                                               ]'
                         options='{"showFilter": false}'>
         </semantic-table>
-        
+
         <semantic-query
                         query="SELECT ?supType WHERE {?? crm:P127_has_broader_term ?supType . }"
                         template="{{> template}}">
@@ -90,8 +92,8 @@ WHERE { GRAPH ?graph { ?entity crm:P2_has_type ??; a ?class .} } LIMIT 10'
         </semantic-table>
         [[/if]]
       </bs-tab>
-      
-      
+
+
       <!-- Source -->
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]
@@ -100,9 +102,9 @@ WHERE { GRAPH ?graph { ?entity crm:P2_has_type ??; a ?class .} } LIMIT 10'
       <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
         <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
       </bs-tab>
-      
+
     </bs-tabs>
-  
+
   [[else]]
   <div class='page__body'>
     <p>

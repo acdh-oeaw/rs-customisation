@@ -1,15 +1,17 @@
 <!-- template (in by now very small parts) copied from X1_Corpus in CLScor
-https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus 
+https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A%2F%2Fclsinfra.io%2Fontologies%2FCRMcls%2FX1_Corpus
 2023-04-21
---> 
-<ol class="page-breadcrumb">
-  <li>
-    <mp-link title="Home" url="/">Home</mp-link>
-  </li>
-  <li class="active">
-    <mp-label iri='[[this]]'></mp-label>
-  </li>
-</ol>
+-->
+<nav aria-label="Breadcrumbs" class="page-breadcrumbs">
+	<ol class="page-breadcrumb">
+		<li>
+			<mp-link title="Home" url="/">Home</mp-link>
+		</li>
+		<li class="active">
+			<mp-label iri="[[this]]"></mp-label>
+		</li>
+	</ol>
+</nav>
 
 <style>
   #tabs .tab-ontodia {
@@ -25,10 +27,10 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <div class='page__header-navtabs'>
       [[> Platform:DefaultResourceHeader]]
     </div>
-  	
+
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      
-    <!-- Bibliographical Data --> 
+
+    <!-- Bibliographical Data -->
       <bs-tab event-key="0" class="tab-overview" title="Bibliographical Data">
         <h1>Text Data</h1>
         <semantic-table
@@ -37,21 +39,21 @@ SELECT DISTINCT  ?text ?textCreation ?titleValue ?subtitleValue ?creationDate ?g
 WHERE {
   GRAPH ?graph {
    ?? (owl:sameAs | ^owl:sameAs)* ?text .
-      
-      OPTIONAL { 
+
+      OPTIONAL {
                                ?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
-                               OPTIONAL { ?textCreation crm:P4_has_time-span / rdfs:label ?creationDate . 
+                               OPTIONAL { ?textCreation crm:P4_has_time-span / rdfs:label ?creationDate .
                                OPTIONAL{ ?textCreation crm:P4_has_time-span / crm:P2_has_type ?creationDateType }}
                                }
       OPTIONAL { ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span / rdfs:label ?performanceDate .
                                OPTIONAL{ ?text frbroo:R66i_had_a_performed_version_through/crm:P4_has_time-span / crm:P2_has_type ?performanceDateType }}
     # text title(s)
     ?text crm:P102_has_title ?title .
-    {                               
+    {
     ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/main> .
     }
     UNION
-    {                               
+    {
     ?title crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/prov> .
     }
     UNION
@@ -59,31 +61,31 @@ WHERE {
     FILTER NOT EXISTS {
     ?title crm:P2_has_type ?sometype .}
     }
-    
+
     ?title rdf:value ?titleValue .
-    
+
     OPTIONAL {
     ?text crm:P102_has_title ?subtitle .
     ?subtitle crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/title/sub> ;
         rdf:value ?subtitleValue .
     }
-    
+
   }
 }
 "
                         column-configuration='[
-    {"displayName": "Author(s)",  "cellTemplate": "{{> author}}"}, 
+    {"displayName": "Author(s)",  "cellTemplate": "{{> author}}"},
     {"displayName": "Title", "cellTemplate": "{{> title}}"},
     {"displayName": " ", "cellTemplate": "{{> rubric}}"},
     {"displayName": "Date", "cellTemplate": "{{> date}}"},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
-    
+
   ]'
   options='{"showFilter": false}'
                         >
           <template id="author">
             {{#if textCreation}}<semantic-query
-                            query="SELECT ?author 
+                            query="SELECT ?author
                                    WHERE { GRAPH <{{graph.value}}> {
                                    <{{textCreation.value}}> crm:P14_carried_out_by ?author . } }
                                    "
@@ -95,7 +97,7 @@ WHERE {
           </template>
           <template id="rubric">
             <semantic-query
-                            query="SELECT ?textType 
+                            query="SELECT ?textType
                                    WHERE { <{{text.value}}> crm:P2_has_type ?textType . }
                                    "
                             template="{{> template}}">
@@ -110,11 +112,11 @@ WHERE {
           <template id="date">
             <div>{{#if creationDate}}{{creationDate.value}} (created{{#if creationDateType}} – {{creationDateType.value}}{{/if}}){{#if performanceDate}}, {{performanceDate.value}} (first performed{{#if performanceDateType}} – {{performanceDateType.value}}{{/if}}){{/if}}{{else}}{{#if performanceDate}}{{performanceDate.value}} (first performed{{#if performanceDateType}} – {{performanceDateType.value}}{{/if}}){{/if}}{{/if}}</div>
           </template>
-          
+
           </semantic-table>
-        
+
         <!-- Text Tree -->
-        
+
         [[#if (ask "ASK { {SELECT (COUNT(?texts) AS ?count) WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ ?parent . ?parent a frbroo:F22_Self-Contained_Expression ; crm:P165_incorporates+ ?texts .} }  FILTER (?count > 2)}")]]
         <h1>Textual Context</h1>
         <semantic-tree
@@ -125,9 +127,9 @@ WHERE {
              crm:P165_incorporates ?node ;
              a frbroo:F22_Self-Contained_Expression . }
          "></semantic-tree>
-        
+
         [[/if]]
-        
+
         [[#if (ask "ASK {SELECT * WHERE  { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165i_is_incorporated_in+ / a frbroo:F24_Publication_Expression } LIMIT 1 }")]]
         <h1>Publication Data</h1>
         <semantic-table
@@ -138,10 +140,10 @@ where {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
      ?text crm:P165i_is_incorporated_in+ ?publText .
       ?publText a frbroo:F24_Publication_Expression .
-      
-    optional {                        
+
+    optional {
       ?publText ^frbroo:R24_created / crm:P4_has_time-span ?publDate .
-    }                          
+    }
   }
 }
                                "
@@ -149,7 +151,7 @@ where {
     {"displayName": "Published in", "cellTemplate": "{{> publText}}"},
     {"variableName": "publDate", "displayName": "Publication Date"},
     {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
-    
+
   ]'
   options='{"showFilter": false}'
                         >
@@ -160,7 +162,7 @@ where {
                           WHERE {
                             <{{text.value}}> ^intro:R16_incorporates ?segment .
                             ?segment a intro:INT16_Segment .
-                            OPTIONAL { ?segment ( schema:pagination | intro:R41_has_location ) ?pagination . 
+                            OPTIONAL { ?segment ( schema:pagination | intro:R41_has_location ) ?pagination .
                               FILTER (!CONTAINS(?pagination, 'http')) }
                             OPTIONAL { ?segment schema:pageStart ?from ; schema:pageEnd ?to . }
                           }"
@@ -172,15 +174,15 @@ where {
                         </template>
           </semantic-table>
         [[/if]]
-        
-        
+
+
       </bs-tab>
 [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates|intro:R10_has_Text_Passage ?content . } LIMIT 1 }")]]
 <bs-tab event-key="22" title="Textual Contents">
 
       <semantic-table
 query='
-SELECT ?incText ?graph WHERE { 
+SELECT ?incText ?graph WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
     ?text crm:P165_incorporates/crm:P165_incorporates* ?incText .
@@ -192,10 +194,10 @@ column-configuration='[
 {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 ]'
 ></semantic-table>
-      
+
       <semantic-table
 query='
-SELECT ?passage ?wording ?graph WHERE { 
+SELECT ?passage ?wording ?graph WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
     ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage .
@@ -220,12 +222,12 @@ column-configuration='[
   </div>
 </template>
 </semantic-table>
-      
+
       </bs-tab>
 [[/if]]
-        
-        
-      
+
+
+
 
         [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]
       <bs-tab event-key="2" title="Person Mentions">
@@ -241,7 +243,7 @@ column-configuration='[
 }
                                '
                         column-configuration='[
-    {"variableName": "mentioned", "displayName": "Mentioned Person"}, 
+    {"variableName": "mentioned", "displayName": "Mentioned Person"},
     {"displayName": "Mention", "cellTemplate": "{{> ref}}"}
   ]'
                         >
@@ -273,8 +275,8 @@ column-configuration='[
                                    }
                                    }
                                    '
-                            
-                             column-configuration='[    
+
+                             column-configuration='[
 {"displayName": "Passage", "cellTemplate": "{{> passage}}"},
 {"displayName": " ", "cellTemplate": "{{> position}}"},
 {"variableName": "source", "displayName": "Source"},
@@ -308,9 +310,9 @@ column-configuration='[
       [[/if]]
 
       <!-- INTERTEXTUAL RELATIONS -->
-      
+
       [[#if (ask "ASK {{ SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation . } LIMIT 1 } UNION { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation . } }")]]
-      
+
         <bs-tab event-key="17" title="Intertextual Relations">
         <!-- OUTGOING RELATIONS -->
         <semantic-table
@@ -325,7 +327,7 @@ WHERE {
   }
 }
 '
-                        
+
                         column-configuration='[
     {"variableName": "targetText", "displayName": "Referenced Text"},
     {"displayName": "Relation","cellTemplate": "{{> relations}}"}
@@ -339,16 +341,16 @@ WHERE {
                                    SELECT DISTINCT ?refPassage ?refWording ?refPosition ?relation ?graph
                                    WHERE { GRAPH ?graph {
                                     <{{targetText.value}}> intro:R10_has_Text_Passage*/intro:R12_is_referred_to_entity ?relation.
-                                    <{{text.value}}> crm:P165_incorporates* / intro:R10_has_Text_Passage* / 
+                                    <{{text.value}}> crm:P165_incorporates* / intro:R10_has_Text_Passage* /
                                                  intro:R13_is_referring_entity ?relation .
-                                   
+
                                    OPTIONAL { ?relation intro:R13_has_referring_entity ?refPassage .
-                                      ?refPassage a intro:INT1_TextPassage . 
+                                      ?refPassage a intro:INT1_TextPassage .
                                       OPTIONAL { ?refPassage intro:R41_has_location ?refPosition . }
                                       OPTIONAL { ?refPassage intro:R44_has_wording ?refWording . }
                                             }}
                                          }
-                                   
+
                                    '
                             column-configuration='[
     {"displayName": "Passage", "cellTemplate": "{{> passage}}"},
@@ -358,29 +360,29 @@ WHERE {
                                    >
               <template id="passage">
                 <div>
-                
+
                 <semantic-link uri={{refPassage.value}}>{{#if refWording}}"{{refWording.value}}"{{else}}{{refPassage.value}}{{/if}}</semantic-link>
                 {{#if refPosition}}
                 , {{refPosition.value}}
                 {{/if}}
                 </div>
               </template>
-              
+
               <template id="source">
                 <semantic-query query='SELECT ?source WHERE {GRAPH ?graph { <{{relation.value}}> prov:wasDerivedFrom ?source . }}' template="{{> sources}}">
                   <template id="sources">
                     {{#each bindings}}<div><semantic-link uri={{source.value}}>{{source.value}}</semantic-link></div>{{/each}}
                   </template>
                 </semantic-query>
-                
+
                 </template>
 
              </semantic-table>
              </details>
           </template>
           </semantic-table>
-        
-        
+
+
         <!-- INCOMING RELATIONS -->
         <semantic-table
                         query='
@@ -393,16 +395,16 @@ where {
     {?text ^intro:R12_has_referred_to_entity ?relation .
       FILTER NOT EXISTS { ?text a intro:INT1_TextPassage . }
     }
-    
+
     {?relation intro:R13_has_referring_entity / ^intro:R10_has_Text_Passage ?quotingText . }
     union
     {?relation intro:R13_has_referring_entity ?quotingText .
             FILTER NOT EXISTS { ?quotingText a intro:INT1_TextPassage . }}
-                               
+
   }
-}        
+}
                                '
-                        
+
                         column-configuration='[
     {"variableName": "quotingText", "displayName": "Referenced by Text"},
     {"variableName": "graph", "displayName": "Project Graph"}
@@ -410,25 +412,25 @@ where {
                         >
           </semantic-table>
         [[/if]]
-        
+
         </bs-tab>
-  
+
       <!-- IDs, Links - Table -->
   <bs-tab title="Entity IDs" event-key="10">
-        <semantic-table 
+        <semantic-table
   query="
 prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 prefix owl: <http://www.w3.org/2002/07/owl#>
-         
+
 SELECT ?text ?id ?idValue ?idURL ?idType ?graph
 WHERE {
   GRAPH ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?text .
     ?text crm:P1_is_identified_by ?id .
     ?id rdf:value ?idValue .
-        OPTIONAL { 
+        OPTIONAL {
             FILTER (CONTAINS(STR(?idValue), 'http'))
             BIND(?idValue AS ?idURL)
         }
@@ -442,7 +444,7 @@ WHERE {
          "
   column-configuration='[
     {"variableName": "idValue", "displayName": "ID", "cellTemplate": "{{> idValue}}"},
-    {"variableName": "idType", "displayName": "ID Type"}, 
+    {"variableName": "idType", "displayName": "ID Type"},
     {"variableName": "graph", "displayName": "Project Graph"}
   ]'
 >
@@ -457,19 +459,19 @@ WHERE {
 
 </semantic-table>
   </bs-tab>
-      
+
       <!-- Source -->
       <bs-tab event-key="1" title="Source">
         [[> Platform:SourceStatements]]
       </bs-tab>
-      
+
       <bs-tab event-key="11" class="tab-ontodia" title="Knowledge Graph">
         <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
       </bs-tab>
-      
-    
+
+
     </bs-tabs>
-  
+
   [[else]]
   <div class='page__body'>
     <p>

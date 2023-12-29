@@ -167,7 +167,7 @@ where {
                           }"
                           template="{{> locations}}">
                           <template id="locations">
-                            {{#if pagination}}{{pagination.value}}{{else}}{{#if from}}{{from.value}}–{{to.value}}{{/if}}{{/if}}
+                            {{#each bindings}}<div>{{#if pagination}}{{pagination.value}}{{else}}{{#if from}}{{from.value}}–{{to.value}}{{/if}}{{/if}}</div>{{/each}}
                           </template>
                         </semantic-query>
                         </template>

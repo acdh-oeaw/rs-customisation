@@ -52,7 +52,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
         
         </bs-tab>
         [[#if (ask "ASK { {SELECT ?id WHERE {?? (owl:sameAs | ^owl:sameAs)* ?entity . ?entity crm:P1_is_identified_by ?id .}LIMIT 1}}")]]
-        <bs-tab title="Entity IDs" event-key="10">
+        <bs-tab title="IDs, URIs, URLs" event-key="10">
           <semantic-table 
     query="
   prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>

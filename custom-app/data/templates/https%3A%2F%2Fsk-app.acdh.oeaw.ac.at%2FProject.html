@@ -12,9 +12,11 @@
 <main class="page">
 
   
-		<h2>SemanticKraus – Connecting Kraus-Scholarship to the Semantic Web</h2>
+		
     <section class="page-section">
-      <p>
+      <h1>SemanticKraus – Connecting Kraus-Scholarship to the Semantic Web</h2>
+      <h2>The Project</h2>
+        <p>
       The SemanticKraus project provides a reference resource containing research data from several projects on the writer, satirist, and cultural critic Karl Kraus (1874–1936). The project compiles and transforms biographical and bibliographical index data to create a comprehensive network of people, texts, and their interrelations. In detail, the data contains
       </p>
       <ul>
@@ -24,10 +26,11 @@
         <li>text passages and mentions resp. intertextual references on texts</li>
       </ul>
       <p>
-      <h3>Source Projects</h3>
-      <p>
-        The source projects the SemanticKraus data is derived from are:
-      </p>
+        The projects involved – see below – have amassed substantial amounts of index data. <i>Die Fackel online</i>, for example, includes an index of persons mentioned within the more than 22,000 pages of <i>Die Fackel</i>, amounting to a total of 16,900 names and 129,000 mentions. Kraus’s legal files are accompanied by indices containing the data of 1,700 persons and 2,100 literary and non-literary works mentioned or cited in the legal files (which by themselves amount to about 4,000 documents). The index of <i>Dritte Walpurgisnacht</i> – notably a single, voluminous work – lists 400 people and 1,100 texts (the majority of which are newspaper articles) that are mentioned or quoted in 3,000 text passages.</p>
+        <p>The projects’ data, although overlapping to a high degree, had been mostly uncorrelated so far. It was transformed to RDF, ingested into a triple store and provided with a user interface based on ResearchSpace as well as a SPARQL endpoint. The result is both a research platform and a reference resource offering users the opportunity for manual exploration as well as automated data retrieval – thus ensuring the integration of Kraus research into the LOD Cloud and serving the frequently expressed demand for open, reusable, and interlinked edition data.</p>
+        <p>The project is accompanied by a HowTo-Blog: <a href="https://howto.acdh.oeaw.ac.at/de/curriculum/semantickraus-a-blogpost-series">SemanticKraus - A Blogpost Series</a></p>
+      
+      <h2>Source Projects</h3>
       <semantic-query
       query="SELECT DISTINCT ?citation ?contributor ?comment WHERE { 
         ?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ;
@@ -61,14 +64,11 @@
     </template>
     </semantic-query>
   
-      <p>
-All of these projects – which are in one way or another linked to the ACDH-CH – have amassed substantial amounts of index data. <i>Die Fackel online</i>, for example, includes an index of persons mentioned within the more than 22,000 pages of <i>Die Fackel</i>, amounting to a total of 16,900 names and 129,000 mentions. Kraus’s legal files are accompanied by indices containing the data of 1,700 persons and 2,100 literary and non-literary works mentioned or cited in the legal files (which by themselves amount to about 4,000 documents). The index of <i>Dritte Walpurgisnacht</i> – notably a single, voluminous work – lists 400 people and 1,100 texts (the majority of which are newspaper articles) that are mentioned or quoted in 3,000 text passages.</p>
-<p>The projects’ data, although overlapping to a high degree, had been mostly uncorrelated so far. It was transformed to RDF, ingested into a triple store and provided with a user interface based on ResearchSpace as well as a SPARQL endpoint. The result is both a research platform and a reference resource offering users the opportunity for manual exploration as well as automated data retrieval – thus ensuring the integration of Kraus research into the LOD Cloud and serving the frequently expressed demand for open, reusable, and interlinked edition data.</p>
-  <p>The project is accompanied by a HowTo-Blog: <a href="https://howto.acdh.oeaw.ac.at/de/curriculum/semantickraus-a-blogpost-series">SemanticKraus - A Blogpost Series</a></p>
+
   </section>
   
 <section class="page-section">
-    <h4>Contributors</h4>
+    <h3>Contributors</h3>
     Bernhard Oberreither – PI, Data Model, ResearchSpace<br />
     Daniel Elsner, Andreas Basch, Peter Andorfer, Carl Friedrich Haak – Data Transformation / Enrichment<br />
 		Astrid Hauer, Johanna Unterholzner – Data Enrichment<br />

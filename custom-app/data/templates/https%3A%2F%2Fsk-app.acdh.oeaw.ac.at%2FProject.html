@@ -49,7 +49,7 @@
       <semantic-query query="SELECT ?URL WHERE {?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ; <http://purl.org/dc/terms/bibliographicCitation> '{{citation.value}}' ; <http://purl.org/dc/terms/source> ?URL . }"
                       template="{{> template2}}">
         <template id="template2">
-          {{#each bindings}}<strong>Project URL:</strong> <a href="{{URL.value}}">{{URL.value}}</a>{{/each}}
+          {{#each bindings}}<div><strong>Project URL:</strong> <a href="{{URL.value}}">{{URL.value}}</a></div>{{/each}}
         </template>
         </semantic-query>
       <semantic-query query="SELECT ?s WHERE { ?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ;

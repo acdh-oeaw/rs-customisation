@@ -180,6 +180,17 @@ where {
 [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates|intro:R10_has_Text_Passage ?content . } LIMIT 1 }")]]
 <bs-tab event-key="22" title="Textual Contents">
 
+
+
+  <mp-sparql-result-counts id='query-count'
+        query="SELECT  DISTINCT ?incText  WHERE { 
+          GRAPH ?graph {
+            ?? (owl:sameAs | ^owl:sameAs)* ?text .
+            ?text crm:P165_incorporates/crm:P165_incorporates* ?incText .
+          }
+        }"
+        template='{{> table}}'>
+        <template id="table">
       <semantic-table
 query='
 SELECT ?incText ?graph WHERE {
@@ -190,11 +201,24 @@ SELECT ?incText ?graph WHERE {
 }
 '
 column-configuration='[
-{"displayName": "Incorporated Texts", "variableName": "incText"},
-{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": "Incorporated Texts ({{numberOfResults}})", "variableName": "incText"},
+{"displayName": "Project Graph", "variableName": "graph"}
 ]'
 ></semantic-table>
+</template>
+</mp-sparql-result-counts>
 
+  
+  
+<mp-sparql-result-counts id='query-count'
+query="SELECT  DISTINCT ?passage  WHERE { 
+  GRAPH ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?text .
+    ?text crm:P165_incorporates* / intro:R10_has_Text_Passage ?passage . 
+  }
+}"
+template='{{> table}}'>
+<template id="table">
       <semantic-table
 query='
 SELECT ?passage ?wording ?graph WHERE {
@@ -208,8 +232,9 @@ SELECT ?passage ?wording ?graph WHERE {
 }
 '
 column-configuration='[
-{"displayName": "Recorded Text Passages", "cellTemplate": "{{> passage}}"},
-{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"displayName": "Recorded Text Passages ({{numberOfResults}})", "cellTemplate": "{{> passage}}"},
+                      {"displayName": "Project Graph", "variableName": "graph"}
+
 ]'
 >
 <template id="passage">
@@ -223,6 +248,9 @@ column-configuration='[
 </template>
 </semantic-table>
 
+</template>
+</mp-sparql-result-counts>
+      
       </bs-tab>
 [[/if]]
 
@@ -232,6 +260,17 @@ column-configuration='[
         [[#if (ask "ASK { SELECT * WHERE { ?? (owl:sameAs | ^owl:sameAs)* ?text . ?text crm:P165_incorporates* / intro:R10_has_Text_Passage / intro:R18_shows_actualization ?mention . } LIMIT 1 }")]]
       <bs-tab event-key="2" title="Person Mentions">
 
+
+        <mp-sparql-result-counts id='query-count'
+        query="SELECT  DISTINCT ?mentioned  WHERE { 
+          GRAPH ?graph {
+            ?? (owl:sameAs | ^owl:sameAs)* ?text .
+            ?text crm:P165_incorporates* / intro:R10_has_Text_Passage* / intro:R18_shows_actualization / intro:R17_actualizes_feature / crm:P67_refers_to ?mentioned.
+   }
+        }"
+        template='{{> table}}'>
+        <template id="table">
+          
         <semantic-table
                         query='
         SELECT DISTINCT ?mentioned ?text
@@ -243,7 +282,7 @@ column-configuration='[
 }
                                '
                         column-configuration='[
-    {"variableName": "mentioned", "displayName": "Mentioned Person"},
+                        {"variableName": "mentioned", "displayName": "Mentioned Persons ({{numberOfResults}})"},
     {"displayName": "Mention", "cellTemplate": "{{> ref}}"}
   ]'
                         >
@@ -306,6 +345,9 @@ column-configuration='[
             </details>
           </template>
           </semantic-table>
+        </template>
+      </mp-sparql-result-counts>
+
         </bs-tab>
       [[/if]]
 
@@ -315,6 +357,19 @@ column-configuration='[
 
         <bs-tab event-key="17" title="Intertextual Relations">
         <!-- OUTGOING RELATIONS -->
+
+        <mp-sparql-result-counts id='query-count'
+        query="SELECT  DISTINCT ?targetText  WHERE { 
+          GRAPH ?graph {
+            ?? (owl:sameAs | ^owl:sameAs)* ?text .
+            ?text crm:P165_incorporates*/intro:R10_has_Text_Passage*/intro:R13_is_referring_entity ?relation .
+        
+            ?relation intro:R12_has_referred_to_entity/^intro:R10_has_Text_Passage? ?targetText .
+            FILTER NOT EXISTS { ?targetText a intro:INT1_TextPassage . }
+          }
+        }"
+        template='{{> table}}'>
+        <template id="table">
         <semantic-table
                         query='
 SELECT DISTINCT ?targetText ?text
@@ -329,7 +384,7 @@ WHERE {
 '
 
                         column-configuration='[
-    {"variableName": "targetText", "displayName": "Referenced Text"},
+                        {"variableName": "targetText", "displayName": "Referenced Texts ({{numberOfResults}})"},
     {"displayName": "Relation","cellTemplate": "{{> relations}}"}
   ]'
                         >
@@ -382,8 +437,29 @@ WHERE {
           </template>
           </semantic-table>
 
+        </template>
+      </mp-sparql-result-counts>
 
         <!-- INCOMING RELATIONS -->
+        <mp-sparql-result-counts id='query-count'
+        query="SELECT  DISTINCT ?quotingText  WHERE { 
+          graph ?graph {
+            ?? (owl:sameAs | ^owl:sameAs)* ?text .
+            {?text intro:R10_has_Text_Passage / intro:R12_is_referred_to_entity ?relation .}
+            union
+            {?text intro:R12_is_referred_to_entity ?relation .
+              FILTER NOT EXISTS { ?text a intro:INT1_TextPassage . }
+            }
+        
+            {?relation intro:R13_has_referring_entity / ^intro:R10_has_Text_Passage ?quotingText . }
+            union
+            {?relation intro:R13_has_referring_entity ?quotingText .
+                    FILTER NOT EXISTS { ?quotingText a intro:INT1_TextPassage . }}
+          }
+        }"
+        template='{{> table}}'>
+          <template id="table">
+        
         <semantic-table
                         query='
 select distinct ?quotingText ?graph
@@ -406,11 +482,13 @@ where {
                                '
 
                         column-configuration='[
-    {"variableName": "quotingText", "displayName": "Referenced by Text"},
+    {"variableName": "quotingText", "displayName": "Referenced by Texts ({{numberOfResults}})"},
     {"variableName": "graph", "displayName": "Project Graph"}
   ]'
                         >
           </semantic-table>
+        </template>
+      </mp-sparql-result-counts>
         [[/if]]
 
         </bs-tab>

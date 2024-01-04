@@ -254,17 +254,13 @@ where {
 [[/if]]
 [[#if (ask "ASK { {SELECT * WHERE {?? (owl:sameAs | ^owl:sameAs)* ?person. ?legalAct crm:P14_carried_out_by ?person; crm:P10_falls_within ?legalCase . ?legalCase rdf:type crm:E5_Event .} LIMIT 1}}")]]
     <!-- legal cases -->
-        <h4>Legal Involvement</h4>
+    
+    <h4>Legal Involvement</h4>
+
+        
     <semantic-table
 
-  query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-
-
-select ?legalCase ?legalActType ?graph
+  query="select ?legalCase ?legalActType ?graph
 where {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
@@ -299,14 +295,26 @@ where {
 
     </bs-tab>
 
-      <!-- Timline eliminated -->
+      <!-- Timline – eliminated -->
 
 
       <!-- Works -->
       [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) ?text . }} LIMIT 1 }")]]
       <bs-tab event-key="17" title="Wrote">
-
-        <h3>Authored Texts</h3>
+        
+        
+        <mp-sparql-result-counts id='query-count'
+        query="
+               SELECT DISTINCT ?text
+                        WHERE {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P14i_performed ?textCreation .
+		?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+  						}"
+        template='<h3>Authored Texts ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
+        
+        
         <semantic-table
                         query="
                         SELECT DISTINCT ?text ?graph
@@ -319,8 +327,8 @@ where {
 }
 "
                         column-configuration='[
-    {"variableName": "text", "displayName": "Text"},
-    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"variableName": "text"},
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
                         >
         </semantic-table>
@@ -334,32 +342,34 @@ where {
       <!-- Mentions: -->
       <bs-tab event-key="3" title="Was Mentioned">
 
-
+<mp-sparql-result-counts id='query-count'
+        query="
+               SELECT DISTINCT ?text
+                        WHERE {
+            ?? (owl:sameAs | ^owl:sameAs)* ?person .
+            ?person crm:P67i_is_referred_to_by / intro:R17_feature_actualized_in / intro:R18_actualization_found_on /
+                     intro:R10_is_Text_Passage_of ?text .
+  						}"
+        template='<h3>Was Mentioned in Texts ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
         <semantic-table
-                        query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-
-SELECT DISTINCT ?author ?text ?issue ?graph
-WHERE {
-  graph ?graph {
-    ?? (owl:sameAs | ^owl:sameAs)* ?person .
-    ?person crm:P67i_is_referred_to_by / intro:R17_feature_actualized_in / intro:R18_actualization_found_on /
-             intro:R10_is_Text_Passage_of ?text .
-    OPTIONAL {
-      ?text (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author
-  }
-    }
-  }
+                        query="SELECT DISTINCT ?author ?text ?issue ?graph
+        WHERE {
+          graph ?graph {
+            ?? (owl:sameAs | ^owl:sameAs)* ?person .
+            ?person crm:P67i_is_referred_to_by / intro:R17_feature_actualized_in / intro:R18_actualization_found_on /
+                     intro:R10_is_Text_Passage_of ?text .
+            OPTIONAL {
+              ?text (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author
+          }
+            }
+          }
                                "
                         column-configuration=
 
                         '[
-                        {"displayName": "Was Mentioned in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
-    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+                        {"cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 
                         ></semantic-table>
@@ -753,8 +763,16 @@ where {
       <!-- Works -->
       [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) ?text . }} LIMIT 1 }")]]
       <bs-tab event-key="17" title="Wrote, Mentioned and Quoted">
-
-        <h3>Authored Texts</h3>
+<mp-sparql-result-counts id='query-count'
+        query="
+               SELECT DISTINCT ?text
+                        WHERE {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P14i_performed ?textCreation .
+		?textCreation (crm:P94_has_created | frbroo:R17_created) ?text .
+  						}"
+        template='<h3>Authored Texts ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
         <semantic-table
                         query="
                         SELECT DISTINCT ?text ?issue ?creationTimespan ?publicationTimespan ?performanceTimespan ?graph
@@ -809,8 +827,24 @@ where {
         </semantic-table>
 
         [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) / intro:R10_has_Text_Passage / intro:R18_shows_actualization / intro:R17_actualizes_feature ?reference . }} LIMIT 1 }")]]
-        <h3>Referred-to Persons</h3>
-
+        
+        
+        
+<mp-sparql-result-counts id='query-count'
+        query="
+               select distinct ?refPerson
+where {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?textCreation crm:P14_carried_out_by  ?person ;
+    (crm:P94_has_created | frbroo:R17_created) /
+    intro:R10_has_Text_Passage /
+    intro:R18_shows_actualization /
+    intro:R17_actualizes_feature /
+    crm:P67_refers_to ?refPerson .
+}
+"
+        template='<h3>Referred-to Persons ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
                     <semantic-table
                         query="select distinct ?person ?refPerson
 where {
@@ -858,7 +892,21 @@ where {
         [[/if]]
 
         [[#if (ask "ASK {SELECT * WHERE { GRAPH ?g { ?? (owl:sameAs | ^owl:sameAs)* / crm:P14i_performed / (crm:P94_has_created | frbroo:R17_created) / intro:R10_has_Text_Passage* / intro:R13_is_referring_entity ?reference . }} LIMIT 1 }")]]
-				<h3>Referred-to Texts</h3>
+				
+        
+        <mp-sparql-result-counts id='query-count'
+        query="SELECT DISTINCT ?text WHERE {
+  GRAPH
+    # text
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?textCreation crm:P14_carried_out_by  ?person ;
+    (crm:P94_has_created | frbroo:R17_created) ?text.
+
+    # reference
+    ?text intro:R10_has_Text_Passage?/^intro:R13_has_referring_entity ?reference .
+               }"
+        template='<h3>Referred-to Texts ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
         <semantic-table
                         query="SELECT DISTINCT ?text WHERE {
   GRAPH ?graph {
@@ -908,14 +956,17 @@ where {
       <!-- Mentions: -->
       <bs-tab event-key="3" title="Was Mentioned and Quoted">
 
+        <mp-sparql-result-counts id='query-count'
+        query="SELECT DISTINCT ?text
+                        WHERE {
+              ?? (owl:sameAs | ^owl:sameAs)* ?person .
+              ?person crm:P67i_is_referred_to_by / intro:R17_feature_actualized_in / intro:R18_actualization_found_on /
+             intro:R10_is_Text_Passage_of ?text .
+  						}"
+        template='<h3>Was Mentioned in Texts ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
         <semantic-table
                         query="
-prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-prefix owl: <http://www.w3.org/2002/07/owl#>
-prefix intro: <https://w3id.org/lso/intro/beta202304#>
-
 SELECT DISTINCT ?author ?text ?issue ?graph
 WHERE {
   graph ?graph {
@@ -936,15 +987,24 @@ WHERE {
                         column-configuration=
 
                         '[
-                        {"displayName": "Mentioned in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
-    {"variableName": "issue", "displayName": "Published in"},
-    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+                        {"cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
+    {"variableName": "issue"},
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 
                         ></semantic-table>
 
 
+<mp-sparql-result-counts id='query-count'
+        query="SELECT DISTINCT ?refText WHERE {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P14i_performed / ( frbroo:R17_created | crm:P94_has_created ) ?text .
+    ?text intro:R10_has_Text_Passage? / intro:R12_is_referred_to_entity / intro:R13_has_referring_entity / intro:R10_is_Text_Passage_of? ?refText .
 
+    FILTER NOT EXISTS { ?refText a intro:INT1_TextPassage . }
+}"
+        template='<h3>Quoted in Texts ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
 
 <semantic-table
 query="
@@ -963,8 +1023,8 @@ SELECT DISTINCT ?author ?refText ?graph WHERE
 }
 "
 column-configuration='[
-{"displayName": "Quoted in Text", "cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{refText.value}}></semantic-link></div>"},
-{"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+{"cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{refText.value}}></semantic-link></div>"},
+{"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 ]'>
 </semantic-table>
 

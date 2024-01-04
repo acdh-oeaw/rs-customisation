@@ -101,6 +101,16 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
           </template>
           </semantic-query>
 
+        
+        <mp-sparql-result-counts id='query-count'
+        query="
+               SELECT DISTINCT ?text
+                        WHERE {
+   ?? (owl:sameAs | ^owl:sameAs)* ?publ .
+		?publ crm:P165_incorporates/crm:P165_incorporates+ ?text .
+  						}"
+        template='<h3>Incorporated Texts ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
         <semantic-table
                         query="
                                select distinct ?text ?graph
@@ -112,12 +122,11 @@ where {
 }
                                "
                         column-configuration='[
-		{"variableName": "text", "displayName": "Incorporated Texts"},
-    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+		{"variableName": "text"},
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 
   ]'
-    options='{"showFilter": false}'
-                        >
+    options='{"showFilter": false}'>
           </semantic-table>
 
         [[else]]
@@ -170,7 +179,16 @@ where {
 
 
         [[/if]]
-        <h4>Published Issues / Volumes</h4>
+        
+        <mp-sparql-result-counts id='query-count'
+        query="SELECT ?publ WHERE
+               {
+               ?? (owl:sameAs | ^owl:sameAs)* ?periodical .
+               ?periodical frbroo:R5_has_component ?publ .
+               }"
+        template='<h3>Published Issues / Volumes ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
+        
        <semantic-table query="SELECT ?publ ?date ?graph
                               WHERE { GRAPH ?graph {
                               ?? (owl:sameAs | ^owl:sameAs)* ?periodical .
@@ -199,7 +217,7 @@ where {
                                ?? (owl:sameAs | ^owl:sameAs)* ?publ .
                                ?publ rdfs:label ?pubLabel;
                                      frbroo:R24i_was_created_through ?publEvent .
-                                 OPTIONAL { ?publEvent crm:P4_has_time-span ?date .}
+                                 OPTIONAL { ?publEvent crm:P4_has_time-span / rdfs:label ?date .}
                                  OPTIONAL { ?publEvent crm:P7_took_place_at ?place .}
                                }
                                }
@@ -210,6 +228,15 @@ where {
           </template>
           </semantic-query>
 
+        <mp-sparql-result-counts id='query-count'
+        query="
+               SELECT DISTINCT ?text
+                        WHERE {
+    ?? (owl:sameAs | ^owl:sameAs)* ?publ .
+		?publ crm:P165_incorporates? ?text .
+  						}"
+        template='<h3>Incorporated Texts ({{numberOfResults}})</h3>'>
+          </mp-sparql-result-counts>
         <semantic-table
                         query="
                                select distinct ?text ?graph
@@ -221,8 +248,8 @@ where {
 }
                                "
                         column-configuration='[
-		{"variableName": "text", "displayName": "Incorporated Texts"},
-    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+		{"variableName": "text"},
+    {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
 
   ]'
     options='{"showFilter": false}'

@@ -31,7 +31,7 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
 
 
-      [[#if (ask "ASK { {SELECT * WHERE {?? a <https://sk.acdh.oeaw.ac.at/types/event/legal-case> } LIMIT 1} }")]]
+      [[#if (ask "ASK { {SELECT * WHERE {?? crm:P2_has_type <https://sk.acdh.oeaw.ac.at/types/event/legal-case> } LIMIT 1} }")]]
     <!-- Event Data -->
       <bs-tab event-key="0" class="tab-overview" title="Event Data">
 				<!-- Approximate Duration-->
@@ -47,7 +47,7 @@ WHERE {
               template='{{> template}}'
 >
           <template id="template">
-            {{#each bindings}}<div><h3>Estimated duration <small>(based on case file creation dates)</small></h3> {{start.value}} to {{end.value}}</div>{{/each}}
+            {{#each bindings}}<h3>Estimated duration <small>(based on case file creation dates)</small></h3><div>{{start.value}} to {{end.value}}</div>{{/each}}
           </template>
 </semantic-query>
         <!-- Description -->
@@ -67,7 +67,12 @@ SELECT ?comment ?graph WHERE
 </semantic-query>
 
         <!-- Participants -->
-
+        <mp-sparql-result-counts id='query-count'
+        query="
+               SELECT DISTINCT ?participant WHERE { ?? crm:P10i_contains ?participation .
+      ?participation crm:P14_carried_out_by ?participant .}"
+        template='{{> table}}'>
+        <template id="table">
         <semantic-table
             query='
             SELECT ?graph ?participant ?partType WHERE {
@@ -79,13 +84,21 @@ SELECT ?comment ?graph WHERE
             }
             '
                          column-configuration='[
-    {"displayName": "Participants", "variableName": "participant" },
+    {"displayName": "Participants ({{numberOfResults}})", "variableName": "participant" },
     {"displayName": " ", "variableName": "?partType"},
-    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": "Project Graph", "variableName": "graph"}
   ]'
   options='{"showFilter": false}'>
         </semantic-table>
+        </template>
+        </mp-sparql-result-counts>
         <!-- Files involved -->
+        
+        <mp-sparql-result-counts id='query-count'
+        query="
+               SELECT DISTINCT ?file WHERE { ?file crm:P12i_was_present_at ?? . }"
+        template='{{> table}}'>
+        <template id="table">
         <semantic-table
                         query='
 						SELECT ?file ?graph WHERE {
@@ -95,12 +108,14 @@ SELECT ?comment ?graph WHERE
             }
 						'
                         column-configuration='[
-    {"displayName": "Files Involved", "variableName": "file" },
-    {"displayName": " ", "cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
+    {"displayName": "Files Involved ({{numberOfResults}})", "variableName": "file" },
+    {"displayName": "Project Graph", "variableName": "graph"}
   ]'
                         >
 
           </semantic-table>
+        </template>
+      </mp-sparql-result-counts>
         </bs-tab>
         <!-- Case timeline -->
       <bs-tab event-key="2" title="Case Timeline">

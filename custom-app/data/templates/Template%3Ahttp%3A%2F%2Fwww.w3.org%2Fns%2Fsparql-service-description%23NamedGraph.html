@@ -63,6 +63,15 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
   ]'
                          options='{"showFilter": false}'
                         ></semantic-table>
+
+                        <mp-sparql-result-counts id='query-count'
+        query="SELECT DISTINCT ?pers WHERE { GRAPH ?? { ?pers a crm:E21_Person . } }"
+        template='<h3>Current Number of Person Entities in the Graph: {{numberOfResults}}</h3>'>
+          </mp-sparql-result-counts>
+          <mp-sparql-result-counts id='query-count'
+        query="SELECT DISTINCT ?text WHERE { GRAPH ?? { {?text a crm:E73_Information_Object . } UNION {?text a frbroo:F22_Self-Contained_Expression . } } }"
+        template='<h3>Current Number of Texts in the Graph: {{numberOfResults}}</h3>'>
+          </mp-sparql-result-counts>
         </div>
         
         

@@ -45,8 +45,8 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
         <semantic-query query="SELECT ?source WHERE {?? <http://purl.org/dc/terms/source> ?source } "
                         template="{{> template}}">
           <template id="template">
-            <h4>Project URL(s)</h4>
-            {{#each bindings}}<a href={{{source.value}}}>{{source.value}}</a>{{/each}}
+            <h4>Project URL(s):</h4>
+            {{#each bindings}}<div><a href={{{source.value}}}>{{source.value}}</a></div>{{/each}}
           </template>
           </semantic-query>
         </div>
@@ -59,18 +59,18 @@ https://clscor.acdh-dev.oeaw.ac.at/resource/?action=edit&uri=Template%3Ahttps%3A
                                }
                                "
                         column-configuration='[
-    {"variableName": "value", "displayName": " "}
+    {"variableName": "value"}
   ]'
                          options='{"showFilter": false}'
                         ></semantic-table>
 
                         <mp-sparql-result-counts id='query-count'
         query="SELECT DISTINCT ?pers WHERE { GRAPH ?? { ?pers a crm:E21_Person . } }"
-        template='<h3>Current Number of Person Entities in the Graph: {{numberOfResults}}</h3>'>
+        template='<h4>Current Number of Person Entities in the Graph: {{numberOfResults}}</h4>'>
           </mp-sparql-result-counts>
           <mp-sparql-result-counts id='query-count'
         query="SELECT DISTINCT ?text WHERE { GRAPH ?? { {?text a crm:E73_Information_Object . } UNION {?text a frbroo:F22_Self-Contained_Expression . } } }"
-        template='<h3>Current Number of Texts in the Graph: {{numberOfResults}}</h3>'>
+        template='<h4>Current Number of Texts in the Graph: {{numberOfResults}}</h4>'>
           </mp-sparql-result-counts>
         </div>
         

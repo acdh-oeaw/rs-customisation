@@ -33,6 +33,20 @@
 	<script defer type="text/javascript" src="{{this}}"></script>
 	{{/each}}
 
+	{{!--
+		Mobile nav dialog.
+		We are not using the built-in react bootstrap wrappers, because they are pretty buggy.
+		Note that scripts must be placed outside of the root `div#application`, which is
+		the subtree managed by react (any javascript will be removed when research space
+		transforms handlebars templates to jsx).
+	--}}
+	<script>
+		const trigger = document.getElementById('main-nav-trigger')
+		const menu = document.getElementById('main-nav-menu')
+		trigger.addEventListener('click', () => {
+			menu?.showModal()
+		})
+	</script>
 </head>
 
 <body>

@@ -10,42 +10,40 @@
 </nav>
 
 <main class="page">
-
-  
-		
-    <section class="page-section">
-      <h1>SemanticKraus – Connecting Kraus-Scholarship to the Semantic Web</h1>
-      <h2>The Project</h2>
-        <p>
+	<section class="page-section container-width-prose prose">
+		<h1>SemanticKraus – Connecting Kraus-Scholarship to the Semantic Web</h1>
+		<h2>The Project</h2>
+		<p>
       The SemanticKraus project provides a reference resource containing research data from several projects on the writer, satirist, and cultural critic Karl Kraus (1874–1936). The project compiles and transforms biographical and bibliographical index data to create a comprehensive network of people, texts, and their interrelations. In detail, the data contains
-      </p>
-      <ul>
-        <li>biographical data, including birth, death, occupation, party affiliation</li>
-        <li>bibliographical data: published texts (literary, journalistic or other)</li>
-        <li>legal files (i. e. bibliographical data) and legal cases (i.e. event data)</li>
-        <li>text passages and mentions resp. intertextual references on texts</li>
-      </ul>
-      <p>
+    </p>
+    <ul>
+      <li>biographical data, including birth, death, occupation, party affiliation</li>
+      <li>bibliographical data: published texts (literary, journalistic or other)</li>
+      <li>legal files (i. e. bibliographical data) and legal cases (i.e. event data)</li>
+      <li>text passages and mentions resp. intertextual references on texts</li>
+    </ul>
+    <p>
         The projects involved – see below – have amassed substantial amounts of index data. <i>Die Fackel online</i>, for example, includes an index of persons mentioned within the more than 22,000 pages of <i>Die Fackel</i>, amounting to a total of 16,900 names and 129,000 mentions. Kraus’s legal files are accompanied by indices containing the data of 1,700 persons and 2,100 literary and non-literary works mentioned or cited in the legal files (which by themselves amount to about 4,000 documents). The index of <i>Dritte Walpurgisnacht</i> – notably a single, voluminous work – lists 400 people and 1,100 texts (the majority of which are newspaper articles) that are mentioned or quoted in 3,000 text passages.</p>
         <p>The projects’ data, although overlapping to a high degree, had been mostly uncorrelated so far. It was transformed to RDF, ingested into a triple store and provided with a user interface based on ResearchSpace as well as a SPARQL endpoint. The result is both a research platform and a reference resource offering users the opportunity for manual exploration as well as automated data retrieval – thus ensuring the integration of Kraus research into the LOD Cloud and serving the frequently expressed demand for open, reusable, and interlinked edition data.</p>
         <p>The project is accompanied by a HowTo-Blog: <strong><a href="https://howto.acdh.oeaw.ac.at/de/curriculum/semantickraus-a-blogpost-series">SemanticKraus - A Blogpost Series</a></strong></p>
-      
-      <h2>Source Projects</h2>
-      <semantic-query
-      query="SELECT DISTINCT ?citation ?contributor ?comment WHERE { 
+
+    <h2>Source Projects</h2>
+    <semantic-query
+      query="SELECT DISTINCT ?citation ?contributor ?comment WHERE {
         ?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ;
             <http://purl.org/dc/terms/bibliographicCitation> ?citation .
         OPTIONAL { ?s <http://purl.org/dc/terms/contributor> ?contributor . }
         OPTIONAL { ?s rdfs:comment ?comment . }
       }
       "
-      template="{{> template}}">
-    <template id="template">
+      template="{{> template}}"
+		>
+    	<template id="template">
       {{#each bindings}}<p>
         <strong>{{citation.value}}</strong><br/>
         {{#if contributor}}<div>{{contributor.value}}</div>{{/if}}
         {{#if comment}}<div>{{comment.value}}</div>{{/if}}
-      
+
       <semantic-query query="SELECT ?URL WHERE {?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ; <http://purl.org/dc/terms/bibliographicCitation> '{{citation.value}}' ; <http://purl.org/dc/terms/source> ?URL . }"
                       template="{{> template2}}">
         <template id="template2">
@@ -53,7 +51,7 @@
             <strong>Project URL: </strong>
             <a href="{{URL.value}}">{{URL.value}}</a></div>{{/each}}
         </template>
-        </semantic-query>
+			</semantic-query>
       <semantic-query query="SELECT ?s WHERE { ?s a <http://www.w3.org/ns/sparql-service-description#NamedGraph> ;
                              <http://purl.org/dc/terms/bibliographicCitation> '{{citation.value}}' . }"
                       template="{{> template3}}">
@@ -62,47 +60,29 @@
             <strong>Named Graph URI: </strong>
             <semantic-link uri="{{s.value}}">{{s.value}}</semantic-link></div>{{/each}}
         </template>
-        </semantic-query>
-              </p>
+			</semantic-query>
+			</p>
       {{/each}}
     </template>
-    </semantic-query>
-  
+		</semantic-query>
+	</section>
 
-  </section>
-  
-<section class="page-section">
-    <h3>Contributors</h3>
-    Bernhard Oberreither – PI, Data Model, ResearchSpace<br />
-    Daniel Elsner, Andreas Basch, Peter Andorfer, Carl Friedrich Haak – Data Transformation / Enrichment<br />
-		Astrid Hauer, Johanna Unterholzner – Data Enrichment<br />
-    Lukas Plank – SPARQL<br />
-    Stefan Probst – ResearchSpace Frontend<br />
-		Ruth Pfosser – Intern<br />
-    Laura Untner – Preliminary Work<br />
-    Constance Quinlan – Preliminary Work (Intern)<br />
-    <h4>Special Thanks to</h4>
-    Matej Ďurčo, Dalibor Pančić, Matthias Schlögl, Martin Anton Müller    
-  </section>
-  
+	<section class="page-section container-width-prose prose">
+    <h2>Contributors</h2>
 
-<!--
-  <h2>
-	  <mp-link url="sk:model">
-		  Model
-	  </mp-link>
-  </h2>
-  <h2>
-	  <mp-link url="/sparql">
-		  SPARQL Interface
-	  </mp-link>
-  </h2>
-  <h2>
-	  <semantic-link iri="app:Overview">
-		  Data Overview
-	  </semantic-link>
-  </h2>
-  -->
+		<ul>
+			<li>Bernhard Oberreither – PI, Data Model, ResearchSpace</li>
+			<li>Daniel Elsner, Andreas Basch, Peter Andorfer, Carl Friedrich Haak – Data Transformation / Enrichment</li>
+			<li>Astrid Hauer, Johanna Unterholzner – Data Enrichment</li>
+			<li>Lukas Plank – SPARQL</li>
+			<li>Stefan Probst – ResearchSpace Frontend</li>
+			<li>Ruth Pfosser – Intern</li>
+			<li>Laura Untner – Preliminary Work</li>
+			<li>Constance Quinlan – Preliminary Work (Intern)</li>
+		</ul>
 
-  
+		<h3>Special Thanks to</h3>
+
+		<p>Matej Ďurčo, Dalibor Pančić, Matthias Schlögl, Martin Anton Müller</p>
+	</section>
 </main>

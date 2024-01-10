@@ -41,11 +41,14 @@
 		transforms handlebars templates to jsx).
 	--}}
 	<script>
-		const trigger = document.getElementById('main-nav-trigger')
-		const menu = document.getElementById('main-nav-menu')
+		const trigger = document.getElementById('main-nav-trigger');
+		const menu = document.getElementById('main-nav-menu');
 		trigger.addEventListener('click', () => {
-			menu?.showModal()
-		})
+			menu?.showModal();
+		});
+		window.matchMedia('(min-width: 640px)').addEventListener('change', (event) => {
+			if (event.matches) menu?.close();
+		});
 	</script>
 </head>
 

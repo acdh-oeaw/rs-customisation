@@ -11,32 +11,32 @@
 
 <main class="page">
 
-		
-  <section class="page-section">
+
+  <section class="page-section container-width-prose prose">
 		<h1>The SemanticKraus Project Data Model and Ontology</h1>
     <semantic-query query="SELECT DISTINCT ?comment WHERE { <https://sk.acdh.oeaw.ac.at/model> rdfs:comment ?comment .}" template="{{> template}}">
       <template id="template">
-        {{#each bindings}}<div>{{comment.value}}</div>{{/each}}
-      </template>
-      </semantic-query>
+        {{#each bindings}}<p>{{comment.value}}</p>{{/each}}
+			</template>
+		</semantic-query>
   </section>
-  
-  <section class="page-section">
-    <semantic-query query="SELECT DISTINCT ?title ?creator ?version WHERE 
+
+  <section class="page-section container-width-prose prose">
+    <semantic-query query="SELECT DISTINCT ?title ?creator ?version WHERE
                            { <https://sk.acdh.oeaw.ac.at/model> <http://purl.org/dc/terms/title> ?title ;
                                <http://purl.org/dc/elements/1.1/creator> ?creator ;
                                owl:versionInfo ?version . }"
                     template="{{> template}}">
       <template id="template">
-        {{#each bindings}}<h4>Title: {{title.value}}</h4>
+        {{#each bindings}}<h2>Title: {{title.value}}</h2>
         <div>Creator: {{creator.value}}</div>
         <div>Version: {{version.value}}</div>
         <div>Github: <a href="https://github.com/semantic-kraus/sk_general/blob/main/sk_model.trig">sk_model.trig</a></div>{{/each}}
       </template>
-      </semantic-query>
+		</semantic-query>
   </section>
-  
-  <section class="page-section">
+
+  <section class="page-section container-width-prose prose">
     <h2 class="page-section__title">Ontologies Re-Used</h2>
     <semantic-query query="SELECT DISTINCT ?onto WHERE { GRAPH <https://sk.acdh.oeaw.ac.at/model> { ?s rdfs:isDefinedBy ?onto } }" template="{{> template}}">
       <template id="template">
@@ -44,11 +44,11 @@
       </template>
       </semantic-query>
   </section>
-  
-    <section class="page-section">
+
+	<section class="page-section container-width-prose prose">
 		<h2 class="page-section__title">Data Model Visualization</h2>
-<img src="https://raw.githubusercontent.com/semantic-kraus/sk_general/main/img/model_full.svg" alt="Data Model Visualization"  style="max-width: 100%; height: auto;">
+		<a aria-label="Data Model Visualizationgy" href="https://raw.githubusercontent.com/semantic-kraus/sk_general/main/img/model_full.svg" target="_blank">
+			<img src="https://raw.githubusercontent.com/semantic-kraus/sk_general/main/img/model_full.svg" alt="Data Model Visualization" style="max-width: 100%; height: auto;">
+		</a>
   </section>
-  
-  
 </main>

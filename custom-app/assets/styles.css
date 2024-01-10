@@ -569,3 +569,15 @@ h4 {
 :where(.prose p + p) {
 	margin-top: 1em;
 }
+
+.entity-title {
+	display: inline-flex;
+	align-items: center;
+}
+
+.type-icon {
+	width: 32px;
+	height: 32px;
+	margin-right: 8px;
+	vertical-align: bottom;
+}

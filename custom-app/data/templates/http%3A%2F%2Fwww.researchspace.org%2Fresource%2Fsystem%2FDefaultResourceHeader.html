@@ -1,11 +1,20 @@
 <div class="page__header-body content-container">
 	<div>
-		<h1>
+		<h1 class="entity-title">
 			<semantic-query query="SELECT DISTINCT ?type WHERE { ?? a ?type }" template="{{> icon-template}}">
 				<template id="icon-template">
 					{{#each bindings}}
-					{{log "type" type}}
-					<div class="sr-only">{{type.value}}</div>
+						{{#switch type.value}}
+							{{#case "http://www.cidoc-crm.org/cidoc-crm/E21_Person" break=true}}
+								<img alt="" class="type-icon" src="/assets/icons/person.svg" />
+							{{/case}}
+							{{#case "https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#F22_Self-Contained_Expression" break=true}}
+								<img alt="" class="type-icon" src="/assets/icons/self-contained-expression.svg" />
+							{{/case}}
+							{{#case "http://www.cidoc-crm.org/cidoc-crm/E73_Information_Object" break=true}}
+								<img alt="" class="type-icon" src="/assets/icons/text.svg" />
+							{{/case}}
+						{{/switch}}
 					{{/each}}
 				</template>
 			</semantic-query>

@@ -1,6 +1,13 @@
 <div class="page__header-body content-container">
 	<div>
 		<h1>
+			<semantic-query query="SELECT DISTINCT ?type WHERE { ?? a ?type }" template="{{> icon-template}}">
+				<template id="icon-template">
+					{{#each bindings}}
+					<div class="sr-only">{{type.value}}</div>
+					{{/each}}
+				</template>
+			</semantic-query>
 			<mp-label iri='[[this]]'></mp-label>
 		</h1>
 

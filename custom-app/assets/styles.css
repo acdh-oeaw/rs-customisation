@@ -428,6 +428,15 @@ h4 {
   font-weight: 300;
 }
 
+.page-section__card {
+  /* margin-top: -72px; */
+  background: var(--color-neutral-50);
+  border-radius: var(--rounded-lg);
+  padding: 16px;
+  border: 1px solid var(--color-neutral-200);
+	box-shadow: var(--shadow-lg);
+}
+
 .page-section p {
   line-height: 1.625;
 }
@@ -436,12 +445,6 @@ h4 {
 .home-page__grid {
   display: grid;
   gap: 16px;
-  margin-top: -72px;
-  background: var(--color-neutral-50);
-  border-radius: var(--rounded-lg);
-  padding: 16px;
-  border: 1px solid var(--color-neutral-200);
-	box-shadow: var(--shadow-lg);
 }
 
 @media (min-width: 640px) {
@@ -558,7 +561,7 @@ h4 {
 }
 
 :where(.prose a) {
-	text-decoration: underline;
+	text-decoration: underline !important;
 	text-decoration-style: dotted;
 	text-underline-offset: 0.15em;
 }

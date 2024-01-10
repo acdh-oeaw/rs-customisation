@@ -32,7 +32,11 @@
 	{{#each assetsMap.app.js}}
 	<script defer type="text/javascript" src="{{this}}"></script>
 	{{/each}}
+</head>
 
+<body>
+	<div id="application" class="rs-application"></div>
+	<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"SemanticKraus","description":"A bibliographical and biographical source and tool linking present and future online publications on Karl Kraus."}</script>
 	{{!--
 		Mobile nav dialog.
 		We are not using the built-in react bootstrap wrappers, because they are pretty buggy.
@@ -40,21 +44,18 @@
 		the subtree managed by react (any javascript will be removed when research space
 		transforms handlebars templates to jsx).
 	--}}
-	<script>
-		const trigger = document.getElementById('main-nav-trigger');
-		const menu = document.getElementById('main-nav-menu');
-		trigger.addEventListener('click', () => {
-			menu?.showModal();
-		});
-		window.matchMedia('(min-width: 640px)').addEventListener('change', (event) => {
-			if (event.matches) menu?.close();
-		});
+	<script defer type="text/javascript">
+		window.addEventListener('DOMContentLoaded', () => {
+			const trigger = document.getElementById('main-nav-trigger');
+			const menu = document.getElementById('main-nav-menu');
+			trigger?.addEventListener('click', () => {
+				menu?.showModal();
+			});
+			window.matchMedia('(min-width: 640px)').addEventListener('change', (event) => {
+				if (event.matches) menu?.close();
+			});
+		})
 	</script>
-</head>
-
-<body>
-	<div id="application" class="rs-application"></div>
-	<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"SemanticKraus","description":"A bibliographical and biographical source and tool linking present and future online publications on Karl Kraus."}</script>
 </body>
 
 </html>

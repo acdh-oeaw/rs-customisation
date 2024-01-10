@@ -45,16 +45,24 @@
 		transforms handlebars templates to jsx).
 	--}}
 	<script defer type="text/javascript">
-		window.addEventListener('DOMContentLoaded', () => {
-			const trigger = document.getElementById('main-nav-trigger');
-			const menu = document.getElementById('main-nav-menu');
-			trigger?.addEventListener('click', () => {
-				menu?.showModal();
+		window.addEventListener("DOMContentLoaded", () => {
+			setTimeout(() => {
+				const trigger = document.getElementById("main-nav-trigger");
+				const menu = document.getElementById("main-nav-menu");
+
+				trigger?.addEventListener("click", () => {
+					menu?.showModal();
+				});
+
+				window
+					.matchMedia("(min-width: 640px)")
+					.addEventListener("change", (event) => {
+						if (event.matches) menu?.close();
+					});
+
+				console.log('Menu', trigger, menu);
 			});
-			window.matchMedia('(min-width: 640px)').addEventListener('change', (event) => {
-				if (event.matches) menu?.close();
-			});
-		})
+		});
 	</script>
 </body>
 

@@ -275,7 +275,7 @@ h4 {
 
 .app-footer__top-item {
   display: flex;
-  column-gap: 16px;
+  gap: 16px;
 	flex-direction: column;
 }
 
@@ -283,7 +283,7 @@ h4 {
 	.app-footer__top-content {
 		flex-direction: row;
 	}
-	.footer__top {
+	.app-footer__top-item {
 		flex-direction: row;
 	}
 }

@@ -336,7 +336,7 @@ h4 {
   justify-content: space-between;
   margin-inline: auto;
   max-width: var(--container-width);
-  width: 100%;
+  width: 100% !important;
 }
 
 .container-width-small {

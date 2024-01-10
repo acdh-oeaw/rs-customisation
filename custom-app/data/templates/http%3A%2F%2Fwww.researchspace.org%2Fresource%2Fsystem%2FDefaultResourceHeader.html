@@ -4,6 +4,7 @@
 			<semantic-query query="SELECT DISTINCT ?type WHERE { ?? a ?type }" template="{{> icon-template}}">
 				<template id="icon-template">
 					{{#each bindings}}
+					{{log "type" type}}
 					<div class="sr-only">{{type.value}}</div>
 					{{/each}}
 				</template>

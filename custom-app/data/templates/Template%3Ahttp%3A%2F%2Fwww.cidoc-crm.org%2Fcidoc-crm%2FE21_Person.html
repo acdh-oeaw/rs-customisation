@@ -353,26 +353,40 @@ where {
         template='<h3>Was Mentioned in Texts ({{numberOfResults}})</h3>'>
           </mp-sparql-result-counts>
         <semantic-table
-                        query="SELECT DISTINCT ?author ?text ?issue ?graph
-        WHERE {
-          graph ?graph {
-            ?? (owl:sameAs | ^owl:sameAs)* ?person .
-            ?person crm:P67i_is_referred_to_by / intro:R17_feature_actualized_in / intro:R18_actualization_found_on /
-                     intro:R10_is_Text_Passage_of ?text .
-            OPTIONAL {
-              ?text (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author
-          }
-            }
-          }
+                        query="
+SELECT DISTINCT ?text ?graph
+WHERE {
+  graph ?graph {
+    ?? (owl:sameAs | ^owl:sameAs)* ?person .
+    ?person crm:P67i_is_referred_to_by / intro:R17_feature_actualized_in / intro:R18_actualization_found_on /
+             intro:R10_is_Text_Passage_of ?text .
+    OPTIONAL
+    {
+    ?text crm:P165i_is_incorporated_in+ ?issue .
+		?issue crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical .
+    }
+
+    }
+  }
                                "
                         column-configuration=
 
                         '[
-                        {"cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
+                         {"cellTemplate": "{{> author}}"},
+                        {"variableName": "text"},
+    {"variableName": "issue"},
     {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 
-                        ></semantic-table>
+                        >
+         <template id="author">
+          <semantic-query query="SELECT DISTINCT ?author WHERE { GRAPH <{{graph.value}}> {
+      <{{text.value}}> (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author . } }"
+                          template="{{#each bindings}}{{author.value}}{{#if @last}}: {{else}}, {{/if}}{{/each}}">
+          </semantic-query>
+				</template>
+
+        </semantic-table>
 
     <!-- Quoted in Text eliminated -->
 
@@ -967,7 +981,7 @@ where {
           </mp-sparql-result-counts>
         <semantic-table
                         query="
-SELECT DISTINCT ?author ?text ?issue ?graph
+SELECT DISTINCT ?text ?issue ?graph
 WHERE {
   graph ?graph {
     ?? (owl:sameAs | ^owl:sameAs)* ?person .
@@ -978,21 +992,28 @@ WHERE {
     ?text crm:P165i_is_incorporated_in+ ?issue .
 		?issue crm:P165i_is_incorporated_in / frbroo:R5i_is_component_of ?periodical .
     }
-    OPTIONAL {
-      ?text (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author
-  }
+
     }
   }
                                "
                         column-configuration=
 
                         '[
-                        {"cellTemplate": "<div>{{#if author}}<semantic-link iri={{author.value}}></semantic-link>: {{/if}}<semantic-link iri={{text.value}}></semantic-link></div>"},
+                         {"cellTemplate": "{{> author}}"},
+                        {"variableName": "text"},
     {"variableName": "issue"},
     {"cellTemplate": "<div>(Project Graph: <semantic-link iri={{graph.value}}></semantic-link>)</div>"}
   ]'
 
-                        ></semantic-table>
+                        >
+         <template id="author">
+          <semantic-query query="SELECT DISTINCT ?author WHERE { GRAPH <{{graph.value}}> {
+      <{{text.value}}> (frbroo:R17i_was_created_by | crm:P94i_was_created_by ) / crm:P14_carried_out_by ?author . } }"
+                          template="{{#each bindings}}{{author.value}}{{#if @last}}: {{else}}, {{/if}}{{/each}}">
+          </semantic-query>
+				</template>
+
+        </semantic-table>
 
 
 <mp-sparql-result-counts id='query-count'

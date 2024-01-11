@@ -42,17 +42,29 @@
 		We are not using the built-in react bootstrap wrappers, because they are pretty buggy.
 		Note that scripts must be placed outside of the root `div#application`, which is
 		the subtree managed by react (any javascript will be removed when research space
-		transforms handlebars templates to jsx).
+		transforms handlebars templates to jsx). The timeout is to ensure react has rendered the page.
 	--}}
 	<script defer type="text/javascript">
 		window.addEventListener("DOMContentLoaded", () => {
 			setTimeout(() => {
 				const trigger = document.getElementById("main-nav-trigger");
 				const menu = document.getElementById("main-nav-menu");
+				const list = document.querySelector("#main-nav-menu ul")
 
 				trigger?.addEventListener("click", () => {
 					menu?.showModal();
 				});
+
+				window.addEventListener('pushstate', () => {
+					menu?.close()
+				})
+				window.addEventListener('popstate', () => {
+					menu?.close()
+				})
+
+				list?.addEventListener('click', () => {
+					menu?.close()
+				})
 
 				window
 					.matchMedia("(min-width: 640px)")
@@ -61,7 +73,7 @@
 					});
 
 				console.log('Menu?', trigger, menu);
-			}, 1000);
+			}, 1500);
 		});
 	</script>
 </body>

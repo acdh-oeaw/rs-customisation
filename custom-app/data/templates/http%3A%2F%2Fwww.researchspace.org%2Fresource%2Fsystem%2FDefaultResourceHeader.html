@@ -1,6 +1,7 @@
 <div class="page__header-body content-container">
 	<div>
 		<h1 class="entity-title">
+			[[#if (ask "ASK { {SELECT ?type WHERE {?? a ?type . FILTER (?type IN (crm:E21_Person, frbroo:F22_Self-Contained_Expression, frbroo:F24_Publication_Expression, crm:E5_Event, crm:E73_Information_Object, crm:E53_Place, crm:E74_Group, intro:INT1_TextPassage, <http://www.w3.org/ns/sparql-service-description#NamedGraph> ) ) } } }")]]
 			<semantic-query query="SELECT DISTINCT ?type WHERE { ?? a ?type . FILTER NOT EXISTS { ?? frbroo:R5_has_component ?comp . } }" template="{{> icon-template}}">
 				<template id="icon-template">
 					{{#each bindings}}
@@ -23,13 +24,13 @@
 							{{#case "https://w3id.org/lso/intro/beta202304#INT1_TextPassage" break=true}}
 								<img alt="" class="type-icon" src="/assets/icons/text-passage.svg" />
 							{{/case}}
-							{{#case "http://www.w3.org/ns/sparql-service-description#NamedGraph " break=true}}
+							{{#case "http://www.w3.org/ns/sparql-service-description#NamedGraph" break=true}}
 							<img alt="" class="type-icon" src="/assets/icons/graph.svg" />
 							{{/case}}
 							{{#case "https://cidoc-crm.org/frbroo/sites/default/files/FRBR2.4-draft.rdfs#F24_Publication_Expression" break=true}}
 								<img alt="" class="type-icon" src="/assets/icons/publication-expression.svg" />
 							{{/case}}
-							<!-- Periodical – Legal Case -->
+							<!-- Type  -->
 						{{/switch}}
 					{{/each}}
 				</template>
@@ -49,6 +50,9 @@
 					{{/each}}
 				</template>
 			</semantic-query>
+			[[else]]
+			<img alt="" class="type-icon" src="/assets/icons/entity.svg" />
+			[[/if]]
 			<mp-label iri='[[this]]'></mp-label>
 		</h1>
 

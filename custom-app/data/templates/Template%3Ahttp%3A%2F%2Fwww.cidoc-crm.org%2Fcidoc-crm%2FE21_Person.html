@@ -732,37 +732,32 @@ where {
                           SELECT DISTINCT ?target ?subject ?start ?end ?spanLabel
   WHERE {
 
-
       ?? (owl:sameAs | ^owl:sameAs)* ?person .
 
-      {
+     {
         ?event ( crm:P100_was_death_of | crm:P98_brought_into_life ) ?person ;
         a / rdfs:label ?subject .
         FILTER(LANG(?subject) = 'en')
       }
       UNION
-      { ?event crm:P14_carried_out_by ?person ;
-            rdfs:label ?subject .
-      OPTIONAL {
-      ?event frbroo:R17_created ?target .}
+      { ?person crm:P14i_performed ?event .
+        ?event rdfs:label ?subject .
+    OPTIONAL { ?event ( frbroo:R17_created | crm:P94_has_created ) ?target . }
       }
       UNION
       {
-        ?event frbroo:R24_created ?target ;
-            rdfs:label ?subject .
-        ?target crm:P165_incorporates+ /
-            frbroo:R17i_was_created_by /
-            crm:P14_carried_out_by ?person .
+        ?person crm:P14i_performed / frbroo:R17_created / crm:P165i_is_incorporated_in+ ?target.
+            ?target frbroo:R24i_was_created_through ?event .
+            ?event rdfs:label ?subject .
       }
 
       ?event crm:P4_has_time-span ?span .
                           ?span rdfs:label ?spanLabel;
                           crm:P82a_begin_of_the_begin ?start .
-                          OPTIONAL {?event crm:P4_has_time-span / crm:P82b_end_of_the_end ?end .
-                            FILTER ( ?end != ?start )
+                          OPTIONAL { ?event crm:P4_has_time-span / crm:P82b_end_of_the_end ?end .
+                          FILTER ( ?end != ?start )
                           FILTER ( STR(?end) != 'undefined' ) }
-
-  }
+}
 "
                    tuple-template="{{> template}}"
                    tuple-template-height="42">

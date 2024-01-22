@@ -737,7 +737,8 @@ where {
 
       {
         ?event ( crm:P100_was_death_of | crm:P98_brought_into_life ) ?person ;
-        a ?subject .
+        a / rdfs:label ?subject .
+        FILTER(LANG(?subject) = 'en')
       }
       UNION
       { ?event crm:P14_carried_out_by ?person ;

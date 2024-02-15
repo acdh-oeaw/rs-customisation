@@ -3,69 +3,104 @@
     <mp-link title="Home" url="/">Home</mp-link>
   </li>
   <li class="active">
-    <mp-label iri='[[this]]'></mp-label>
+    <mp-label iri="[[this]]"></mp-label>
   </li>
 </ol>
 
 <div class="page">
-    <div class='page__header-navtabs'>
-      <div class='page__header-thumbnail'>
-  <mp-resource-thumbnail no-image-uri='/images/default-thumbnail.png' iri='[[this]]'></mp-resource-thumbnail>
-</div>
-<div class='page__header-body'>
-  <h1>
-    <mp-label iri='[[this]]'></mp-label>
-  </h1>
-
-  <!--Description -->
-  <p>
-    Overview of corpora 
-    <!-- useful description -->
-  </p>
-</div>
+  <div class="page__header-navtabs">
+    <div class="page__header-thumbnail">
+      <mp-resource-thumbnail no-image-uri="/images/default-thumbnail.png" iri="[[this]]"></mp-resource-thumbnail>
     </div>
-    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      <bs-tab event-key="0" class="tab-overview" title="Overview">
-        Fields and stats will be here<br/>
- Overview of types:
-        <semantic-table 
-  query="
+    <div class="page__header-body">
+      <h1>
+        <mp-label iri="[[this]]"></mp-label>
+      </h1>
+
+      <!--Description -->
+      <p>
+        Overview of corpora
+        <!-- useful description -->
+      </p>
+    </div>
+  </div>
+  <bs-tabs id="tabs" class="page__body-navtabs" unmount-on-exit="true">
+    <bs-tab event-key="0" class="tab-overview" title="Overview">
+      Fields and stats will be here<br />
+      Overview of types:
+      <semantic-table
+        query="
         SELECT ?type (COUNT(?s) as ?cnt)
 WHERE {
  ?s a ?type.
 }
 GROUP BY ?type
 ORDER BY  DESC ( ?cnt)"
-         >
-         </semantic-table>
-      </bs-tab>
-      
-      <!-- Top Level Corpora -->
-      <bs-tab event-key="1" title="Top Level Corpora">
-        <semantic-table 
-  query="
+      >
+      </semantic-table>
+    </bs-tab>
+
+    <!-- Top Level Corpora -->
+    <bs-tab event-key="1" title="Top Level Corpora">
+      <semantic-table
+        query="
       	SELECT ?corpus
 WHERE {
  ?corpus a crmcls:X1_Corpus .
  FILTER NOT EXISTS {?corpus crmcls:Y1i_is_subcorpus_of ?super }
 }
 "
-></semantic-table>
-      </bs-tab>
-      
-      <!-- /Top Level Corpora -->
-      <!-- All Corpora -->
-      <bs-tab event-key="2" class="tab-corporaList" title="All Corpora">
-        <semantic-table 
-  query="
+      ></semantic-table>
+    </bs-tab>
+
+    <!-- /Top Level Corpora -->
+    <!-- All Corpora -->
+    <bs-tab event-key="2" class="tab-corporaList" title="All Corpora">
+      <semantic-table
+        query="
       	SELECT ?corpus
 WHERE {
  ?corpus a crmcls:X1_Corpus . 
 }
 "
-></semantic-table>
-      </bs-tab>
-      <!-- /All Corpora -->
-      
-    </bs-tabs>
+      ></semantic-table>
+    </bs-tab>
+    <!-- /All Corpora -->
+
+    <!-- Stats -->
+    <bs-tab event-key="3" class="tab-corporaList" title="Stats">
+      <bs-tabs id="tabs" class="page__body-navtabs" unmount-on-exit="true">
+        <bs-tab event-key="4" class="tab-corporaList" title="Formats">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?format (count(?format) as ?formatCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
+                  crm:P141_assigned [rdfs:label ?format] .
+            }
+            group by ?format 
+            order by desc(?formatCnt)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "format", "value": "formatCnt"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+      	select ?format (count(?format) as ?formatCnt)
+        where {
+          ?e13 a crm:E13_Attribute_Assignment ;
+              crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
+              crm:P141_assigned [rdfs:label ?format] .
+        }
+        group by ?format 
+        order by desc(?formatCnt)
+        "
+          ></semantic-table>
+        </bs-tab>
+      </bs-tabs>
+    </bs-tab>
+    <!-- /Stats -->
+  </bs-tabs>
 </div>

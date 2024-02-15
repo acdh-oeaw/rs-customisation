@@ -70,7 +70,41 @@ WHERE {
     <!-- Stats -->
     <bs-tab event-key="3" class="tab-corporaList" title="Stats">
       <bs-tabs id="tabs" class="page__body-navtabs" unmount-on-exit="true">
-        <bs-tab event-key="4" class="tab-corporaList" title="Formats">
+        <!-- Languages -->
+        <bs-tab event-key="4" class="tab-corporaList" title="Languages">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?lang (count(?lang) as ?langCount)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P72_has_Language ;
+                   crm:P141_assigned ?lang .
+              ?lang rdfs:label ?label .
+            }
+            group by ?lang
+            order by desc(?langCount)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "lang", "value": "langCount"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+            select ?lang (count(?lang) as ?langCount)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P72_has_Language ;
+                   crm:P141_assigned ?lang .
+              ?lang rdfs:label ?label .
+            }
+            group by ?lang
+            order by desc(?langCount)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- Formats -->
+        <!-- Formats -->
+        <bs-tab event-key="5" class="tab-corporaList" title="Formats">
           <semantic-chart
             provider="chartjs"
             type="bar"
@@ -99,6 +133,7 @@ WHERE {
         "
           ></semantic-table>
         </bs-tab>
+        <!-- Formats -->
       </bs-tabs>
     </bs-tab>
     <!-- /Stats -->

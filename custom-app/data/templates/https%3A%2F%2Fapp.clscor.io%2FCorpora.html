@@ -204,6 +204,41 @@ WHERE {
           ></semantic-table>
         </bs-tab>
         <!-- LiteraryGenres -->
+        <!-- Features -->
+        <bs-tab event-key="8" class="tab-corporaList" title="Features">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?feature (count(?feature) as ?featureCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
+                   crm:P141_assigned ?feature .
+              ?feature crm:P71i_is_listed_in <https://clscor.io/entity/type/feature> ;
+                          rdfs:label ?featureLabel .
+            }
+            group by ?feature 
+            order by desc(?featureCnt)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "feature", "value": "featureCnt"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+            select ?feature (count(?feature) as ?featureCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
+                  crm:P141_assigned ?feature .
+              ?feature crm:P71i_is_listed_in <https://clscor.io/entity/type/feature> ;
+                          rdfs:label ?featureLabel .
+            }
+            group by ?feature 
+            order by desc(?featureCnt)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- LiteraryGenres -->
       </bs-tabs>
     </bs-tab>
     <!-- /Stats -->

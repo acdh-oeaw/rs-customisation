@@ -102,7 +102,7 @@ WHERE {
         "
           ></semantic-table>
         </bs-tab>
-        <!-- Formats -->
+        <!-- Languages -->
         <!-- Formats -->
         <bs-tab event-key="5" class="tab-corporaList" title="Formats">
           <semantic-chart
@@ -134,6 +134,41 @@ WHERE {
           ></semantic-table>
         </bs-tab>
         <!-- Formats -->
+        <!-- CorpusType -->
+        <bs-tab event-key="6" class="tab-corporaList" title="CorpusType">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?corpusTypeLabel (count(?corpusType) as ?corpusTypeCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P2_has_type ;
+                   crm:P141_assigned ?corpusType .
+              ?corpusType crm:P71i_is_listed_in <https://clscor.io/entity/type/corpus> ;
+                          rdfs:label ?corpusTypeLabel .
+            }
+            group by ?corpusTypeLabel
+            order by desc(?corpusTypeCnt)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "corpusTypeLabel", "value": "corpusTypeCnt"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+            select ?corpusTypeLabel (count(?corpusType) as ?corpusTypeCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P2_has_type ;
+                   crm:P141_assigned ?corpusType .
+              ?corpusType crm:P71i_is_listed_in <https://clscor.io/entity/type/corpus> ;
+                          rdfs:label ?corpusTypeLabel .
+            }
+            group by ?corpusTypeLabel
+            order by desc(?corpusTypeCnt)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- CorpusType -->
       </bs-tabs>
     </bs-tab>
     <!-- /Stats -->

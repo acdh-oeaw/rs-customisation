@@ -31,11 +31,11 @@
       <semantic-table
         query="
         SELECT ?type (COUNT(?s) as ?cnt)
-WHERE {
- ?s a ?type.
-}
-GROUP BY ?type
-ORDER BY  DESC ( ?cnt)"
+        WHERE {
+        ?s a ?type.
+        }
+        GROUP BY ?type
+        ORDER BY  DESC ( ?cnt)"
       >
       </semantic-table>
     </bs-tab>
@@ -83,6 +83,7 @@ WHERE {
               ?lang rdfs:label ?label .
             }
             group by ?lang
+            having (count(?lang) > 2)
             order by desc(?langCount)
             "
             sets='[{"dataSetName": "Count in Dataset", "category": "lang", "value": "langCount"}]'

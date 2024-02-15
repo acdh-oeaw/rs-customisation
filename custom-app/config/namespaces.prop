@@ -1,3 +1,4 @@
 app = https://app.clscor.io/
 crmcls = https://clscor.io/ontologies/CRMcls/
 lrm = http://iflastandards.info/ns/lrm/lrmoo/
+dracon = http://dracor.org/ontology#

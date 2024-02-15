@@ -135,7 +135,7 @@ WHERE {
         </bs-tab>
         <!-- Formats -->
         <!-- CorpusType -->
-        <bs-tab event-key="6" class="tab-corporaList" title="CorpusType">
+        <bs-tab event-key="6" class="tab-corporaList" title="CorpusTypes">
           <semantic-chart
             provider="chartjs"
             type="bar"
@@ -169,6 +169,41 @@ WHERE {
           ></semantic-table>
         </bs-tab>
         <!-- CorpusType -->
+        <!-- LiteraryGenres -->
+        <bs-tab event-key="7" class="tab-corporaList" title="LiteraryGenres">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?genre (count(?genre) as ?genreCnt)
+            where {
+            ?e13 a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crm:P2_has_type ;
+                  crm:P141_assigned ?genre .
+            ?genre crm:P71i_is_listed_in <https://clscor.io/entity/type/literary_genre> ;
+                        rdfs:label ?genreLabel .
+            }
+            group by ?genre 
+            order by desc(?genreCnt)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "genre", "value": "genreCnt"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+            select ?genre (count(?genre) as ?genreCnt)
+            where {
+            ?e13 a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crm:P2_has_type ;
+                  crm:P141_assigned ?genre .
+            ?genre crm:P71i_is_listed_in <https://clscor.io/entity/type/literary_genre> ;
+                        rdfs:label ?genreLabel .
+            }
+            group by ?genre 
+            order by desc(?genreCnt)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- LiteraryGenres -->
       </bs-tabs>
     </bs-tab>
     <!-- /Stats -->

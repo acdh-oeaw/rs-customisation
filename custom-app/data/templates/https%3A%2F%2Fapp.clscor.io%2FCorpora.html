@@ -3,69 +3,244 @@
     <mp-link title="Home" url="/">Home</mp-link>
   </li>
   <li class="active">
-    <mp-label iri='[[this]]'></mp-label>
+    <mp-label iri="[[this]]"></mp-label>
   </li>
 </ol>
 
 <div class="page">
-    <div class='page__header-navtabs'>
-      <div class='page__header-thumbnail'>
-  <mp-resource-thumbnail no-image-uri='/images/default-thumbnail.png' iri='[[this]]'></mp-resource-thumbnail>
-</div>
-<div class='page__header-body'>
-  <h1>
-    <mp-label iri='[[this]]'></mp-label>
-  </h1>
-
-  <!--Description -->
-  <p>
-    Overview of corpora 
-    <!-- useful description -->
-  </p>
-</div>
+  <div class="page__header-navtabs">
+    <div class="page__header-thumbnail">
+      <mp-resource-thumbnail no-image-uri="/images/default-thumbnail.png" iri="[[this]]"></mp-resource-thumbnail>
     </div>
-    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
-      <bs-tab event-key="0" class="tab-overview" title="Overview">
-        Fields and stats will be here<br/>
- Overview of types:
-        <semantic-table 
-  query="
+    <div class="page__header-body">
+      <h1>
+        <mp-label iri="[[this]]"></mp-label>
+      </h1>
+
+      <!--Description -->
+      <p>
+        Overview of corpora
+        <!-- useful description -->
+      </p>
+    </div>
+  </div>
+  <bs-tabs id="tabs" class="page__body-navtabs" unmount-on-exit="true">
+    <bs-tab event-key="0" class="tab-overview" title="Overview">
+      Overview of types:
+      <semantic-table
+        query="
         SELECT ?type (COUNT(?s) as ?cnt)
-WHERE {
- ?s a ?type.
-}
-GROUP BY ?type
-ORDER BY  DESC ( ?cnt)"
-         >
-         </semantic-table>
-      </bs-tab>
-      
-      <!-- Top Level Corpora -->
-      <bs-tab event-key="1" title="Top Level Corpora">
-        <semantic-table 
-  query="
+        WHERE {
+        ?s a ?type.
+        }
+        GROUP BY ?type
+        ORDER BY  DESC ( ?cnt)"
+      >
+      </semantic-table>
+    </bs-tab>
+
+    <!-- Top Level Corpora -->
+    <bs-tab event-key="1" title="Top Level Corpora">
+      <semantic-table
+        query="
       	SELECT ?corpus
 WHERE {
  ?corpus a crmcls:X1_Corpus .
  FILTER NOT EXISTS {?corpus crmcls:Y1i_is_subcorpus_of ?super }
 }
 "
-></semantic-table>
-      </bs-tab>
-      
-      <!-- /Top Level Corpora -->
-      <!-- All Corpora -->
-      <bs-tab event-key="2" class="tab-corporaList" title="All Corpora">
-        <semantic-table 
-  query="
+      ></semantic-table>
+    </bs-tab>
+
+    <!-- /Top Level Corpora -->
+    <!-- All Corpora -->
+    <bs-tab event-key="2" class="tab-corporaList" title="All Corpora">
+      <semantic-table
+        query="
       	SELECT ?corpus
-WHERE {
- ?corpus a crmcls:X1_Corpus . 
-}
-"
-></semantic-table>
-      </bs-tab>
-      <!-- /All Corpora -->
-      
-    </bs-tabs>
+        WHERE {
+        ?corpus a crmcls:X1_Corpus . 
+        }
+        "
+      ></semantic-table>
+    </bs-tab>
+    <!-- /All Corpora -->
+
+    <!-- Stats -->
+    <bs-tab event-key="3" class="tab-corporaList" title="Stats">
+      <bs-tabs id="tabs" class="page__body-navtabs" unmount-on-exit="true">
+        <!-- Languages -->
+        <bs-tab event-key="4" class="tab-corporaList" title="Languages">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?lang (count(?lang) as ?langCount)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P72_has_Language ;
+                   crm:P141_assigned ?lang .
+              ?lang rdfs:label ?label .
+            }
+            group by ?lang
+            having (count(?lang) > 2)
+            order by desc(?langCount)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "lang", "value": "langCount"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+            select ?lang (count(?lang) as ?langCount)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P72_has_Language ;
+                   crm:P141_assigned ?lang .
+              ?lang rdfs:label ?label .
+            }
+            group by ?lang
+            order by desc(?langCount)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- Languages -->
+        <!-- Formats -->
+        <bs-tab event-key="5" class="tab-corporaList" title="Formats">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?format (count(?format) as ?formatCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
+                  crm:P141_assigned [rdfs:label ?format] .
+            }
+            group by ?format 
+            order by desc(?formatCnt)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "format", "value": "formatCnt"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+      	select ?format (count(?format) as ?formatCnt)
+        where {
+          ?e13 a crm:E13_Attribute_Assignment ;
+              crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
+              crm:P141_assigned [rdfs:label ?format] .
+        }
+        group by ?format 
+        order by desc(?formatCnt)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- Formats -->
+        <!-- CorpusType -->
+        <bs-tab event-key="6" class="tab-corporaList" title="CorpusTypes">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?corpusTypeLabel (count(?corpusType) as ?corpusTypeCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P2_has_type ;
+                   crm:P141_assigned ?corpusType .
+              ?corpusType crm:P71i_is_listed_in <https://clscor.io/entity/type/corpus> ;
+                          rdfs:label ?corpusTypeLabel .
+            }
+            group by ?corpusTypeLabel
+            order by desc(?corpusTypeCnt)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "corpusTypeLabel", "value": "corpusTypeCnt"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+            select ?corpusTypeLabel (count(?corpusType) as ?corpusTypeCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P2_has_type ;
+                   crm:P141_assigned ?corpusType .
+              ?corpusType crm:P71i_is_listed_in <https://clscor.io/entity/type/corpus> ;
+                          rdfs:label ?corpusTypeLabel .
+            }
+            group by ?corpusTypeLabel
+            order by desc(?corpusTypeCnt)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- CorpusType -->
+        <!-- LiteraryGenres -->
+        <bs-tab event-key="7" class="tab-corporaList" title="LiteraryGenres">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?genre (count(?genre) as ?genreCnt)
+            where {
+            ?e13 a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crm:P2_has_type ;
+                  crm:P141_assigned ?genre .
+            ?genre crm:P71i_is_listed_in <https://clscor.io/entity/type/literary_genre> ;
+                        rdfs:label ?genreLabel .
+            }
+            group by ?genre 
+            order by desc(?genreCnt)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "genre", "value": "genreCnt"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+            select ?genre (count(?genre) as ?genreCnt)
+            where {
+            ?e13 a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crm:P2_has_type ;
+                  crm:P141_assigned ?genre .
+            ?genre crm:P71i_is_listed_in <https://clscor.io/entity/type/literary_genre> ;
+                        rdfs:label ?genreLabel .
+            }
+            group by ?genre 
+            order by desc(?genreCnt)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- LiteraryGenres -->
+        <!-- Features -->
+        <bs-tab event-key="8" class="tab-corporaList" title="Features">
+          <semantic-chart
+            provider="chartjs"
+            type="bar"
+            query="select ?feature (count(?feature) as ?featureCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
+                   crm:P141_assigned ?feature .
+              ?feature crm:P71i_is_listed_in <https://clscor.io/entity/type/feature> ;
+                          rdfs:label ?featureLabel .
+            }
+            group by ?feature 
+            order by desc(?featureCnt)
+            "
+            sets='[{"dataSetName": "Count in Dataset", "category": "feature", "value": "featureCnt"}]'
+          ></semantic-chart>
+          <hr />
+          <semantic-table
+            query="
+            select ?feature (count(?feature) as ?featureCnt)
+            where {
+              ?e13 a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
+                  crm:P141_assigned ?feature .
+              ?feature crm:P71i_is_listed_in <https://clscor.io/entity/type/feature> ;
+                          rdfs:label ?featureLabel .
+            }
+            group by ?feature 
+            order by desc(?featureCnt)
+        "
+          ></semantic-table>
+        </bs-tab>
+        <!-- LiteraryGenres -->
+      </bs-tabs>
+    </bs-tab>
+    <!-- /Stats -->
+  </bs-tabs>
 </div>

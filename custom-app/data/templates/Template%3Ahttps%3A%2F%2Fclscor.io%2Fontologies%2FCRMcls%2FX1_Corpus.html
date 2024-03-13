@@ -1,0 +1,173 @@
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri='[[this]]'></mp-label>
+  </li>
+</ol>
+
+<style>
+  #tabs .tab-ontodia {
+    margin: 0px;
+    padding: 2px 0px 0px;
+    width: 100%;
+    height: calc(100vh - 300px);
+  }
+</style>
+
+<div class="page">
+	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
+    <div class='page__header-navtabs'>
+      [[> Platform:DefaultResourceHeader]]
+    </div>
+    <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+      <bs-tab event-key="0" class="tab-overview" title="Overview">
+        Fields and stats will be here <br>
+        Test Fields:        
+        <mp-field-visualization
+                  subject='[[this]]'
+                  fields='[[fieldDefinitions
+                              corpusName="https://clscor.io/fieldDefinition/corpusName"                              
+                               ]]'
+             template='{{> Default:ResourceFieldBasedVisualization subject="[[this]]" [[#if asserted]]guess="true"[[/if]]}}'
+          ></mp-field-visualization>
+   
+        Count components
+	        <semantic-table query="SELECT ?doc_type (count(?document) as ?cnt)
+                                    WHERE {
+                                      ?? crm:P148_has_component|lrm:R71_has_part ?document .
+                                      ?document a ?doc_type.  
+                                    } GROUP BY ?doc_type"   
+												options='{"showFilter": false}'>>
+       		</semantic-table>
+      </bs-tab>
+      
+      <!-- SubCorpora-Tab: show only if there are subcorpora -->
+      [[#if (ask "ASK {SELECT * WHERE {?? crmcls:Y1_has_subcorpus ?o} }")]]
+      <bs-tab event-key="1" class="tab-subCorpora" title="Subcorpora">
+        <semantic-table 
+  query="
+      	SELECT (?subcorpus  AS ?Subcorpora)
+WHERE {
+ ?? crmcls:Y1_has_subcorpus ?subcorpus .
+}
+"
+></semantic-table>
+      </bs-tab>
+      [[/if]]
+      <!-- /SubCorpora-Tab -->
+      
+      <!-- Documents -->
+      <bs-tab event-key="2" title="Corpus Documents">
+        <bs-alert bs-style="warning">
+        Only 1000 items are displayed.      
+        </bs-alert>
+        <semantic-table 
+          query="
+                SELECT DISTINCT ?document
+                WHERE {
+                  {?? crm:P148_has_component|lrm:R71_has_part ?document .
+                  ?document a crmcls:X2_Corpus_Document.}
+                        UNION
+                  {
+                    ?? crmcls:Y1_has_subcorpus|crm:P148_has_component|lrm:R71_has_part ?document .
+                        ?document a crmcls:X2_Corpus_Document.
+                  }
+                }
+                        LIMIT 1000
+                "
+></semantic-table>
+      </bs-tab>
+      <!-- /Documents -->
+      
+      
+      <!-- Authors -->
+      <bs-tab event-key="3" title="Authors">
+        <semantic-table 
+  query="
+      	SELECT DISTINCT ?actor (COUNT(?document) AS ?textCount)
+        WHERE {
+          {
+            ?? crm:P148_has_component|lrm:R71_has_part ?document .
+            ?document a crmcls:X2_Corpus_Document ;
+                  lrm:R4_embodies ?expression .
+            ?expression lrm:R17i_was_created_by ?creation.
+            ?actor crm:P14i_performed ?creation.
+          }
+          UNION
+          {
+          ?? crmcls:Y1_has_subcorpus/lrm:R71_has_part ?document .
+          ?document a crmcls:X2_Corpus_Document ;
+          lrm:R4_embodie ?expression .
+          ?expression lrm:R17i_was_created_by ?creation .
+          ?actor crm:P14i_performed ?creation.
+          }
+        }
+        GROUP BY ?actor
+"
+></semantic-table>
+     	</bs-tab>
+      <!-- /Authors -->
+      
+      <!-- TextClasses -->
+      <bs-tab event-key="4" title="Text Classes">
+        <semantic-table 
+  query="SELECT ?type ( COUNT(?document) as ?count )
+        WHERE {
+          {
+            ?? crm:P148_has_component|lrm:R71_has_part ?document .
+            ?document a crmcls:X2_Corpus_Document ;
+              crm:P2_has_type ?type .
+              ?type crm:P2_has_type <https://core.clscor.io/entity/type/textClass> .
+            
+            
+          }
+          UNION
+          {
+          ?? crmcls:Y1_has_subcorpus/lrm:R71_has_part ?document .
+          ?document a crmcls:X2_Corpus_Document ;
+            crm:P2_has_type ?type .
+            ?type crm:P2_has_type <https://core.clscor.io/entity/type/textClass> .
+          }
+        }
+        GROUP BY ?type
+        ORDER BY DESC(?count)"></semantic-table>
+      </bs-tab>
+      <!-- /TextClasses -->
+      
+      
+      <bs-tab event-key="5" class="tab-ontodia" title="Knowledge Graph">
+        <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats iri='[[this]]'></ontodia>
+      </bs-tab>
+      <bs-tab event-key="6" title="Source">
+        [[> Platform:SourceStatements]]
+      </bs-tab>
+    
+      
+      <!-- DraCor-specific Tabs -->
+      [[#if (ask "ASK {SELECT * WHERE {?? a dracon:corpus} }")]]
+      <bs-tab class="tab-DraCorPlays" title="Plays" event-key="7">
+        <semantic-table 
+  query="
+      	SELECT ?play
+WHERE {
+ ?play dracon:in_corpus ?? .
+}
+"
+></semantic-table>
+      </bs-tab>
+      [[/if]]
+      <!-- /DraCor-specific Tabs -->
+    </bs-tabs>
+  [[else]]
+  <div class='page__body'>
+    <p>
+      It seems that no entity with IRI <code>"[[this]]"</code> in any subject, predicate or object position is known in the knowledge graph. Also no static application page with this identifier can be found.
+    </p>
+    <p>
+      Click on the edit button (<i class="fa fa-pencil"></i>) in the top right of this page (<i>only visibile if the respective ACL permissions are being granted to you</i>) to create a new, static application page with this identifier.
+    </p>
+  </div>
+  [[/if]]
+</div>

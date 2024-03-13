@@ -1,0 +1,328 @@
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+  <div class="rs-header">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button
+        type="button"
+        class="navbar-toggle collapsed"
+        data-toggle="collapse"
+        data-target="#rs-navbar"
+        aria-expanded="false"
+        aria-controls="rs-navbar"
+        aria-label="Toggle navigation"
+      >
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a href="/">
+        <button
+          class="btn btn-primary"
+          style="margin-left:15px; font-size:16px; border:none; background:none; color: var(--color-dark)"
+        >
+          CLSCor
+        </button>
+      </a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="rs-navbar">
+
+      <ul class="nav navbar-nav" style="display: flex; column-gap:10px;">
+
+        <li>
+          <semantic-link
+            iri="http://www.researchspace.org/resource/ThinkingFrames"
+            urlqueryparam-view="simple-search"
+            title="Seach"
+          >
+            <button class="btn btn-primary">
+              <i class="fa fa-search btn-icon-left"></i>
+              <span class="btn-icon-left">Search</span>
+            </button>
+          </semantic-link>
+
+          {{!  <bs-dropdown id='searchItems'>
+            <bs-dropdown-toggle bs-style="primary">
+              <i class="fa fa-search btn-icon-left"></i>
+              <span class="btn-icon-left">Search</span>
+            </bs-dropdown-toggle>
+            <bs-dropdown-menu>
+              <bs-menu-item>
+                <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames" 
+                          urlqueryparam-view='simple-search'
+                          title="Advanced seach"
+                          urlqueryparam-active-tab='project'
+                          >
+                          Projects
+                </semantic-link>
+              </bs-menu-item>
+
+              <bs-menu-item>
+                <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames" 
+                          urlqueryparam-view='simple-search'
+                          title="Advanced seach"
+                          urlqueryparam-active-tab='collection_item'
+                          >
+                          Objects
+                </semantic-link>
+              </bs-menu-item>
+
+              
+              <bs-menu-item divider="true"></bs-menu-item>
+            
+              <bs-menu-item>
+                <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames" 
+                          urlqueryparam-view='simple-search'
+                          title="Advanced seach"
+                          urlqueryparam-active-tab='exhibition'
+                          >
+                          Exhibitions
+                </semantic-link>
+              </bs-menu-item>
+
+              <bs-menu-item divider="true"></bs-menu-item>
+              <bs-menu-item>
+                <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames" 
+                          urlqueryparam-view='simple-search'
+                          urlqueryparam-active-tab='project'
+                          title="Advanced seach"
+                          >
+                          <b>Search all</b>
+                </semantic-link>
+              </bs-menu-item>
+            </bs-dropdown-menu>
+          </bs-dropdown> }}
+        </li>
+
+        <li>
+          <bs-dropdown id="resourceItems">
+            <bs-dropdown-toggle bs-style="primary">
+              <i class="fa fa-bars btn-icon-left"></i>
+              <span class="btn-icon-left">Resources</span>
+            </bs-dropdown-toggle>
+            <bs-dropdown-menu>
+              <bs-menu-item>
+                <semantic-link
+                  iri="http://www.researchspace.org/resource/ThinkingFrames"
+                  urlqueryparam-view="authority-editor"
+                >
+                  Authorities
+                </semantic-link>
+              </bs-menu-item>
+              <bs-menu-item>
+                <semantic-link
+                  iri="http://www.researchspace.org/resource/ThinkingFrames"
+                  urlqueryparam-view="system-assets"
+                >
+                  Assets
+                </semantic-link>
+              </bs-menu-item>
+              <bs-menu-item>
+                <semantic-link
+                  iri="http://www.researchspace.org/resource/ThinkingFrames"
+                  urlqueryparam-view="system-narrative"
+                >
+                  Semantic narratives
+                </semantic-link>
+              </bs-menu-item>
+              <bs-menu-item>
+                <semantic-link
+                  iri="http://www.researchspace.org/resource/ThinkingFrames"
+                  urlqueryparam-view="system-knowledge-maps"
+                >
+                  Knowledge maps
+                </semantic-link>
+              </bs-menu-item>
+            </bs-dropdown-menu>
+          </bs-dropdown>
+        </li>
+
+        <li>
+          <semantic-query
+            query="prefix Platform: <http://www.researchspace.org/resource/system/>
+                                SELECT ?config WHERE { 
+                                  ?config a Platform:FormConfig .
+                                  ?config crm:P71i_is_listed_in <http://www.researchspace.org/resource/system/vocab/authority_manager_config_types> .
+                                  FILTER(?config IN(<http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/architect>, <http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/place>))
+                                }"
+            template="\{{> template}}"
+          >
+
+            <template id="template">
+              <bs-dropdown id="newItem">
+                <bs-dropdown-toggle bs-style="primary">
+                  <i class="fa fa-plus-square btn-icon-left"></i>
+                  <span class="btn-icon-left">New</span>
+                </bs-dropdown-toggle>
+                <bs-dropdown-menu>
+                  \{{#each bindings}}
+                  \{{#ifCond config.value "=="
+                  "http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/architect"}}
+                  <bs-menu-item>
+                    <semantic-link
+                      iri="http://www.researchspace.org/resource/ThinkingFrames"
+                      urlqueryparam-view="entity-editor"
+                      urlqueryparam-entity-type-config="http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/architect"
+                      urlqueryparam-mode="new"
+                      urlqueryparam-entity-editor-label="New architect"
+                    >
+                      Architect
+                    </semantic-link>
+                  </bs-menu-item>
+                  \{{/ifCond}}
+                  \{{#ifCond config.value "=="
+                  "http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/place"}}
+                  <bs-menu-item>
+                    <semantic-link
+                      iri="http://www.researchspace.org/resource/ThinkingFrames"
+                      urlqueryparam-view="authority-content"
+                      urlqueryparam-resource="http://www.researchspace.org/resource/vocab/place"
+                      urlqueryparam-frame="true"
+                    >
+                      Place
+                    </semantic-link>
+                  </bs-menu-item>
+                  \{{/ifCond}}
+                  \{{/each}}
+                </bs-dropdown-menu>
+              </bs-dropdown>
+            </template>
+          </semantic-query>
+
+        </li>
+
+      </ul>
+
+      <ul class="nav navbar-nav icon-btns-container" style="display: flex; column-gap:10px;">
+        <style>
+          .navbar-default .vl { background-size: 1px 70%; width: 40px; background-color: pink; }
+        </style>
+        <!--
+        <li style="margin-left: 10px;">
+          <semantic-link iri="http://www.researchspace.org/resource/ThinkingFrames"
+                                urlqueryparam-view='entity-editor' 
+                                urlqueryparam-entity-type-config='http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/Feedback'
+                                urlqueryparam-mode='new'
+                                urlqueryparam-entity-editor-label="New feedback"
+                          >
+            <button class="btn btn-primary"> 
+                <i class="fa fa-comments btn-icon-left"></i>
+                Feedback
+            </button>
+          </semantic-link>
+        </li>
+        -->
+        <mp-anonymous-hidden>
+          <li class="rs-only-xs">
+            <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings">
+              Setting
+            </semantic-link>
+          </li>
+        </mp-anonymous-hidden>
+
+        <mp-anonymous-hidden>
+          <li>
+            <semantic-link iri="http://www.researchspace.org/resource/admin" title="System Settings">
+              <button class="btn btn-primary">
+                <i class="fa fa-cog btn-icon-left"></i>
+                Settings
+              </button>
+            </semantic-link>
+          </li>
+        </mp-anonymous-hidden>
+
+        <li>
+          <mp-anonymous-hidden
+            alt='<li><a href="/login" title="login">
+                                      <div class="nav-iconAndLabel"> 
+                                        <i class="rs-icon rs-icon-user_round"></i>
+                                        <div>Logout</div>
+                                      </div>
+                                  </a></li>'
+          >
+
+            <bs-dropdown id="account">
+              <bs-dropdown-toggle bs-style="primary">
+                <i class="rs-icon rs-icon-user_round btn-icon-left"></i>
+                <span class="btn-icon-left">Account</span>
+              </bs-dropdown-toggle>
+
+              <bs-dropdown-menu style="right: 0; left: unset;">
+                <bs-menu-item title="userPrincipal">
+                  <semantic-query
+                    query='SELECT DISTINCT ?__useruri__ ?actor ?userName ?fullName ?scheme { 
+                                            BIND(REPLACE(REPLACE(STR(?__useruri__), STR(User:), ""), "%40", "@") as ?userName) 
+                                            OPTIONAL {
+                                              ?actor crm:P1_is_identified_by ?email .
+                                              ?email a crm:E42_Identifier .
+                                              ?email crm:P190_has_symbolic_content ?userName .
+                                              ?email crm:P2_has_type <http://www.researchspace.org/resource/vocab/identifier/email> .
+
+                                              ?actor crm:P1_is_identified_by ?fullNameUri .
+                                              ?fullNameUri a crm:E41_Appellation .
+                                              ?fullNameUri crm:P190_has_symbolic_content ?fullName .
+                                              ?fullNameUri crm:P2_has_type <http://www.researchspace.org/resource/vocab/identifier/full_name> .
+
+                                              OPTIONAL { ?actor crm:P71i_is_listed_in ?scheme . }
+                                            }
+                                          } LIMIT 1'
+                    template="\{{> template}}"
+                  >
+                    <template id="template">
+                      {{!-- <semantic-link-container uri='\{{bindings.0.__useruri__.value}}'> --}}
+                      <div class="user-dropdown_item">
+                        <i class="rs-icon rs-icon-user_round rs-xs-none"></i>
+                        \{{#if bindings.0.fullName.value}}
+                        {{!-- <mp-event-trigger id='\{{frameId}}-entity-type-edit-trigger--edit-user' 
+                                          type='Dashboard.AddFrame'
+                                          targets='["\{{frameId}}-entity-editor-frame"]'
+                                          data='{"viewId":"entity-editor", 
+                                                "entityTypeConfig": "http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/User_list", 
+                                                "resourceIri": "\{{bindings.0.actor.value}}",
+                                                "additional_data":{"scheme":"\{{bindings.0.scheme.value}}"}, 
+                                                "editable": true,
+                                                "mode": "edit"
+                                                }'
+                                            >
+                                  <span style="text-transform: none;">\{{bindings.0.fullName.value}}</span>
+                              </mp-event-trigger> --}}
+                        <span style="text-transform: none; cursor: not-allowed;">\{{bindings.0.fullName.value}}</span>
+
+                        \{{else}}
+                        {{!-- <mp-event-trigger id='\{{frameId}}-entity-type-edit-trigger--new-user' 
+                                          type='Dashboard.AddFrame'
+                                          targets='["\{{frameId}}-entity-editor-frame"]'
+                                          data='{"viewId":"entity-editor", 
+                                                "entityTypeConfig": "http://www.researchspace.org/resource/system/vocab/authority_manager_config_types/data/User_list", 
+                                                "additional_data":{"email":"\{{bindings.0.userName.value}}"}, 
+                                                "editable": true,
+                                                "mode":"new"}'
+                                            >
+                                  <span style="text-transform: none;">\{{bindings.0.userName.value}} <i>(not registred user)</i></span>
+                              </mp-event-trigger> --}}
+                        <span style="text-transform: none; cursor: not-allowed;">\{{bindings.0.userName.value}}
+                          <i>(not registred user)</i></span>
+                        \{{/if}}
+                      </div>
+                      {{! </semantic-link-container> }}
+                    </template>
+                  </semantic-query>
+                </bs-menu-item>
+                <bs-menu-item href="/logout" title="logout">
+                  <div class="user-dropdown_item">
+                    <i class="rs-icon rs-icon-logout rs-xs-none"></i>
+                    <span>Logout</span>
+                  </div>
+                </bs-menu-item>
+              </bs-dropdown-menu>
+            </bs-dropdown>
+          </mp-anonymous-hidden>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>

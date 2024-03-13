@@ -1,47 +1,57 @@
 <ol class="page-breadcrumb">
-	<li>
-		<mp-link title="Home" url="/">Home</mp-link>
-	</li>
-	<li class="active">
-		<mp-label iri='[[this]]'></mp-label>
-	</li>
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri="[[this]]"></mp-label>
+  </li>
 </ol>
 
 <div class="page">
-	<div style="display:block;width:100%;margin:0 auto;height:300px">
-		<img style="width:100%;position:absolute;z-index:-1;top:0;left:0;" src="../assets/img/background.jpg">
-	</div>
-	<div class="container-fluid" style="background-color:#e5d0ff;min-height:50vh">
-		<bs-row class="row-center">
-			<img style="width:600px" src="https://clsinfra.io/wp-content/uploads/2021/09/CLS-INFRA_Linear-Long-Logo-Col.png" alt="">
-		</bs-row>
-		<bs-row class="row-center">
-			<h1>🐱 CLSCor Corpus Exploration Platform 🐱</h1>
-		</bs-row>
-		<bs-row class="row-center">
-				<bs-col md="6">
-					<div data-flex-layout="row md-column center-stretch">
-						<div class="grid-demo"></div>
-						<div class="grid-demo">
-							<h3>About CLSCor</h3>
-							<p>The digital age offers challenges and opportunities for completing research on Europe’s multilingual and interconnected literary heritage. At present, the landscape of literary data is diverse and fragmented. Even though many resources are currently available in digital libraries, a lack of standardisation hinders their access and reuse. The EU-funded <a href="https://clsinfra.io/"><b>CLS INFRA project</b></a> will help to build the shared and sustainable infrastructure needed to undertake literary studies in the digital age. The CLSCor Corpus Exploration Platform enables users to explore metadata on literary corpora. <semantic-link iri="app:About">[read more...]</semantic-link></p>
-						</div>
-					</div>
-				</bs-col>
-				<bs-col md="6">
-					<div class="grid-demo">
-						<h3>Explore</h3>
-						<p>Following are various ways to explore the data in the CLSCor Catalogue:</p>
-							<ul>
-								<li><mp-link url="/sparql">SPARQL Interface</mp-link></li>
-                <li><semantic-link iri="app:Overview">Overview</semantic-link></li> 
-								<li><semantic-link iri="app:Corpora">Corpora</semantic-link></li> 
-							</ul>
-						<!--(<s><semantic-link iri="app:DraCor">DraCor Research Space</semantic-link> | <semantic-link iri="app:User-Needs-Analysis">User Needs Analysis</semantic-link></s>)-->
-					</div>
-				</bs-col>			
-		</bs-row>
-	</div>
+  <div style="display: block; width: 100%; margin: 0 auto; height: 100px">
+    <!-- <img style="width:100%;position:absolute;z-index:-1;top:0;left:0;" src="../assets/img/background.jpg"> -->
+  </div>
+  <div class="container-fluid" style="background-color: #e5d0ff; min-height: 50vh">
+    <bs-row class="row-center">
+      <img
+        style="width: 600px"
+        src="https://clsinfra.io/wp-content/uploads/2021/09/CLS-INFRA_Linear-Long-Logo-Col.png"
+        alt=""
+      />
+    </bs-row>
+    <bs-row class="row-center">
+      <h1>🐱 CLSCor Corpus Exploration Platform 🐱</h1>
+    </bs-row>
+    <bs-row class="row-center">
+      <bs-col md="6">
+        <div data-flex-layout="row md-column center-stretch">
+          <div class="grid-demo"></div>
+          <div class="grid-demo">
+            <h3>About CLSCor</h3>
+            <p>
+              The digital age offers challenges and opportunities for completing research on Europe’s multilingual and
+              interconnected literary heritage. At present, the landscape of literary data is diverse and fragmented.
+              Even though many resources are currently available in digital libraries, a lack of standardisation hinders
+              their access and reuse. The EU-funded <a href="https://clsinfra.io/"><b>CLS INFRA project</b></a> will
+              help to build the shared and sustainable infrastructure needed to undertake literary studies in the
+              digital age. The CLSCor Corpus Exploration Platform enables users to explore metadata on literary corpora.
+              <semantic-link iri="app:About">[read more...]</semantic-link>
+            </p>
+          </div>
+        </div>
+      </bs-col>
+      <bs-col md="6">
+        <div class="grid-demo">
+          <h3>Explore</h3>
+          <p>Following are various ways to explore the data in the CLSCor Catalogue:</p>
+          <ul>
+            <li><mp-link url="/sparql">SPARQL Interface</mp-link></li>
+            <li><semantic-link iri="app:Overview">Overview</semantic-link></li>
+            <li><semantic-link iri="app:Corpora">Corpora</semantic-link></li>
+          </ul>
+          <!--(<s><semantic-link iri="app:DraCor">DraCor Research Space</semantic-link> | <semantic-link iri="app:User-Needs-Analysis">User Needs Analysis</semantic-link></s>)-->
+        </div>
+      </bs-col>
+    </bs-row>
+  </div>
 </div>
-
-

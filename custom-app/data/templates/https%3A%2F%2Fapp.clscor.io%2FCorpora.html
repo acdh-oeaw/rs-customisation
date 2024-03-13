@@ -26,7 +26,6 @@
   </div>
   <bs-tabs id="tabs" class="page__body-navtabs" unmount-on-exit="true">
     <bs-tab event-key="0" class="tab-overview" title="Overview">
-      Fields and stats will be here<br />
       Overview of types:
       <semantic-table
         query="
@@ -59,10 +58,10 @@ WHERE {
       <semantic-table
         query="
       	SELECT ?corpus
-WHERE {
- ?corpus a crmcls:X1_Corpus . 
-}
-"
+        WHERE {
+        ?corpus a crmcls:X1_Corpus . 
+        }
+        "
       ></semantic-table>
     </bs-tab>
     <!-- /All Corpora -->

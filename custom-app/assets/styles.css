@@ -27,7 +27,7 @@
   --color-accent-950: #112220;
 
   --color-breadcrumb-bg: transparent;
-  --color-navbar-bg: #f8fafc;
+  --color-navbar-bg: #fff;
 
   --rounded-sm: 2px;
   --rounded-md: 4px;
@@ -62,7 +62,7 @@
 :root {
   --color-body-bg: var(--color-neutral-50);
 
-  --color-dark: var(--color-neutral-800);
+  --color-dark: #32236c; /* var(--color-neutral-800); */
   --color-dark-darker: var(--color-neutral-950);
   --color-dark--op50: var(--color-neutral-200);
   --color-dark--op75: var(--color-neutral-500);
@@ -348,7 +348,17 @@ h4 {
 }
 
 .navbar {
-  border-bottom: 1px solid var(--color-dark--op50);
+  box-shadow: 0 0 6px 1px rgba(29, 17, 51, 0.04), 0 0 8px 2px rgba(61, 64, 70, 0.12),
+    0 0 5px -3px rgba(29, 17, 51, 0.12);
+}
+
+.navbar .btn-primary {
+  background: none;
+  border: none;
+  color: var(--color-dark);
+}
+.navbar .btn-primary .fa {
+  color: var(--color-dark);
 }
 
 .page-breadcrumbs {

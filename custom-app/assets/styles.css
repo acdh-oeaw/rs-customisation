@@ -62,7 +62,7 @@
 :root {
   --color-body-bg: var(--color-neutral-50);
 
-  --color-dark: #32236c; /* var(--color-neutral-800); */
+  --color-dark:  var(--color-neutral-800);
   --color-dark-darker: var(--color-neutral-950);
   --color-dark--op50: var(--color-neutral-200);
   --color-dark--op75: var(--color-neutral-500);
@@ -357,7 +357,8 @@ h4 {
   border: none;
   color: var(--color-dark);
 }
-.navbar .btn-primary .fa {
+.navbar .btn-primary .fa,
+.navbar .login .nav-iconAndLabel {
   color: var(--color-dark);
 }
 

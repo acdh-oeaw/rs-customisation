@@ -46,7 +46,7 @@
       	SELECT ?corpus
 WHERE {
  ?corpus a crmcls:X1_Corpus .
- FILTER NOT EXISTS {?corpus crmcls:Y1i_is_subcorpus_of ?super }
+ FILTER NOT EXISTS {?corpus crmcls:Y4i_is_subcorpus_of ?super }
 }
 "
       ></semantic-table>
@@ -56,11 +56,78 @@ WHERE {
     <!-- All Corpora -->
     <bs-tab event-key="2" class="tab-corporaList" title="All Corpora">
       <semantic-table
+      column-configuration='[
+        {"displayName": "Corpus", "variableName": "corpus"},
+        {"displayName": "Acronym", "variableName": "acronym"},
+        {"displayName": "Text count", "variableName": "textCount"},
+        {"displayName": "Languages", "variableName": "languages"},
+        {"displayName": "Genres", "variableName": "genres"},
+        {"displayName": "Time Span", "variableName": "timeSpan"},
+        {"displayName": "Corpus Type", "variableName": "corpusTypes"},
+        {"displayName": "Subcorpora", "variableName": "subcorpus"}
+      ]'
         query="
-      	SELECT ?corpus
+      	SELECT
+        ?corpus
+        (MAX(?acronym) as ?acronym)
+        (count(?document) as ?textCount) 
+        (group_concat(distinct ?langLabel;separator=', ') as ?languages) 
+        (group_concat(distinct ?genreLabel;separator=', ') as ?genres)
+        (group_concat(distinct ?corpusTypeLabel;separator=', ') as ?corpusTypes)
+        (group_concat(distinct ?timeSpanLabel;separator=', ') as ?timeSpan)
+        (COUNT(distinct ?subcorpus) as ?subcorpus)
         WHERE {
-        ?corpus a crmcls:X1_Corpus . 
+          ?corpus a crmcls:X1_Corpus .
+          
+          ?corpus crm:P148_has_component ?x11 .
+          ?x11 a crmcls:X11_Prototypical_Document .
+
+          OPTIONAL {
+            ?corpus crm:P1_is_identified_by ?appellation .
+            ?appellation crm:P2_has_type <https://clscor.io/entity/type/appellation/acronym> .
+            ?appellation rdf:value ?acronym .
+          }
+          OPTIONAL {
+            ?corpus crm:P148_has_component|lrm:R71_has_part ?document .
+            ?document a crmcls:X2_Corpus_Document
+          }
+          OPTIONAL {
+            
+            ?e13_lang crm:P140_assigned_attribute_to ?x11 .
+            ?e13_lang a crm:E13_Attribute_Assignment ;
+            crm:P177_assigned_property_of_type crm:P72_has_Language ;
+            crm:P141_assigned ?lang .
+            ?lang rdfs:label ?langLabel .
+          }
+          OPTIONAL {
+            ?e13_genre crm:P140_assigned_attribute_to ?x11 .
+            ?e13_genre a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crm:P2_has_type ;
+                  crm:P141_assigned ?genre .
+            ?genre crm:P71i_is_listed_in <https://clscor.io/entity/type/literary_genre> ;
+                        rdfs:label ?genreLabel .
+          }
+          OPTIONAL {
+            ?e13_type crm:P140_assigned_attribute_to ?corpus .
+            ?e13_type a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P2_has_type ;
+                   crm:P141_assigned ?corpusType .
+              ?corpusType crm:P71i_is_listed_in <https://clscor.io/entity/type/corpus> ;
+                          rdfs:label ?corpusTypeLabel .
+          }
+          OPTIONAL {
+            ?e13_time crm:P140_assigned_attribute_to ?corpus .
+            ?e13_time a crm:E13_Attribute_Assignment ;
+                   crm:P177_assigned_property_of_type crm:P4_has_time-span ;
+                   crm:P141_assigned ?timeSpan .
+            ?timeSpan rdfs:label ?timeSpanLabel .
+          }
+          OPTIONAL {
+            ?subcorpus crmcls:Y4i_is_subcorpus_of ?corpus .
+          }
         }
+        group by ?corpus
+        order by desc(?textCount)
         "
       ></semantic-table>
     </bs-tab>

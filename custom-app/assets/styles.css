@@ -624,3 +624,21 @@ h4 {
   width: 24px;
   height: 24px;
 }
+
+.stats-tabs {
+  display: grid;
+  grid-template-columns: auto 1fr;
+}
+
+.stats-tabs ul.nav-tabs{
+  display: flex;
+  flex-direction: column;
+  margin-right: 48px;
+}
+@media (min-width: 992px) {
+  .tab-statsList {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+}
+

@@ -139,6 +139,9 @@ h4 {
   border-radius: var(--rounded-full);
   overflow: hidden;
   border: 2px solid var(--color-accent-200);
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
 }
 
 .app-header__title-text {

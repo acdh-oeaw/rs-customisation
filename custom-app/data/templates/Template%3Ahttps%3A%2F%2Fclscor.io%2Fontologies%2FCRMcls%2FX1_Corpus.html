@@ -23,15 +23,6 @@
     </div>
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
       <bs-tab event-key="0" class="tab-overview" title="Overview">
-        Fields and stats will be here <br>
-        Test Fields:        
-        <mp-field-visualization
-                  subject='[[this]]'
-                  fields='[[fieldDefinitions
-                              corpusName="https://clscor.io/fieldDefinition/corpusName"                              
-                               ]]'
-             template='{{> Default:ResourceFieldBasedVisualization subject="[[this]]" [[#if asserted]]guess="true"[[/if]]}}'
-          ></mp-field-visualization>
    
         Count components
 	        <semantic-table query="SELECT ?doc_type (count(?document) as ?cnt)
@@ -44,16 +35,16 @@
       </bs-tab>
       
       <!-- SubCorpora-Tab: show only if there are subcorpora -->
-      [[#if (ask "ASK {SELECT * WHERE {?? crmcls:Y1_has_subcorpus ?o} }")]]
+      [[#if (ask "ASK {SELECT * WHERE {?? crmcls:Y4_has_subcorpus ?o} }")]]
       <bs-tab event-key="1" class="tab-subCorpora" title="Subcorpora">
         <semantic-table 
-  query="
-      	SELECT (?subcorpus  AS ?Subcorpora)
-WHERE {
- ?? crmcls:Y1_has_subcorpus ?subcorpus .
-}
-"
-></semantic-table>
+          query="
+                SELECT (?subcorpus  AS ?Subcorpora)
+        WHERE {
+        ?? crmcls:Y4_has_subcorpus ?subcorpus .
+        }
+        "
+        ></semantic-table>
       </bs-tab>
       [[/if]]
       <!-- /SubCorpora-Tab -->
@@ -71,7 +62,7 @@ WHERE {
                   ?document a crmcls:X2_Corpus_Document.}
                         UNION
                   {
-                    ?? crmcls:Y1_has_subcorpus|crm:P148_has_component|lrm:R71_has_part ?document .
+                    ?? crmcls:Y4_has_subcorpus|crm:P148_has_component|lrm:R71_has_part ?document .
                         ?document a crmcls:X2_Corpus_Document.
                   }
                 }
@@ -97,7 +88,7 @@ WHERE {
           }
           UNION
           {
-          ?? crmcls:Y1_has_subcorpus/lrm:R71_has_part ?document .
+          ?? crmcls:Y4_has_subcorpus/lrm:R71_has_part ?document .
           ?document a crmcls:X2_Corpus_Document ;
           lrm:R4_embodie ?expression .
           ?expression lrm:R17i_was_created_by ?creation .
@@ -125,7 +116,7 @@ WHERE {
           }
           UNION
           {
-          ?? crmcls:Y1_has_subcorpus/lrm:R71_has_part ?document .
+          ?? crmcls:Y4_has_subcorpus/lrm:R71_has_part ?document .
           ?document a crmcls:X2_Corpus_Document ;
             crm:P2_has_type ?type .
             ?type crm:P2_has_type <https://core.clscor.io/entity/type/textClass> .

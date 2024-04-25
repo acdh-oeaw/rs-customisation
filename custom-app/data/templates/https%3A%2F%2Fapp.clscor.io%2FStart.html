@@ -10,31 +10,27 @@
 <div class="page" style="padding-top: 0">
   <div class="page__hero">
     <div class="container">
+      <img src="/assets/img/bg_midjourney.png" alt="Network background" class="img-blend-in" height="100" />
       <h1>
         <img src="/assets/img/CLS_INFRA_Icon2.png" alt="CLSInfra Logo" height="100" />CLSCor Corpus Exploration Platform
       </h1>
     </div>
   </div>
-  <div class="container-fluid">
+  <div class="container page-section">
     <bs-row class="row-center">
-      <bs-col md="6">
-        <div data-flex-layout="row md-column center-stretch">
-          <div class="grid-demo"></div>
-          <div class="grid-demo">
-            <h3>About CLSCor</h3>
-            <p>
-              The digital age offers challenges and opportunities for completing research on Europe’s multilingual and
-              interconnected literary heritage. At present, the landscape of literary data is diverse and fragmented.
-              Even though many resources are currently available in digital libraries, a lack of standardisation hinders
-              their access and reuse. The EU-funded <a href="https://clsinfra.io/"><b>CLS INFRA project</b></a> will
-              help to build the shared and sustainable infrastructure needed to undertake literary studies in the
-              digital age. The CLSCor Corpus Exploration Platform enables users to explore metadata on literary corpora.
-              <semantic-link iri="app:About">Read more...</semantic-link>
-            </p>
-          </div>
-        </div>
+      <bs-col md="8">
+        <h2>About CLSCor</h2>
+        <p>
+          The digital age offers challenges and opportunities for completing research on Europe’s multilingual and
+          interconnected literary heritage. At present, the landscape of literary data is diverse and fragmented. Even
+          though many resources are currently available in digital libraries, a lack of standardisation hinders their
+          access and reuse. The EU-funded <a href="https://clsinfra.io/"><b>CLS INFRA project</b></a> will help to build
+          the shared and sustainable infrastructure needed to undertake literary studies in the digital age. The CLSCor
+          Corpus Exploration Platform enables users to explore metadata on literary corpora.
+          <semantic-link iri="app:About">Read more...</semantic-link>
+        </p>
       </bs-col>
-      <bs-col md="6">
+      <!-- <bs-col>
         <div class="grid-demo">
           <h3>Explore</h3>
           <p>Following are various ways to explore the data in the CLSCor Catalogue:</p>
@@ -43,22 +39,43 @@
             <li><semantic-link iri="app:Overview">Overview</semantic-link></li>
             <li><semantic-link iri="app:Corpora">Corpora</semantic-link></li>
           </ul>
-          <!--(<s><semantic-link iri="app:DraCor">DraCor Research Space</semantic-link> | <semantic-link iri="app:User-Needs-Analysis">User Needs Analysis</semantic-link></s>)-->
         </div>
-      </bs-col>
+      </bs-col> -->
     </bs-row>
-
     <bs-row class="row-center">
-      <bs-col md="6">
-        <div class="page-section__card" style="width: 18rem">
-          <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-            <p class="card-text">
-              Some quick example text to build on the card title and make up the bulk of the card's content.
-            </p>
-            <a href="#" class="card-link">Card link</a>
-            <a href="#" class="card-link">Another link</a>
+      <bs-col md="8">
+        <h2>Explore</h2>
+        <p>Following are various ways to explore the data in the CLSCor Catalogue:</p>
+        <div class="d-flex flex-wrap" style="gap: 16px">
+          <semantic-link iri="app:Corpora" class="page-section__card">
+            <div>
+              <div class="card-body">
+                <h3 class="card-title">Corpora</h3>
+                <h6 class="card-subtitle mb-2 text-muted">Whole card is clickable</h6>
+                <p class="card-text">
+                  Some quick example text to build on the card title and make up the bulk of the card's content.
+                </p>
+              </div>
+            </div></semantic-link
+          >
+          <div class="page-section__card">
+            <div class="card-body">
+              <h3 class="card-title"><semantic-link iri="app:Overview">Dataset</semantic-link></h3>
+              <h6 class="card-subtitle mb-2 text-muted">Clickable title</h6>
+              <p class="card-text">
+                Some quick example text to build on the card title and make up the bulk of the card's content.
+              </p>
+            </div>
+          </div>
+          <div class="page-section__card">
+            <div class="card-body">
+              <h3 class="card-title">SPARQL Interface</h3>
+              <h6 class="card-subtitle mb-2 text-muted">Link at the bottom</h6>
+              <p class="card-text">
+                Some quick example text to build on the card title and make up the bulk of the card's content.
+              </p>
+              <mp-link url="/sparql" class="card-link">Start SPARQLing</mp-link>
+            </div>
           </div>
         </div>
       </bs-col>

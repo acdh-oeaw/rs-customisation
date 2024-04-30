@@ -476,11 +476,12 @@ a:hover {
 }
 a.page-section__card {
   color: initial;
+  transition: all 150ms ease-out;
 }
 a.page-section__card:hover,
-a.page-section__card:hover .card-title,
-a.page-section__card:hover .card-subtitle {
-  color: var(--color-accent-700);
+a.page-section__card:focus-visible {
+  background-color: var(--color-accent-100);
+  transition: all 150ms ease-out;
 }
 .page-section h3 a {
   color: initial;

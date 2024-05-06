@@ -2,6 +2,9 @@
   <li>
     <mp-link title="Home" url="/">Home</mp-link>
   </li>
+  <li>
+    <semantic-link iri="app:Corpora"></semantic-link>
+  </li>
   <li class="active">
     <mp-label iri='[[this]]'></mp-label>
   </li>
@@ -16,55 +19,10 @@
   }
 </style>
 
-<div class="page">
+<div class="page x1-corpus">
 	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
-    <div class='page__header-navtabs'>
-        <div class="page__header-thumbnail">
-          <mp-resource-thumbnail no-image-uri="/images/default-thumbnail.png" iri="[[this]]"></mp-resource-thumbnail>
-        </div>
-        <div class="page__header-body">
-          <h1>
-            <mp-label iri="[[this]]"></mp-label>
-
-            <!-- Acronym -->
-            <semantic-query 
-            query="SELECT ?acronym WHERE {?? crm:P1_is_identified_by ?appellation . ?appellation crm:P2_has_type <https://clscor.io/entity/type/appellation/acronym> . ?appellation rdf:value ?acronym .}" 
-            template="{{> acronym_template}}">
-            <template id="acronym_template">
-              {{#if bindings}}
-                ({{#each bindings}}{{acronym.value}}{{/each}})
-              {{/if}}
-            </template>
-          </semantic-query>
-          </h1>
-          <!-- Link (identifier) -->
-          <semantic-query 
-            query="SELECT ?link WHERE {
-              ?? crm:P1_is_identified_by ?link.
-              ?link a crm:E42_Identifier.
-            }" 
-            template="{{> link_template}}">
-            <template id="link_template">
-                {{#each bindings}}<a href="{{link.value}}" target="_blank">{{link.value}}</a><br>{{/each}}
-            </template>
-          </semantic-query>
-          <!-- Corpus Type -->
-          <semantic-query 
-            query="SELECT ?corpusTypeLabel ?corpusType WHERE {
-              ?e13_type crm:P140_assigned_attribute_to ?? .
-              ?e13_type a crm:E13_Attribute_Assignment ;
-              crm:P177_assigned_property_of_type crm:P2_has_type ;
-              crm:P141_assigned ?corpusType .
-              ?corpusType crm:P71i_is_listed_in <https://clscor.io/entity/type/corpus> ;
-                          rdfs:label ?corpusTypeLabel .}" 
-            template="{{> type_template}}">
-            <template id="type_template">
-              {{#if bindings}}
-                {{#each bindings}}<semantic-link uri="{{corpusType.value}}"></semantic-link>{{/each}}
-              {{/if}}
-            </template>
-          </semantic-query>
-        </div>
+    <div class='page__header'>
+      [[> Template:X1Header]]
     </div>
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
       <bs-tab event-key="0" class="tab-overview" title="Overview">

@@ -1,0 +1,178 @@
+  <div class='page__header-body'>
+    <h1>
+      <mp-label iri='[[this]]'></mp-label>
+    </h1>
+    <dl>
+    <!--URI -->
+    <p>
+      <dt>URI</dt> <dd><a href='[[this]]' target='_blank'><i>[[this]]</i>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </p>
+
+    <!--Link -->
+    <p>
+      <dt>Link</dt> <dd><semantic-query 
+      query="SELECT ?link WHERE {
+        ?? crm:P1_is_identified_by ?link.
+        ?link a crm:E42_Identifier.
+      }" 
+      template="{{> link_template}}">
+      <template id="link_template">
+          {{#each bindings}}<a href="{{link.value}}" target="_blank">{{link.value}}</a><br>{{/each}}
+      </template>
+    </semantic-query></dd>
+    </p>
+
+    <!--Acronym -->    
+    <p>
+      <dt>Acronym</dt> <dd><semantic-query query="SELECT ?acronym WHERE {?? crm:P1_is_identified_by ?appellation . ?appellation crm:P2_has_type <https://clscor.io/entity/type/appellation/acronym> . ?appellation rdf:value ?acronym .}" 
+      style="display: inline;"></semantic-query></dd>
+    </p>
+
+    <!--Corpus Type -->    
+    <p>
+      <dt>Corpus Type</dt> <dd><semantic-query 
+      query="SELECT ?corpusType WHERE {
+        ?e13_type crm:P140_assigned_attribute_to ?? .
+        ?e13_type a crm:E13_Attribute_Assignment ;
+        crm:P177_assigned_property_of_type crm:P2_has_type ;
+        crm:P141_assigned ?corpusType .
+        ?corpusType crm:P71i_is_listed_in <https://clscor.io/entity/type/corpus>.}" 
+      template="{{> type_template}}">
+      <template id="type_template">
+        {{#if bindings}}
+          {{#each bindings}}<semantic-link uri="{{corpusType.value}}" style="display: inline"></semantic-link>{{/each}}
+        {{/if}}
+      </template>
+    </semantic-query></dd>
+    </p>
+
+    <!-- Languages -->    
+    <p>
+      <dt>Languages</dt> <dd><semantic-query 
+      query="SELECT ?lang WHERE {
+        ?? crm:P148_has_component ?x11 .
+        ?x11 a crmcls:X11_Prototypical_Document .
+        ?e13_lang crm:P140_assigned_attribute_to ?x11 .
+        ?e13_lang a crm:E13_Attribute_Assignment ;
+        crm:P177_assigned_property_of_type crm:P72_has_Language ;
+        crm:P141_assigned ?lang .}" 
+      template="{{> type_template}}">
+      <template id="type_template">
+        {{#if bindings}}
+          {{#each bindings}}<semantic-link uri="{{lang.value}}" style="display: inline"></semantic-link>{{/each}}
+        {{/if}}
+      </template>
+    </semantic-query></dd>
+    </p>
+
+    <!-- Text count -->    
+    <p>
+      <dt>Text count</dt> <dd><semantic-query 
+      query="SELECT (count(distinct ?document) as ?textCount)  WHERE {
+        ?? crm:P148_has_component|lrm:R71_has_part ?document .
+        ?document a crmcls:X2_Corpus_Document. }" style="display: inline;">
+    </semantic-query> documents</dd>
+    </p>
+
+    <!-- Time span -->    
+    <p>
+      <dt>Time span</dt> <dd><semantic-query 
+      query="SELECT ?timeSpan  WHERE {
+        ?e13_time crm:P140_assigned_attribute_to ?? .
+        ?e13_time a crm:E13_Attribute_Assignment ;
+                crm:P177_assigned_property_of_type crm:P4_has_time-span ;
+                crm:P141_assigned ?timeSpan .}" style="display: inline;">
+    </semantic-query></dd>
+    </p>
+
+    <!-- Formats -->    
+    <p>
+      <dt>Formats</dt> <dd><semantic-query 
+      query="SELECT distinct ?format  WHERE {
+        ?? crm:P148_has_component ?x2 .
+        {?x2 crmcls:Y2_has_format ?format}
+        UNION 
+        {?e13 crm:P140_assigned_attribute_to ?x2 .
+        ?e13 a crm:E13_Attribute_Assignment ;
+        crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
+        crm:P141_assigned ?format .}
+      }" style="display: inline;">
+    </semantic-query></dd>
+    </p>
+
+    <!-- Genres -->    
+    <p>
+      <dt>Genres</dt> <dd><semantic-query 
+      query="SELECT distinct ?genre  WHERE {
+        ?? crm:P148_has_component ?x11 .
+        ?e13_genre crm:P140_assigned_attribute_to ?x11 .
+        ?e13_genre a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crm:P2_has_type ;
+                  crm:P141_assigned ?genre .
+        ?genre crm:P71i_is_listed_in <https://clscor.io/entity/type/literary_genre> ;
+      }" style="display: inline;">
+    </semantic-query></dd>
+    </p>
+
+    <!--License -->    
+    <p>
+      <dt>License</dt> <dd><semantic-query 
+      query="SELECT ?licenseType WHERE {
+        ?? crm:P148_has_component ?x11 .
+        ?e13_type crm:P140_assigned_attribute_to ?x11 .
+        ?e13_type a crm:E13_Attribute_Assignment ;
+        crm:P177_assigned_property_of_type crm:P2_has_type ;
+        crm:P141_assigned ?licenseType .
+        ?licenseType crm:P71i_is_listed_in <https://clscor.io/entity/type/license>.}" 
+      style="display: inline;">
+      
+    </semantic-query></dd>
+    </p>
+
+    <!--Features -->    
+    <p>
+      <dt>Features</dt> <dd><semantic-query 
+      query="SELECT ?feature WHERE {
+        ?? crm:P148_has_component ?x11 .
+        ?e13_type crm:P140_assigned_attribute_to ?x11 .
+        ?e13_type a crm:E13_Attribute_Assignment ;
+        crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature;
+        crm:P141_assigned ?feature }" 
+      style="display: inline;">
+      
+    </semantic-query></dd>
+    </p>
+    <!--Metadata collection timespan -->    
+    <p>
+      <dt>Metadata collected from-to</dt> <dd><semantic-query 
+      query="SELECT ?from ?to WHERE {
+        ?? crm:P148_has_component ?x11 .
+        ?x9 crm:P135_created_type ?x11 .
+        ?x9 crm:P4_has_time-span ?timeSpan .
+        ?timeSpan crm:P81b_begin_of_the_end ?to .
+        ?timeSpan crm:P81a_end_of_the_begin ?from .
+      }" 
+      style="display: inline;"
+      template="{{> timespan_template}}">
+      <template id="timespan_template">
+        {{#if bindings}}
+          {{#each bindings}}[{{from.value}}] - [{{to.value}}]{{/each}}
+        {{/if}}
+      </template>
+      
+    </semantic-query></dd>
+    </p>
+
+  </dl>
+  <!--Commentary -->    
+  <p style="column-span: all;">
+    <semantic-query 
+    query="SELECT ?commentary WHERE {
+      ?? crm:P148_has_component ?x11 .
+      ?x9 crm:P135_created_type ?x11 .
+      ?x9 crm:P3_has_note ?commentary }" 
+    style="display: inline;">
+    
+  </semantic-query>
+  </p>
+  </div>

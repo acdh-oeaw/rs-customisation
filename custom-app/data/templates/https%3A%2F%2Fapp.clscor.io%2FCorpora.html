@@ -60,7 +60,7 @@
       	SELECT
         ?corpus
         (MAX(?acronym) as ?acronym)
-        (count(?document) as ?textCount) 
+        (count(distinct ?document) as ?textCount) 
         (group_concat(distinct ?langLabel;separator=', ') as ?languages) 
         (group_concat(distinct ?genreLabel;separator=', ') as ?genres)
         (group_concat(distinct ?corpusTypeLabel;separator=', ') as ?corpusTypes)

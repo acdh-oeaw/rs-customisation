@@ -564,7 +564,7 @@ a.page-section__card:focus-visible {
 .page__header-body dl p {
   display: grid;
   grid-template-columns: auto 1fr;
-  gap: 6px;
+  gap: 0px 6px;
 }
 
 .page__header-body dt {

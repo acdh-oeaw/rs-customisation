@@ -65,14 +65,6 @@
     </semantic-query></dd>
     </p>
 
-    <!-- Text count -->    
-    <p>
-      <dt>Text count</dt> <dd><semantic-query 
-      query="SELECT (count(distinct ?document) as ?textCount)  WHERE {
-        ?? crm:P148_has_component|lrm:R71_has_part ?document .
-        ?document a crmcls:X2_Corpus_Document. }" style="display: inline;">
-    </semantic-query> documents</dd>
-    </p>
 
     <!-- Time span -->    
     <p>
@@ -85,20 +77,7 @@
     </semantic-query></dd>
     </p>
 
-    <!-- Formats -->    
-    <p>
-      <dt>Formats</dt> <dd><semantic-query 
-      query="SELECT distinct ?format  WHERE {
-        ?? crm:P148_has_component ?x2 .
-        {?x2 crmcls:Y2_has_format ?format}
-        UNION 
-        {?e13 crm:P140_assigned_attribute_to ?x2 .
-        ?e13 a crm:E13_Attribute_Assignment ;
-        crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
-        crm:P141_assigned ?format .}
-      }" style="display: inline;">
-    </semantic-query></dd>
-    </p>
+    
 
     <!-- Genres -->    
     <p>
@@ -114,6 +93,58 @@
     </semantic-query></dd>
     </p>
 
+    
+    <!--Features -->    
+    <p>
+      <dt>Features</dt> <dd><semantic-query 
+      query="SELECT ?feature WHERE {
+        ?? crm:P148_has_component ?x11 .
+        ?e13_type crm:P140_assigned_attribute_to ?x11 .
+        ?e13_type a crm:E13_Attribute_Assignment ;
+        crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature;
+        crm:P141_assigned ?feature }" 
+      style="display: inline;">
+      
+    </semantic-query></dd>
+    </p>
+
+    <!-- Formats -->    
+    <p>
+      <dt>Formats (computed)</dt> <dd><semantic-query 
+      query="SELECT distinct ?format  WHERE {
+        ?? crm:P148_has_component ?x2 .
+        ?x2 crmcls:Y2_has_format ?format
+      }" style="display: inline;">
+    </semantic-query></dd>
+      <dt>Formats (asserted)</dt> <dd><semantic-query 
+      query="SELECT distinct ?format  WHERE {
+        ?? crm:P148_has_component ?x11 .
+        ?e13 crm:P140_assigned_attribute_to ?x11 .
+        ?e13 a crm:E13_Attribute_Assignment ;
+        crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
+        crm:P141_assigned ?format .
+      }" style="display: inline;">
+    </semantic-query></dd>
+    </p>
+
+    <!-- Text count -->    
+    <p>
+      <dt>Text count (computed)</dt> <dd><semantic-query 
+      query="SELECT (count(distinct ?document) as ?textCount)  WHERE {
+        ?? crm:P148_has_component|lrm:R71_has_part ?document .
+        ?document a crmcls:X2_Corpus_Document. }" style="display: inline;">
+    </semantic-query> documents</dd>
+    <dt>Text count (asserted)</dt> <dd><semantic-query 
+      query="SELECT ?textCountAsserted  WHERE {
+        ?e13_text_count crm:P140_assigned_attribute_to ?? .
+        ?e13_text_count a crm:E13_Attribute_Assignment ;
+        crm:P141_assigned ?e54_text_count .
+        ?e54_text_count a crm:E54_Dimension .
+        ?e54_text_count crm:P90_has_value ?textCountAsserted . }" style="display: inline;">
+    </semantic-query> documents</dd>
+    </p>
+
+    
     <!--License -->    
     <p>
       <dt>License</dt> <dd><semantic-query 
@@ -129,19 +160,6 @@
     </semantic-query></dd>
     </p>
 
-    <!--Features -->    
-    <p>
-      <dt>Features</dt> <dd><semantic-query 
-      query="SELECT ?feature WHERE {
-        ?? crm:P148_has_component ?x11 .
-        ?e13_type crm:P140_assigned_attribute_to ?x11 .
-        ?e13_type a crm:E13_Attribute_Assignment ;
-        crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature;
-        crm:P141_assigned ?feature }" 
-      style="display: inline;">
-      
-    </semantic-query></dd>
-    </p>
     <!--Metadata collection timespan -->    
     <p>
       <dt>Metadata collected from-to</dt> <dd><semantic-query 

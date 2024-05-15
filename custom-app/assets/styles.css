@@ -507,9 +507,13 @@ a.page-section__card:focus-visible {
   margin-top: 24px;
 }
 
+
 @media (min-width: 640px) {
   .home-page__grid {
     grid-template-columns: 1fr 1fr;
+  }
+  .home-page__grid.subcorpus__grid {
+    grid-template-columns: repeat(5, minmax(auto, 1fr));
   }
 }
 
@@ -582,6 +586,14 @@ a.page-section__card:focus-visible {
 
 .page__header-navtabs {
   padding-bottom: 32px !important;
+}
+
+.page__body{
+  max-width: var(--container-width);
+  width: 100%;
+  margin-inline: auto;
+  padding-bottom: 32px;
+  float: unset
 }
 
 .page__body-navtabs {

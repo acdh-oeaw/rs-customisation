@@ -24,6 +24,42 @@
     <div class='page__header'>
       [[> Template:X1Header]]
     </div>
+    <div class="page__body">
+            
+        [[#if (ask "ASK {SELECT * WHERE {?? crmcls:Y4_has_subcorpus ?o} }")]]
+        <h2>Subcorpora</h2>
+        <div class="home-page__grid subcorpus__grid mt-3">
+          <semantic-query 
+          query="SELECT ?subcorpus (MAX(?acronym) as ?acronym) (COUNT(?document) as ?textCount)
+                WHERE {
+                ?? crmcls:Y4_has_subcorpus ?subcorpus .
+                ?subcorpus crm:P1_is_identified_by ?appellation .  
+                ?appellation rdf:value ?acronym .
+                ?subcorpus crm:P148_has_component|lrm:R71_has_part ?document .
+                ?document a crmcls:X2_Corpus_Document .
+                }
+                GROUP BY ?subcorpus
+                " 
+          template="{{> subcorpus_cards}}">
+          <template id="subcorpus_cards">
+            {{#if bindings}}
+              {{#each bindings}}
+              <div class="home-page__grid-item">
+                <semantic-link iri="{{subcorpus.value}}">
+                  <h3>
+                    <img src="/assets/icons/corpus.svg" height="20" width="20" alt="corpus icon" /> {{acronym.value}}
+                  </h3>
+                  <p>{{textCount.value}} documents</p></semantic-link>
+              </div>
+              {{/each}}
+            {{/if}}
+          </template>
+      </semantic-query>
+          
+      </div>
+       
+        [[/if]]
+    </div>
     <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
       <bs-tab event-key="0" class="tab-overview" title="Overview">
    
@@ -59,17 +95,22 @@
         </bs-alert>
         <semantic-table 
           query="
-                SELECT DISTINCT ?document
+                SELECT DISTINCT ?document ?actor
                 WHERE {
                   {?? crm:P148_has_component|lrm:R71_has_part ?document .
-                  ?document a crmcls:X2_Corpus_Document.}
+                  ?document a crmcls:X2_Corpus_Document;
+                      lrm:R4_embodies ?expression .
+                  ?expression lrm:R17i_was_created_by ?creation.
+                  ?actor crm:P14i_performed ?creation.}
                         UNION
                   {
                     ?? crmcls:Y4_has_subcorpus|crm:P148_has_component|lrm:R71_has_part ?document .
-                        ?document a crmcls:X2_Corpus_Document.
+                    ?document a crmcls:X2_Corpus_Document;
+                        lrm:R4_embodies ?expression .
+                    ?expression lrm:R17i_was_created_by ?creation .
+                    ?actor crm:P14i_performed ?creation.
                   }
-                }
-                        LIMIT 1000
+                }     
                 "
 ></semantic-table>
       </bs-tab>
@@ -93,7 +134,7 @@
           {
           ?? crmcls:Y4_has_subcorpus/lrm:R71_has_part ?document .
           ?document a crmcls:X2_Corpus_Document ;
-          lrm:R4_embodie ?expression .
+          lrm:R4_embodies ?expression .
           ?expression lrm:R17i_was_created_by ?creation .
           ?actor crm:P14i_performed ?creation.
           }

@@ -570,10 +570,11 @@ a.page-section__card:focus-visible {
   grid-template-columns: 1fr 1fr;
 }
 
-.page__header-body dl p {
+.page__header-body dl div {
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0px 6px;
+  margin-bottom: 6px;
 }
 
 .page__header-body dt {

@@ -4,12 +4,12 @@
     </h1>
     <dl>
     <!--URI -->
-    <p>
+    <div>
       <dt>URI</dt> <dd><a href='[[this]]' target='_blank'><i>[[this]]</i>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
-    </p>
+    </div>
 
     <!--Link -->
-    <p>
+    <div>
       <dt>Link</dt> <dd><semantic-query 
       query="SELECT ?link WHERE {
         ?? crm:P1_is_identified_by ?link.
@@ -20,16 +20,16 @@
           {{#each bindings}}<a href="{{link.value}}" target="_blank">{{link.value}}</a><br>{{/each}}
       </template>
     </semantic-query></dd>
-    </p>
+    </div>
 
     <!--Acronym -->    
-    <p>
+    <div>
       <dt>Acronym</dt> <dd><semantic-query query="SELECT ?acronym WHERE {?? crm:P1_is_identified_by ?appellation . ?appellation crm:P2_has_type <https://clscor.io/entity/type/appellation/acronym> . ?appellation rdf:value ?acronym .}" 
       style="display: inline;"></semantic-query></dd>
-    </p>
+    </div>
 
     <!--Corpus Type -->    
-    <p>
+    <div>
       <dt>Corpus Type</dt> <dd><semantic-query 
       query="SELECT ?corpusType WHERE {
         ?e13_type crm:P140_assigned_attribute_to ?? .
@@ -44,10 +44,10 @@
         {{/if}}
       </template>
     </semantic-query></dd>
-    </p>
+    </div>
 
     <!-- Languages -->    
-    <p>
+    <div>
       <dt>Languages</dt> <dd><semantic-query 
       query="SELECT ?lang WHERE {
         ?? crm:P148_has_component ?x11 .
@@ -63,11 +63,11 @@
         {{/if}}
       </template>
     </semantic-query></dd>
-    </p>
+    </div>
 
 
     <!-- Time span -->    
-    <p>
+    <div>
       <dt>Time span</dt> <dd><semantic-query 
       query="SELECT ?timeSpan  WHERE {
         ?e13_time crm:P140_assigned_attribute_to ?? .
@@ -75,12 +75,12 @@
                 crm:P177_assigned_property_of_type crm:P4_has_time-span ;
                 crm:P141_assigned ?timeSpan .}" style="display: inline;">
     </semantic-query></dd>
-    </p>
+    </div>
 
     
 
     <!-- Genres -->    
-    <p>
+    <div>
       <dt>Genres</dt> <dd><semantic-query 
       query="SELECT distinct ?genre  WHERE {
         ?? crm:P148_has_component ?x11 .
@@ -91,14 +91,23 @@
         ?genre crm:P71i_is_listed_in <https://clscor.io/entity/type/literary_genre> ;
       }" style="display: inline;">
     </semantic-query></dd>
-    </p>
+    </div>
 
     
     <!--Features -->    
-    <p>
-      <dt>Features</dt> <dd><semantic-query 
-      query="SELECT ?feature WHERE {
+    <div>
+      <dt>Features (computed)</dt> <dd><semantic-query 
+        query="SELECT distinct ?feature WHERE {
+          ?? crm:P148_has_component ?x2 .
+          ?x2 a crmcls:X2_Corpus_Document.
+          ?x2 crmcls:Y1_exhibits_feature/crm:P2_has_type ?feature }" 
+        style="display: inline;">
+        
+      </semantic-query></dd>
+      <dt>Features (asserted)</dt> <dd><semantic-query 
+      query="SELECT distinct ?feature WHERE {
         ?? crm:P148_has_component ?x11 .
+        ?x11 a crmcls:X11_Prototypical_Document .
         ?e13_type crm:P140_assigned_attribute_to ?x11 .
         ?e13_type a crm:E13_Attribute_Assignment ;
         crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature;
@@ -106,10 +115,11 @@
       style="display: inline;">
       
     </semantic-query></dd>
-    </p>
+      
+    </div>
 
     <!-- Formats -->    
-    <p>
+    <div>
       <dt>Formats (computed)</dt> <dd><semantic-query 
       query="SELECT distinct ?format  WHERE {
         ?? crm:P148_has_component ?x2 .
@@ -125,10 +135,10 @@
         crm:P141_assigned ?format .
       }" style="display: inline;">
     </semantic-query></dd>
-    </p>
+    </div>
 
     <!-- Text count -->    
-    <p>
+    <div>
       <dt>Text count (computed)</dt> <dd><semantic-query 
       query="SELECT (count(distinct ?document) as ?textCount)  WHERE {
         ?? crm:P148_has_component|lrm:R71_has_part ?document .
@@ -142,11 +152,11 @@
         ?e54_text_count a crm:E54_Dimension .
         ?e54_text_count crm:P90_has_value ?textCountAsserted . }" style="display: inline;">
     </semantic-query> documents</dd>
-    </p>
+    </div>
 
     
     <!--License -->    
-    <p>
+    <div>
       <dt>License</dt> <dd><semantic-query 
       query="SELECT ?licenseType WHERE {
         ?? crm:P148_has_component ?x11 .
@@ -158,10 +168,10 @@
       style="display: inline;">
       
     </semantic-query></dd>
-    </p>
+    </div>
 
     <!--Metadata collection timespan -->    
-    <p>
+    <div>
       <dt>Metadata collected from-to</dt> <dd><semantic-query 
       query="SELECT ?from ?to WHERE {
         ?? crm:P148_has_component ?x11 .
@@ -179,11 +189,11 @@
       </template>
       
     </semantic-query></dd>
-    </p>
+    </div>
 
   </dl>
   <!--Commentary -->    
-  <p style="column-span: all;">
+  <div style="column-span: all;">
     <semantic-query 
     query="SELECT ?commentary WHERE {
       ?? crm:P148_has_component ?x11 .
@@ -192,5 +202,5 @@
     style="display: inline;">
     
   </semantic-query>
-  </p>
+  </div>
   </div>

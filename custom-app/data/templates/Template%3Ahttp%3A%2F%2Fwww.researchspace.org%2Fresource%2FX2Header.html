@@ -1,0 +1,75 @@
+  <div class='page__header-body'>
+    <h1>
+      <mp-label iri='[[this]]'></mp-label>
+    </h1>
+    <dl>
+    <!--URI -->
+    <div>
+      <dt>URI</dt> <dd><a href='[[this]]' target='_blank'><i>[[this]]</i>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </div>
+
+    
+    <!--Features -->    
+    <div>
+      <dt>Features</dt> <dd><semantic-query 
+        query="SELECT distinct ?feature WHERE {
+          ?? crmcls:Y1_exhibits_feature/crm:P2_has_type ?feature }" 
+        style="display: inline;">
+        
+      </semantic-query></dd>
+    </div>
+
+    <!-- Author -->    
+    <div>
+      <dt>Author</dt> <dd><semantic-query 
+      query="SELECT distinct ?actor  WHERE {
+        ?? lrm:R4_embodies ?expression .
+              ?expression lrm:R17i_was_created_by ?creation.
+              ?actor crm:P14i_performed ?creation.
+      }" style="display: inline;">
+    </semantic-query></dd>
+      
+    </div>
+
+
+
+    <!-- Formats -->    
+    <div>
+      <dt>Format</dt> <dd><semantic-query 
+      query="SELECT distinct ?format  WHERE {
+        ?? crmcls:Y2_has_format ?format
+      }" style="display: inline;">
+    </semantic-query></dd>
+      
+    </div>
+    
+    <!--Corpus -->
+    <div>
+      <dt>Corpus</dt> <dd><semantic-query 
+      query="SELECT ?corpus WHERE {
+        ?? lrm:R71i_is_part_of ?corpus.
+      }" >
+    </semantic-query></dd>
+    </div>
+
+    <!-- Languages -->    
+    <div>
+      <dt>Language</dt> <dd><semantic-query 
+      query="SELECT distinct ?language  WHERE {
+        ?? crm:P72_has_language ?language
+      }" style="display: inline;">
+    </semantic-query></dd>
+      
+    </div>
+
+  </dl>
+  <!--Commentary -->    
+  <div style="column-span: all;">
+    <semantic-query 
+    query="SELECT ?commentary WHERE {
+      ?? crm:P3_has_note ?commentary }" 
+    style="display: inline;">
+    
+  </semantic-query>
+  </div>
+  </div>

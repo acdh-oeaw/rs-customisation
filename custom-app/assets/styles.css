@@ -521,6 +521,7 @@ a.page-section__card:focus-visible {
 }
 
 .home-page__grid-item {
+  background-color: transparent;
   border-radius: var(--rounded-md);
   border: 1px solid var(--color-neutral-200);
   transition: all 150ms ease-out;
@@ -752,4 +753,15 @@ a.page-section__card:focus-visible {
 .entity_icon {
   vertical-align: top;
   margin-right: 4px;
+}
+.overlay-lightbox.fade.in.modal {
+  background-color:  #525156bb;
+}
+.overlay-lightbox__dialog.modal-dialog {
+  margin: 10px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  width: calc(100% - 20px);
 }

@@ -2,9 +2,9 @@
   <li>
     <mp-link title="Home" url="/">Home</mp-link>
   </li>
-  <li>
+  <!-- <li>
     <semantic-link iri="app:Corpora"></semantic-link>
-  </li>
+  </li> -->
   <li class="active">
     <mp-label iri='[[this]]'></mp-label>
   </li>
@@ -24,22 +24,23 @@
 <div class="page x1-corpus">
     
 	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
-    <div class='page__header'>
-      [[> Template:X2Header]]
+    <div class='page__header no-thumbnail'>
+      [[> Platform:DefaultResourceHeader]]
     </div>
     <div class="page__body">
-        [[#if (ask "ASK {SELECT * WHERE {?? lrm:R4_embodies/lrm:R17i_was_created_by/crm:P14_carried_out_by ?author} }")]]
-        <h2 style="display: flex; gap: 15px; align-items: center;"><span>Author</span>
+        [[#if (ask "ASK {SELECT * WHERE {?? crm:P14i_performed/lrm:R17_created/lrm:R4i_is_embodied_in ?x2} }")]]
+        <h2 style="display: flex; gap: 15px; align-items: center;"><span>Work</span>
+
           <mp-overlay-dialog title="Knowledge Graph" type="lightbox">
-            <mp-overlay-dialog-trigger><button class="btn-sm btn-light" style="border: 0;"><img src="/assets/icons/network.svg" height="20" width="20" alt="network icon" class="entity_icon"/> Show as Knowledge Graph</button></mp-overlay-dialog-trigger>
+            <mp-overlay-dialog-trigger><button class="btn-sm btn-light" style="border: 0px;"><img src="/assets/icons/network.svg" height="20" width="20" alt="network icon" class="entity_icon"/> Show as Knowledge Graph</button></mp-overlay-dialog-trigger>
             <mp-overlay-dialog-content>
               <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats 
               query="
                   CONSTRUCT
                   WHERE {
-                    ?? lrm:R4_embodies ?expression .
+                    ?x2 lrm:R4_embodies ?expression .
                     ?expression lrm:R17i_was_created_by ?creation.
-                    ?actor crm:P14i_performed ?creation.
+                    ?? crm:P14i_performed ?creation.
                   }
               "
               ></ontodia>
@@ -48,30 +49,25 @@
         </h2>
         <div class="home-page__grid author__grid mt-3">
           <semantic-query 
-            query="SELECT DISTINCT ?actor (COUNT(?otherDocument) as ?count)
+            query="SELECT DISTINCT ?document ?corpus
             WHERE {
-              ?? lrm:R4_embodies ?expression .
+              ?document lrm:R4_embodies ?expression .
               ?expression lrm:R17i_was_created_by ?creation.
-              ?actor crm:P14i_performed ?creation.
+              ?? crm:P14i_performed ?creation.
 
-              ?? lrm:R71i_is_part_of ?corpus.
-              ?otherDocument lrm:R71i_is_part_of ?corpus;
-                  lrm:R4_embodies ?otherExpression .
-              ?otherExpression lrm:R17i_was_created_by ?otherCreation.
-              ?actor crm:P14i_performed ?otherCreation.
+              ?document lrm:R71i_is_part_of ?corpus.
             }
-            GROUP BY ?actor
                   " 
-            template="{{> author_cards}}">
-            <template id="author_cards">
+            template="{{> work_cards}}">
+            <template id="work_cards">
               {{#if bindings}}
                 {{#each bindings}}
                 <div class="home-page__grid-item">
-                  <semantic-link iri="{{actor.value}}">
+                  <semantic-link iri="{{document.value}}">
                     <h3>
-                      <img src="/assets/icons/author.svg" height="20" width="20" alt="author icon" class="entity_icon"/> <mp-label iri='{{actor.value}}'></mp-label>
+                      <img src="/assets/icons/openBook.svg" height="20" width="20" alt="book icon" class="entity_icon"/> <mp-label iri='{{document.value}}'></mp-label>
                     </h3>
-                    <p>{{count.value}} document(s) in the same corpus</p>
+                    <span><mp-label iri='{{corpus.value}}'></mp-label></span>
                   </semantic-link>
                 </div>
                 {{/each}}

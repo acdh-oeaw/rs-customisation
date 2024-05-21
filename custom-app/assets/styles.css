@@ -765,3 +765,6 @@ a.page-section__card:focus-visible {
   bottom: 0px;
   width: calc(100% - 20px);
 }
+.no-thumbnail .page__header-thumbnail {
+  display: none;
+}

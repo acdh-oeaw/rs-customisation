@@ -34,6 +34,44 @@
 
         <li>
           <semantic-link
+            iri="app:Start"
+            title="Home"
+          >
+            <button class="btn btn-primary">
+              <span>Home</span>
+            </button>
+          </semantic-link>
+        </li>
+        <li>
+          <semantic-link
+            iri="app:Corpora"
+            title="Corpora"
+          >
+            <button class="btn btn-primary">
+              <span>Corpora</span>
+            </button>
+          </semantic-link>
+        </li>
+        <li>
+          <semantic-link
+            iri="app:Overview"
+            title="Dataset"
+          >
+            <button class="btn btn-primary">
+              <span>Dataset</span>
+            </button>
+          </semantic-link>
+        </li>
+        <li>
+          <mp-link url="/sparql">
+            <button class="btn btn-primary">
+              <span>SPARQL</span>
+            </button>
+          </mp-link>
+        </li>
+
+        <li>
+          <semantic-link
             iri="http://www.researchspace.org/resource/ThinkingFrames"
             urlqueryparam-view="simple-search"
             title="Seach"
@@ -97,7 +135,7 @@
           </bs-dropdown> }}
         </li>
 
-        <li>
+        {{!-- <li>
           <bs-dropdown id="resourceItems">
             <bs-dropdown-toggle bs-style="primary">
               <i class="fa fa-bars btn-icon-left"></i>
@@ -138,7 +176,7 @@
               </bs-menu-item>
             </bs-dropdown-menu>
           </bs-dropdown>
-        </li>
+        </li> --}}
 
         <li>
           <semantic-query

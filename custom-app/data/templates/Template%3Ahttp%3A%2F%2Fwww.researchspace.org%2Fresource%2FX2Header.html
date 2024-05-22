@@ -1,4 +1,12 @@
+[[#if (ask 'ASK { SELECT ?img WHERE {?? crm:P148_has_component/crm:P1_is_identified_by/crm:P190_has_symbolic_content ?img} }')]]
+    <div class="col-2">
+    <div class="page__header-thumbnail">
+      <img class="resource-thumbnail" src="[[singleValueFromSelect 'SELECT ?img WHERE {?? crm:P148_has_component/crm:P1_is_identified_by/crm:P190_has_symbolic_content ?img}']]" title="https://clscor.io/entity/62b7c18a8f">
+    </div>
+  </div>
+    [[/if]]
   <div class='page__header-body'>
+    
     <h1>
       <mp-label iri='[[this]]'></mp-label>
     </h1>

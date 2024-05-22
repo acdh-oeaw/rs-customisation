@@ -768,3 +768,15 @@ a.page-section__card:focus-visible {
 .no-thumbnail .page__header-thumbnail {
   display: none;
 }
+.col-2 {
+  display: flex;
+}
+.page__header-thumbnail {
+  width: auto;
+  height: 100%;
+}
+.page__header-thumbnail img {
+  max-height: unset;
+  max-width: 100%;
+  min-height: 200px;
+}

@@ -1,0 +1,119 @@
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri="[[this]]"></mp-label>
+  </li>
+</ol>
+
+<div class="page container">
+  <div class="page__header-navtabs page-section">
+    <div class="page__header-body" style="width: 100%">
+      <h1>
+        <mp-label iri="[[this]]"></mp-label>
+      </h1>
+
+      <!--Description -->
+      <p>
+        This is a very useful description of our authors. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+        sit amet pellentesque nisl. Vivamus venenatis, magna a elementum venenatis, nunc tortor vestibulum libero, nec
+        ultricies nibh magna ut nibh. Sed ut mattis nunc, id accumsan libero. Integer ultrices arcu elit, id dignissim
+        ligula pulvinar a. Nam venenatis enim in neque dignissim, id convallis sapien dapibus.
+      </p>
+      <!-- Highlighted Corpora -->
+      <h2 style="margin-top: 48px;">Most featured authors over all corpora</h2>
+      <div class="home-page__grid mt-3">
+          <semantic-query 
+            query="SELECT DISTINCT ?actor (Count(distinct ?document) as ?count)
+            WHERE {
+              ?corpus crm:P148_has_component|lrm:R71_has_part ?document .
+              ?document a crmcls:X2_Corpus_Document;
+                        lrm:R4_embodies ?expression .
+              ?expression lrm:R17i_was_created_by ?creation.
+              ?actor crm:P14i_performed ?creation.
+              
+            }    
+            GROUP BY ?actor
+            ORDER BY desc(?count)
+            LIMIT 3
+                  " 
+            template="{{> author_cards}}">
+            <template id="author_cards">
+              {{#if bindings}}
+                {{#each bindings}}
+                <div class="home-page__grid-item">
+                  <semantic-link iri="{{actor.value}}">
+                    <h3>
+                      <img src="/assets/icons/author.svg" height="20" width="20" alt="author icon" class="entity_icon"/> <mp-label iri='{{actor.value}}'></mp-label>
+                    </h3>
+                    <p>{{count.value}} documents in our dataset</p>
+                  </semantic-link>
+                </div>
+                {{/each}}
+              {{/if}}
+            </template>
+          </semantic-query>
+      </div>
+    </div>
+    <!-- Search Corpora -->
+    <!-- <h2 style="margin-top: 24px;">Or search all of them: </h2> -->
+    <bs-panel expanded="true" header="Or view and search all [[singleValueFromSelect 'SELECT (count(distinct ?author) as ?authorCount)  WHERE {?author a crm:E39_Actor; rdfs:label ?actorName; crm:P14i_performed/lrm:R17_created ?expression.}']] authors" collapsible="true">
+      <semantic-table
+        column-configuration='[
+        {"displayName": "Author", "variableName": "author"},
+        {"displayName": "Text count", "variableName": "workCount"},
+        {"displayName": "WikidataID", "variableName": "wikidataID"},
+        {"displayName": "Unique WikidataID found?", "variableName": "wikidataUnique"}
+      ]'
+        query='
+        PREFIX wd: <http://www.wikidata.org/entity/>
+        PREFIX wdt: <http://www.wikidata.org/prop/direct/>
+        PREFIX p: <http://www.wikidata.org/prop/>
+        PREFIX ps: <http://www.wikidata.org/prop/statement/>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX crmcls: <https://clscor.io/ontologies/CRMcls/>
+        PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
+        PREFIX lrm: <http://iflastandards.info/ns/lrm/lrmoo/>
+        PREFIX wikibase: <http://wikiba.se/ontology#>
+        PREFIX bd: <http://www.bigdata.com/rdf#>
+        PREFIX hint: <http://www.bigdata.com/queryHints#>
+        PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+
+      	SELECT 
+          distinct ?author 
+          (GROUP_CONCAT(distinct ?wikidataItem; separator=", ") AS ?wikidataID) 
+          (COUNT (distinct ?expression) as ?workCount) 
+          (IF(COUNT(distinct ?wikidataItem)=1, true, false) as ?wikidataUnique)  
+        WHERE {
+          ?author a crm:E39_Actor;
+                  rdfs:label ?actorName;
+                  crm:P14i_performed/lrm:R17_created ?expression.
+          ?expression a lrm:F2_Expression.
+          
+          # Transform the name from "Nachname, Vorname [Actor]" to "Vorname Nachname"
+          BIND(REPLACE(?actorName, " \\[.*?\\]", "") AS ?nameWithoutTag)
+          BIND(REPLACE(?nameWithoutTag, " ?\\(.*?\\) ?", "") AS ?nameWithoutParentheses)
+          BIND(REPLACE(?nameWithoutParentheses, "^(.*?), (.*?)(,.*)?$", "$2 $1") AS ?transformedName)
+          BIND(STRLANG(STR(?transformedName), "en") AS ?transformedNameWithLanguage)
+          
+          OPTIONAL { SERVICE <https://query.wikidata.org/sparql> {
+            SERVICE wikibase:label {
+              bd:serviceParam wikibase:language "en".
+            }
+            # Search for authors in wikidata
+            ?wikidataItem rdfs:label|skos:altLabel ?transformedNameWithLanguage.
+            ?wikidataItem p:P106/ps:P106 ?occupation.
+              FILTER(?occupation = wd:Q36180 || ?occupation = wd:Q214917).          
+            } }
+          # This line ensures that the local query is executed before the call to wikidata. Otherwise, ?transformedNameWithLanguage would be empty
+          hint:Prior hint:runLast true.
+        }
+        GROUP BY ?author
+        ORDER BY DESC(?workCount)
+        '
+      ></semantic-table>
+    </bs-panel>
+
+  </div>
+</div>

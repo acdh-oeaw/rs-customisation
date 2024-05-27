@@ -100,7 +100,7 @@
         query="SELECT distinct ?feature WHERE {
           ?? crm:P148_has_component ?x2 .
           ?x2 a crmcls:X2_Corpus_Document.
-          ?x2 crmcls:Y1_exhibits_feature/crm:P2_has_type ?feature }" 
+          ?x2 ^crm:P140_assigned_attribute_to/crm:P141_assigned/crm:P2_has_type ?feature. }" 
         style="display: inline;">
         
       </semantic-query></dd>

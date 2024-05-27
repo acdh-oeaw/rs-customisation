@@ -20,9 +20,12 @@
     <!--Features -->    
     <div>
       <dt>Features</dt> <dd><semantic-query 
-        query="SELECT distinct ?feature WHERE {
-          ?? crmcls:Y1_exhibits_feature/crm:P2_has_type ?feature }" 
-        style="display: inline;">
+        query="SELECT distinct ?type ?token_value WHERE {
+          ?? ^crm:P140_assigned_attribute_to/crm:P141_assigned ?feature.
+          ?feature crm:P91i_is_unit_of/crm:P90_has_value ?token_value.
+          ?feature crm:P2_has_type ?type. }" 
+        style="display: inline;"
+        template='{{#each bindings}}<semantic-link uri="{{type.value}}"></semantic-link> ({{token_value.value}}){{/each}}'>
         
       </semantic-query></dd>
     </div>

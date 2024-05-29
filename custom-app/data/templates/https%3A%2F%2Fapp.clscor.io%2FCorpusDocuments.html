@@ -1,0 +1,53 @@
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri="[[this]]"></mp-label>
+  </li>
+</ol>
+
+<div class="page container">
+  <div class="page__header-navtabs page-section">
+    <div class="page__header-body" style="width: 100%">
+      <h1>
+        <mp-label iri="[[this]]"></mp-label>
+      </h1>
+
+      <!--Description -->
+      <p>
+        This is a very useful description of our corpus documents. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+        sit amet pellentesque nisl. Vivamus venenatis, magna a elementum venenatis, nunc tortor vestibulum libero, nec
+        ultricies nibh magna ut nibh. Sed ut mattis nunc, id accumsan libero. Integer ultrices arcu elit, id dignissim
+        ligula pulvinar a. Nam venenatis enim in neque dignissim, id convallis sapien dapibus.
+      </p>
+      
+    <!-- Search Corpus Documents -->
+        <bs-panel header="Search all [[singleValueFromSelect 'SELECT (count(distinct ?document) as ?textCount)  WHERE {?corpus crm:P148_has_component|lrm:R71_has_part ?document . ?document a crmcls:X2_Corpus_Document. }']] corpus documents" collapsible="true" class="mt-3" expanded="true">
+          <semantic-table
+            column-configuration='[
+            {"displayName": "Document", "variableName": "document"},
+            {"displayName": "Author", "variableName": "actor"},
+            {"displayName": "Corpus", "variableName": "corpus"}
+          ]'
+            query="
+            SELECT DISTINCT ?document ?actor ?corpus
+                WHERE {
+                  {
+                    ?corpus crm:P148_has_component|lrm:R71_has_part ?document;
+                      a crmcls:X1_Corpus.
+                    ?document a crmcls:X2_Corpus_Document.
+                    OPTIONAL {
+                      ?document lrm:R4_embodies ?expression .
+                      ?expression lrm:R17i_was_created_by ?creation.
+                      ?actor crm:P14i_performed ?creation.
+                    }
+                  }
+                }
+            "
+          ></semantic-table>
+        </bs-panel>
+
+    
+  </div>
+</div>

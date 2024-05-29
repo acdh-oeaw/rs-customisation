@@ -103,6 +103,7 @@
             }
             # Search for authors in wikidata
             ?wikidataItem rdfs:label|skos:altLabel ?transformedNameWithLanguage.
+            ?wikidataItem p:P31/ps:P31 wd:Q5.
             ?wikidataItem p:P106/ps:P106 ?occupation.
               FILTER(?occupation = wd:Q36180 || ?occupation = wd:Q214917).          
             } }

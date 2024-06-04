@@ -26,7 +26,7 @@
           BIND (REPLACE(STR(?linkLabel), "(.*?) .*", "$1") AS ?link)
         }' 
         style="display: inline;"
-        template='{{#each bindings}}<a href="{{link.value}}">{{link.value}}</a>{{/each}}'>
+        template='{{#each bindings}}<a href="{{link.value}}" target="_blank">{{link.value}}</a>{{/each}}'>
         
       </semantic-query></dd>
     </div>

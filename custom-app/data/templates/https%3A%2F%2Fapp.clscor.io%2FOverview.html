@@ -83,19 +83,13 @@ SELECT ?g ?cnt ?created ?creator WHERE { {SELECT DISTINCT ?g (COUNT(DISTINCT ?s)
 
 
 <h2 class="mt-6">Classes</h2>
-<bs-panel header="Search all [[singleValueFromSelect 'SELECT  (COUNT(DISTINCT ?type) AS ?count)  WHERE {  ?sub a ?type }']] used classes" collapsible="true">
-       <!-- <mp-sparql-result-counts id='query-count'
-                                     query="SELECT  DISTINCT ?type  WHERE {  ?sub a ?type }"
-                                     template='{{#if hasLimit}} <bs-alert bs-style="warning">
-                                               Showing {{numberOfResults}} of {{totalNumberOfResults}} matches. <strong>Please, refine your search.</strong> </bs-alert>
-                                               {{else}}<span>Found <b>{{numberOfResults}}</b> distinct (used) classes </span>{{/if}}'>
-            </mp-sparql-result-counts> -->
-    
+<bs-panel header="Search all [[singleValueFromSelect 'SELECT  (COUNT(DISTINCT ?type) AS ?count)  WHERE {  ?sub a ?type }']] used classes" collapsible="true" expanded="true">
+
             <semantic-table
              query="SELECT  ?type (count( ?sub) as ?cnt_sub )  WHERE {  ?sub a ?type } GROUP BY ?type ORDER BY DESC(?cnt_sub)"
              column-configuration='[
                {"variableName":"type", "displayName":"Class"},                
-              {"variableName":"cnt_sub", "displayName":"Count instances"},                                    
+               {"variableName":"cnt_sub", "displayName":"Count instances"},                                    
                {
     						"displayName": "Class URI", 
     						"cellTemplate": "<div>{{type.value}}</div>" 
@@ -110,34 +104,31 @@ SELECT ?g ?cnt ?created ?creator WHERE { {SELECT DISTINCT ?g (COUNT(DISTINCT ?s)
  
     
 <h2 class="mt-6">Properties</h2>
-    
-<mp-sparql-result-counts id='query-count'
-                                     query="SELECT DISTINCT ?p WHERE {[] ?p []}"
-                                     template='{{#if hasLimit}} <bs-alert bs-style="warning">
-                                               Showing {{numberOfResults}} of {{totalNumberOfResults}} matches. <strong>Please, refine your search.</strong> </bs-alert>
-                                               {{else}}<span>Currently <b>{{numberOfResults}}</b> distinct properties in use</span>{{/if}}'>
-            </mp-sparql-result-counts>    
+<bs-panel header="Search all [[singleValueFromSelect 'SELECT  (COUNT(DISTINCT ?p) AS ?count)  WHERE {  [] ?p []. }']] used properties" collapsible="true" expanded="true"> 
 
-<semantic-table
-             query=" SELECT ?p (COUNT(?p) as ?pCount)
-                      WHERE {[] ?p []}
-                      GROUP BY ?p
-                    ORDER BY DESC(?pCount)
-                    "
-             column-configuration='[
-               {"variableName":"p", "displayName":"Property"}, 
-               {"variableName":"pCount", "displayName":"Count of triples"}
-             ]'
-             options='{
-               "showFilter":true
-             }'
-           >
+            <semantic-table
+                        query=" SELECT ?p (COUNT(?p) as ?pCount)
+                                  WHERE { 
+                                    GRAPH ?g{[] ?p []}
+                                    FILTER( !(contains(str(?g), 'researchspace') ))
+                                  }
+                                  GROUP BY ?p
+                                ORDER BY DESC(?pCount)
+                                "
+                        column-configuration='[
+                          {"variableName":"p", "displayName":"Property"}, 
+                          {"variableName":"pCount", "displayName":"Count of triples"}
+                        ]'
+                        options='{
+                          "showFilter":true
+                        }'
+                      >
             
           
     
            </semantic-table>
       
-    
+          </bs-panel>
   </div>
   
 </div>

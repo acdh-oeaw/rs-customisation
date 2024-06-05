@@ -32,6 +32,45 @@
       </semantic-query></dd>
     </div>
 
+    <!-- Author -->    
+    <div>
+      <dt>Author</dt> <dd><semantic-query 
+      query="SELECT distinct ?actor  WHERE {
+        ?? lrm:R4_embodies ?expression .
+              ?expression lrm:R17i_was_created_by ?creation.
+              ?actor crm:P14i_performed ?creation.
+      }" style="display: inline;">
+    </semantic-query></dd>
+      
+    </div>
+
+    <!-- Date of Creation -->
+    <div>
+      
+    [[#if (ask "ASK { SELECT ?g WHERE {GRAPH <https://clscor.io/graph/rem> { ?? ?p ?o } } } ")]]
+    <dt>Date of the manuscript</dt> 
+    <dd><semantic-query 
+      query="SELECT distinct ?fullDate  WHERE {
+        ?? lrm:R4_embodies/lrm:R4i_is_embodied_in ?manifestation .
+        ?itemProduction lrm:R27_materialized ?manifestation;
+          crm:P4_has_time-span ?date.
+        ?date crm:P81a_end_of_the_begin ?from;
+              crm:P81b_begin_of_the_end ?to.
+              BIND(concat(STR(?from),' - ', STR(?to)) AS ?fullDate)
+      }" style="display: inline;">
+    </semantic-query></dd>
+    [[else]]
+    <dt>Date of creation</dt> 
+    <dd><semantic-query 
+      query="SELECT distinct ?date  WHERE {
+        ?? lrm:R4_embodies ?expression .
+              ?expression lrm:R17i_was_created_by ?creation.
+              ?creation crm:P82_at_some_time_within ?date.
+      }" style="display: inline;">
+    </semantic-query></dd>
+    [[/if]]
+    </div>
+
     
     <!--Features -->    
     <div>
@@ -46,17 +85,7 @@
       </semantic-query></dd>
     </div>
 
-    <!-- Author -->    
-    <div>
-      <dt>Author</dt> <dd><semantic-query 
-      query="SELECT distinct ?actor  WHERE {
-        ?? lrm:R4_embodies ?expression .
-              ?expression lrm:R17i_was_created_by ?creation.
-              ?actor crm:P14i_performed ?creation.
-      }" style="display: inline;">
-    </semantic-query></dd>
-      
-    </div>
+    
 
 
 

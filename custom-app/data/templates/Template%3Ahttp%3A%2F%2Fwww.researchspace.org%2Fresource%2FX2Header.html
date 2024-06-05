@@ -21,9 +21,10 @@
       <dt>Link</dt> <dd><semantic-query 
         query='SELECT distinct ?link WHERE {
           ?? crm:P1_is_identified_by ?linkNode.
-          ?linkNode rdfs:label ?linkLabel.
+          ?linkNode crm:P190_has_symbolic_content ?linkLabel.
           FILTER regex(STR(?linkLabel), "http(s)?://", "i").
           BIND (REPLACE(STR(?linkLabel), "(.*?) .*", "$1") AS ?link)
+
         }' 
         style="display: inline;"
         template='{{#each bindings}}<a href="{{link.value}}" target="_blank">{{link.value}}</a>{{/each}}'>

@@ -141,7 +141,7 @@
     <div>
       <dt>Text count (computed)</dt> <dd><semantic-query 
       query="SELECT (count(distinct ?document) as ?textCount)  WHERE {
-        ?? crm:P148_has_component|lrm:R71_has_part ?document .
+        ?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
         ?document a crmcls:X2_Corpus_Document. }" style="display: inline;">
     </semantic-query> documents</dd>
     <dt>Text count (asserted)</dt> <dd><semantic-query 

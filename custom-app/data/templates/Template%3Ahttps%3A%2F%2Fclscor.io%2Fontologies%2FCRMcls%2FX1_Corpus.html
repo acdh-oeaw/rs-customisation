@@ -30,10 +30,10 @@
         <h2>Subcorpora</h2>
         <div class="home-page__grid subcorpus__grid mt-3">
           <semantic-query 
-          query="SELECT ?subcorpus (COUNT(?document) as ?textCount)
+          query="SELECT ?subcorpus (COUNT(distinct ?document) as ?textCount)
                 WHERE {
                 ?? crmcls:Y4_has_subcorpus ?subcorpus .
-                ?subcorpus crm:P148_has_component|lrm:R71_has_part ?document .
+                ?subcorpus crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
                 ?document a crmcls:X2_Corpus_Document .
                 }
                 GROUP BY ?subcorpus
@@ -56,9 +56,9 @@
       </div>
         [[/if]]
 
-        [[#if (ask "ASK {SELECT * WHERE {?? crm:P148_has_component|lrm:R71_has_part ?o. ?o a crmcls:X2_Corpus_Document} }")]]
+        [[#if (ask "ASK {SELECT * WHERE {?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?o. ?o a crmcls:X2_Corpus_Document} }")]]
         <h2 class="mt-6">Corpus documents</h2>
-        <bs-panel header="Search all [[singleValueFromSelect 'SELECT (count(distinct ?document) as ?textCount)  WHERE {?? crm:P148_has_component|lrm:R71_has_part ?document . ?document a crmcls:X2_Corpus_Document. }']] corpus documents" collapsible="true" class="mt-3">
+        <bs-panel header="Search all [[singleValueFromSelect 'SELECT (count(distinct ?document) as ?textCount)  WHERE {?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document . ?document a crmcls:X2_Corpus_Document. }']] corpus documents" collapsible="true" class="mt-3">
           <semantic-table
             column-configuration='[
             {"displayName": "Document", "variableName": "document"},
@@ -68,7 +68,7 @@
             SELECT DISTINCT ?document ?actor
                 WHERE {
                   {
-                    ?? crm:P148_has_component|lrm:R71_has_part ?document .
+                    ?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
                     OPTIONAL {
                       ?document a crmcls:X2_Corpus_Document;
                       lrm:R4_embodies ?expression .
@@ -78,7 +78,7 @@
                   }
                     UNION
                   {
-                    ?? crmcls:Y4_has_subcorpus/crm:P148_has_component|lrm:R71_has_part ?document .
+                    ?? crmcls:Y4_has_subcorpus/crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
                     OPTIONAL {
                       ?document a crmcls:X2_Corpus_Document;
                       lrm:R4_embodies ?expression .
@@ -92,7 +92,7 @@
           ></semantic-table>
         </bs-panel>
         [[/if]]
-        [[#if (ask "ASK {SELECT * WHERE {?? crm:P148_has_component|lrm:R71_has_part/lrm:R4_embodies/lrm:R17i_was_created_by/crm:P14_carried_out_by ?author} }")]]
+        [[#if (ask "ASK {SELECT * WHERE {?? (crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of)/lrm:R4_embodies/lrm:R17i_was_created_by/crm:P14_carried_out_by ?author} }")]]
         <h2 class="mt-6">Most featured authors in this corpus</h2>
         <div class="home-page__grid author__grid mt-3">
           <semantic-query 
@@ -100,11 +100,11 @@
             WHERE {
               {
                 {
-                ?? crm:P148_has_component|lrm:R71_has_part ?document .
+                ?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
               }
                 UNION
               {
-                ?? crmcls:Y4_has_subcorpus/crm:P148_has_component|lrm:R71_has_part ?document .
+                ?? crmcls:Y4_has_subcorpus/crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
                 
               }
             }
@@ -135,7 +135,7 @@
             </template>
           </semantic-query>
         </div>
-        <bs-panel header="Search all [[singleValueFromSelect 'SELECT (count(distinct ?actor) as ?authorCount) WHERE {?? crm:P148_has_component|lrm:R71_has_part ?document. ?document lrm:R4_embodies/lrm:R17i_was_created_by ?creation. ?actor crm:P14i_performed ?creation.}']] authors" collapsible="true" class="mt-2">
+        <bs-panel header="Search all [[singleValueFromSelect 'SELECT (count(distinct ?actor) as ?authorCount) WHERE {?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document. ?document lrm:R4_embodies/lrm:R17i_was_created_by ?creation. ?actor crm:P14i_performed ?creation.}']] authors" collapsible="true" class="mt-2">
           <semantic-table
             column-configuration='[
             {"displayName": "Author", "variableName": "actor"},
@@ -146,11 +146,11 @@
                 WHERE {
                   {
                     {
-                    ?? crm:P148_has_component|lrm:R71_has_part ?document .
+                    ?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
                   }
                     UNION
                   {
-                    ?? crmcls:Y4_has_subcorpus/crm:P148_has_component|lrm:R71_has_part ?document .
+                    ?? crmcls:Y4_has_subcorpus/crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
                     
                   }
                 }

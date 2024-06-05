@@ -27,7 +27,7 @@
           <semantic-query 
             query="SELECT DISTINCT ?actor (Count(distinct ?document) as ?count)
             WHERE {
-              ?corpus crm:P148_has_component|lrm:R71_has_part ?document .
+              ?corpus crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
               ?document a crmcls:X2_Corpus_Document;
                         lrm:R4_embodies ?expression .
               ?expression lrm:R17i_was_created_by ?creation.

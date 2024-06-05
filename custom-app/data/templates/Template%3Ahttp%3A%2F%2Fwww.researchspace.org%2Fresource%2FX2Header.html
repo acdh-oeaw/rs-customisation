@@ -16,6 +16,21 @@
       <dt>URI</dt> <dd><a href='[[this]]' target='_blank'><i>[[this]]</i>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
     </div>
 
+    <!--URI -->
+    <div>
+      <dt>Link</dt> <dd><semantic-query 
+        query='SELECT distinct ?link WHERE {
+          ?? crm:P1_is_identified_by ?linkNode.
+          ?linkNode rdfs:label ?linkLabel.
+          FILTER regex(STR(?linkLabel), "http(s)?://", "i").
+          BIND (REPLACE(STR(?linkLabel), "(.*?) .*", "$1") AS ?link)
+        }' 
+        style="display: inline;"
+        template='{{#each bindings}}<a href="{{link.value}}" target="_blank">{{link.value}}</a>{{/each}}'>
+        
+      </semantic-query></dd>
+    </div>
+
     
     <!--Features -->    
     <div>

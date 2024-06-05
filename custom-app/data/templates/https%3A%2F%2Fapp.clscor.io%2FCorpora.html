@@ -49,7 +49,7 @@
     </div>
     <!-- Search Corpora -->
     <!-- <h2 style="margin-top: 24px;">Or search all of them: </h2> -->
-    <bs-panel header="Or view and search all corpora" collapsible="true">
+    <bs-panel header="Or view and search all [[singleValueFromSelect 'SELECT (count(distinct ?corpus) as ?count)  WHERE {?corpus a crmcls:X1_Corpus. }']] corpora" collapsible="true">
       <semantic-table
         column-configuration='[
         {"displayName": "Corpus", "variableName": "corpus"},

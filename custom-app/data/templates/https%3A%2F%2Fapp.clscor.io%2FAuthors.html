@@ -29,9 +29,9 @@
             WHERE {
               ?corpus crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document .
               ?document a crmcls:X2_Corpus_Document;
-                        lrm:R4_embodies ?expression .
-              ?expression lrm:R17i_was_created_by ?creation.
-              ?actor crm:P14i_performed ?creation.
+                        ^lrm:R4i_is_embodied_in|lrm:R4_embodies ?expression .
+              ?expression ^lrm:R17_created|lrm:R17i_was_created_by ?creation.
+              ?actor crm:P14i_performed|^crm:P14_carried_out_by ?creation.
               
             }    
             GROUP BY ?actor
@@ -58,7 +58,7 @@
     </div>
     <!-- Search Corpora -->
     <!-- <h2 style="margin-top: 24px;">Or search all of them: </h2> -->
-    <bs-panel expanded="true" header="Or view and search all [[singleValueFromSelect 'SELECT (count(distinct ?author) as ?authorCount)  WHERE {?author a crm:E39_Actor; rdfs:label ?actorName; crm:P14i_performed/lrm:R17_created ?expression.}']] authors" collapsible="true">
+    <bs-panel expanded="true" header="Or view and search all [[singleValueFromSelect 'SELECT (count(distinct ?author) as ?authorCount)  WHERE {?author a crm:E39_Actor; rdfs:label ?actorName; (crm:P14i_performed|^crm:P14_carried_out_by)/(lrm:R17_created|^lrm:R17i_was_created_by) ?expression.}']] authors" collapsible="true">
       <semantic-table
         column-configuration='[
         {"displayName": "Author", "variableName": "author"},
@@ -88,7 +88,7 @@
         WHERE {
           ?author a crm:E39_Actor;
                   rdfs:label ?actorName;
-                  crm:P14i_performed/lrm:R17_created ?expression.
+                  (crm:P14i_performed|^crm:P14_carried_out_by)/(lrm:R17_created|^lrm:R17i_was_created_by) ?expression.
           ?expression a lrm:F2_Expression.
           
           # Transform the name from "Nachname, Vorname [Actor]" to "Vorname Nachname"

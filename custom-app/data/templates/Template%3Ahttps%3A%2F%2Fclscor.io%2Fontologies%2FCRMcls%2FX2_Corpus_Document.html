@@ -44,6 +44,7 @@
                   lrm:R4_embodies ?otherExpression .
               ?otherExpression lrm:R17i_was_created_by|^lrm:R17_created ?otherCreation.
               ?actor crm:P14i_performed|^crm:P14_carried_out_by ?otherCreation.
+              ?actor a crm:E39_Actor.
             }
             GROUP BY ?actor
                   " 
@@ -76,12 +77,27 @@
                     ?? lrm:R4_embodies ?expression .
                     ?expression lrm:R17i_was_created_by ?creation.
                     ?actor crm:P14i_performed ?creation.
+                    ?expression lrm:R4i_is_embodied_in ?manifestation.
+                    ?itemProduction lrm:R27_materialized ?manifestation;
+                      crm:P4_has_time-span ?dateNode.
                   }
                   WHERE {
-                    ?? lrm:R4_embodies ?expression .
+                    ?? ^lrm:R4i_is_embodied_in|lrm:R4_embodies ?expression .
                     OPTIONAL {
-                      ?expression lrm:R17i_was_created_by ?creation.
-                      ?actor crm:P14i_performed ?creation.
+                      ?expression ^lrm:R17_created|lrm:R17i_was_created_by ?creation.
+                      ?actor crm:P14i_performed|^crm:P14_carried_out_by ?creation.
+                      ?actor a crm:E39_Actor.
+                      OPTIONAL {
+                        ?creation crm:P82_at_some_time_within ?date.
+                      }
+                    }
+                    OPTIONAL {
+                      ?expression lrm:R4i_is_embodied_in ?manifestation.
+                      ?itemProduction lrm:R27_materialized ?manifestation;
+                      OPTIONAL {
+                        ?itemProduction crm:P4_has_time-span ?dateNode.
+                      }
+                        
                     }
                   }
               "

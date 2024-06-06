@@ -175,8 +175,8 @@
             }
           }]'
         ></semantic-chart>
-        <!-- <hr />
-        <semantic-table
+        <bs-panel header="View as table" collapsible="true" class="mt-3">
+          <semantic-table
           query="
           select ?lang (count(?lang) as ?langCount)
           where {
@@ -188,7 +188,12 @@
           group by ?lang
           order by desc(?langCount)
       "
-        ></semantic-table> -->
+      column-configuration='[
+        {"displayName": "Language", "variableName": "lang"},
+        {"displayName": "Count", "variableName": "langCount"}
+      ]'
+        ></semantic-table>
+        </bs-panel>
       </bs-tab>
       <!-- Languages -->
       <!-- Formats -->
@@ -225,23 +230,28 @@
             }
           }]'
         ></semantic-chart>
-        <!-- <hr />
-        <semantic-table
+        <bs-panel header="View as table" collapsible="true" class="mt-3">
+          <semantic-table
           query="
-      select ?format (count(?format) as ?formatCnt)
-      where {
-        ?e13 a crm:E13_Attribute_Assignment ;
-            crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
-            crm:P141_assigned [rdfs:label ?format] .
-      }
-      group by ?format 
-      order by desc(?formatCnt)
+          select ?format (count(?format) as ?formatCnt)
+          where {
+            ?e13 a crm:E13_Attribute_Assignment ;
+                crm:P177_assigned_property_of_type crmcls:Y2_has_format ;
+                crm:P141_assigned ?format .
+          }
+          group by ?format 
+          order by desc(?formatCnt)
       "
-        ></semantic-table> -->
+      column-configuration='[
+        {"displayName": "Format", "variableName": "format"},
+        {"displayName": "Count", "variableName": "formatCnt"}
+      ]'
+        ></semantic-table>
+        </bs-panel>
       </bs-tab>
       <!-- Formats -->
       <!-- CorpusType -->
-      <bs-tab event-key="6" class="tab-statsList" title="CorpusTypes">
+      <bs-tab event-key="6" class="tab-statsList" title="Corpus Types">
         <semantic-chart
           provider="chartjs"
           type="bar"
@@ -276,10 +286,10 @@
             }
           }]'
         ></semantic-chart>
-        <!-- <hr />
-        <semantic-table
+        <bs-panel header="View as table" collapsible="true" class="mt-3">
+          <semantic-table
           query="
-          select ?corpusTypeLabel (count(?corpusType) as ?corpusTypeCnt)
+          select ?corpusType (count(?corpusType) as ?corpusTypeCnt)
           where {
             ?e13 a crm:E13_Attribute_Assignment ;
                  crm:P177_assigned_property_of_type crm:P2_has_type ;
@@ -287,10 +297,15 @@
             ?corpusType crm:P71i_is_listed_in <https://clscor.io/entity/type/corpus> ;
                         rdfs:label ?corpusTypeLabel .
           }
-          group by ?corpusTypeLabel
+          group by ?corpusType
           order by desc(?corpusTypeCnt)
       "
-        ></semantic-table> -->
+      column-configuration='[
+        {"displayName": "Corpus Type", "variableName": "corpusType"},
+        {"displayName": "Count", "variableName": "corpusTypeCnt"}
+      ]'
+        ></semantic-table>
+        </bs-panel>
       </bs-tab>
       <!-- CorpusType -->
       <!-- LiteraryGenres -->
@@ -329,8 +344,8 @@
             }
           }]'
         ></semantic-chart>
-        <!-- <hr />
-        <semantic-table
+        <bs-panel header="View as table" collapsible="true" class="mt-3">
+          <semantic-table
           query="
           select ?genre (count(?genre) as ?genreCnt)
           where {
@@ -343,7 +358,12 @@
           group by ?genre 
           order by desc(?genreCnt)
       "
-        ></semantic-table> -->
+      column-configuration='[
+        {"displayName": "Genre", "variableName": "genre"},
+        {"displayName": "Count", "variableName": "genreCnt"}
+      ]'
+        ></semantic-table>
+        </bs-panel>
       </bs-tab>
       <!-- LiteraryGenres -->
       <!-- Features -->
@@ -382,21 +402,26 @@
             }
           }]'
         ></semantic-chart>
-       <!--  <hr />
-        <semantic-table
+        <bs-panel header="View as table" collapsible="true" class="mt-3">
+          <semantic-table
           query="
           select ?feature (count(?feature) as ?featureCnt)
           where {
             ?e13 a crm:E13_Attribute_Assignment ;
-                crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
-                crm:P141_assigned ?feature .
+                 crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
+                 crm:P141_assigned ?feature .
             ?feature crm:P71i_is_listed_in <https://clscor.io/entity/type/feature> ;
                         rdfs:label ?featureLabel .
           }
           group by ?feature 
           order by desc(?featureCnt)
       "
-        ></semantic-table> -->
+      column-configuration='[
+        {"displayName": "Feature", "variableName": "feature"},
+        {"displayName": "Count", "variableName": "featureCnt"}
+      ]'
+        ></semantic-table>
+        </bs-panel>
       </bs-tab>
       <!-- LiteraryGenres -->
     </bs-tabs>

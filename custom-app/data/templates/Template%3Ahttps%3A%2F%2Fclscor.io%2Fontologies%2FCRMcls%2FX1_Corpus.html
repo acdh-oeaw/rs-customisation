@@ -92,7 +92,7 @@
           ></semantic-table>
         </bs-panel>
         [[/if]]
-        [[#if (ask "ASK {SELECT * WHERE {?? (crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of)/lrm:R4_embodies/lrm:R17i_was_created_by/crm:P14_carried_out_by ?author} }")]]
+        [[#if (ask "ASK {SELECT * WHERE {?? (crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of)/lrm:R4_embodies/(lrm:R17i_was_created_by|^lrm:R17_created)/(^crm:P14i_performed|crm:P14_carried_out_by) ?author} }")]]
         <h2 class="mt-6">Most featured authors in this corpus</h2>
         <div class="home-page__grid author__grid mt-3">
           <semantic-query 
@@ -135,7 +135,7 @@
             </template>
           </semantic-query>
         </div>
-        <bs-panel header="Search all [[singleValueFromSelect 'SELECT (count(distinct ?actor) as ?authorCount) WHERE {?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document. ?document lrm:R4_embodies/lrm:R17i_was_created_by ?creation. ?actor crm:P14i_performed ?creation.}']] authors" collapsible="true" class="mt-2">
+        <bs-panel header="Search all [[singleValueFromSelect 'SELECT (count(distinct ?actor) as ?authorCount) WHERE {?? crm:P148_has_component|lrm:R71_has_part|^lrm:R71i_is_part_of|^crm:P148i_is_component_of ?document. ?document lrm:R4_embodies/(lrm:R17i_was_created_by|^lrm:R17_created)/(^crm:P14i_performed|crm:P14_carried_out_by) ?actor.}']] authors" collapsible="true" class="mt-2">
           <semantic-table
             column-configuration='[
             {"displayName": "Author", "variableName": "actor"},
@@ -156,8 +156,8 @@
                 }
                   ?document a crmcls:X2_Corpus_Document;
                   lrm:R4_embodies ?expression .
-                  ?expression lrm:R17i_was_created_by ?creation.
-                  ?actor crm:P14i_performed ?creation.
+                  ?expression lrm:R17i_was_created_by|^lrm:R17_created ?creation.
+                  ?actor crm:P14i_performed|^crm:P14_carried_out_by ?creation.
                   
                 }    
                 GROUP BY ?actor

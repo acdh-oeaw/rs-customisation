@@ -28,17 +28,17 @@
       [[> Platform:DefaultResourceHeader]]
     </div>
     <div class="page__body">
-        [[#if (ask "ASK {SELECT * WHERE {?? crm:P14i_performed/lrm:R17_created/lrm:R4i_is_embodied_in ?x2} }")]]
+        [[#if (ask "ASK {SELECT * WHERE {?? (crm:P14i_performed|^crm:P14_carried_out_by)/(lrm:R17_created|^lrm:R17i_was_created_by)/(lrm:R4i_is_embodied_in|^lrm:R4_embodies) ?x2. ?x2 a crmcls:X2_Corpus_Document.} }")]]
         <h2 style="display: flex; gap: 15px; align-items: center;"><span>Work</span>
         </h2>
         <div class="home-page__grid author__grid mt-3">
           <semantic-query 
             query="SELECT DISTINCT ?document ?corpus
             WHERE {
-              ?document lrm:R4_embodies ?expression .
-              ?expression lrm:R17i_was_created_by ?creation.
-              ?? crm:P14i_performed ?creation.
-
+              ?document ^lrm:R4i_is_embodied_in|lrm:R4_embodies ?expression .
+              ?expression ^lrm:R17_created|lrm:R17i_was_created_by ?creation.
+              ?? crm:P14i_performed|^crm:P14_carried_out_by ?creation.
+              ?document a crmcls:X2_Corpus_Document.
               ?document lrm:R71i_is_part_of ?corpus.
             }
                   " 
@@ -67,10 +67,16 @@
           <ontodia id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats  accept-blank-nodes="true"
               query="
                   CONSTRUCT
-                  WHERE {
-                    ?x2 lrm:R4_embodies ?expression .
+                  {
+                    ?document lrm:R4_embodies ?expression .
                     ?expression lrm:R17i_was_created_by ?creation.
                     ?? crm:P14i_performed ?creation.
+                  }
+                  WHERE {
+                    ?document ^lrm:R4i_is_embodied_in|lrm:R4_embodies ?expression .
+                    ?expression ^lrm:R17_created|lrm:R17i_was_created_by ?creation.
+                    ?? crm:P14i_performed|^crm:P14_carried_out_by ?creation.
+                    ?document a crmcls:X2_Corpus_Document.
                   }
               "
               ></ontodia>

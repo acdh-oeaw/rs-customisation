@@ -1,0 +1,91 @@
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  [[> http://www.researchspace.org/resource/assets/OntologyBreadcrumbs ]]
+  <li class="active">
+    <mp-label iri='[[this]]'></mp-label>
+  </li>
+</ol>
+
+<div class="page">
+  <div class='page__header-navtabs'>
+    [[> Platform:DefaultResourceHeader]]
+  </div>
+  <div class="page__body">
+  <bs-tabs id="tabs" class='page__body-navtabs' unmount-on-exit=true>
+    
+    
+    <bs-tab event-key="1" title="Instances">
+      <semantic-query query='SELECT (COUNT(DISTINCT ?instance) AS ?number) WHERE {
+          {
+            OPTIONAL {
+              ?feature crm:P2_has_type ??.
+            }
+            BIND(
+              COALESCE (
+                ?feature,
+                ??
+              ) AS ?this
+            )
+            ?attributeAssignment crm:P141_assigned ?this.
+            ?attributeAssignment crm:P140_assigned_attribute_to ?target.
+            OPTIONAL {
+              ?target a crmcls:X11_Prototypical_Document.
+              ?corpus crm:P148_has_component ?target.
+            }
+            BIND(
+              COALESCE (
+                ?corpus,
+                ?target
+              ) AS ?instance
+            )
+          }
+          UNION
+          {
+            ?instance crmcls:Y2_has_format|crm:P2_has_type ??.
+            ?instance a ?class.
+            FILTER (?class != crmcls:X3_Feature)
+          }
+        } LIMIT 1000'
+          template='{{#each bindings}}<bs-alert bs-style="info"><strong>{{number.value}}</strong> instances. The table below shows maximum 1000. </bs-alert>{{/each}}'>
+      </semantic-query>
+      <semantic-table query='
+      SELECT DISTINCT ?instance WHERE {
+        {
+          OPTIONAL {
+            ?feature crm:P2_has_type ??.
+          }
+          BIND(
+            COALESCE (
+              ?feature,
+              ??
+            ) AS ?this
+          )
+          ?attributeAssignment crm:P141_assigned ?this.
+          ?attributeAssignment crm:P140_assigned_attribute_to ?target.
+          OPTIONAL {
+            ?target a crmcls:X11_Prototypical_Document.
+            ?corpus crm:P148_has_component ?target.
+          }
+          BIND(
+            COALESCE (
+              ?corpus,
+              ?target
+            ) AS ?instance
+          )
+        }
+        UNION
+        {
+          ?instance crmcls:Y2_has_format|crm:P2_has_type ??.
+          ?instance a ?class.
+          FILTER (?class != crmcls:X3_Feature)
+        }
+      } LIMIT 1000'
+      options='{"showTableHeading":false, "filterPlaceholderText":"Filter Individuals"}'
+        no-result-template='<i>No individuals of rdf:type "<mp-label iri="[[this]]"></mp-label>". Blank nodes are not considered.</i>'>
+      </semantic-table>
+    </bs-tab>
+  </bs-tabs>
+</div>
+</div>

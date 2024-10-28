@@ -24,8 +24,8 @@
 <div class="page x1-corpus">
     
 	[[#if (ask "ASK { {SELECT * WHERE {?? ?p ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?? ?o}LIMIT 1}UNION {SELECT * WHERE {?s ?p ??}LIMIT 1}UNION{ {SELECT * WHERE {?a ?p ?o. FILTER(??=<Template:http://www.w3.org/2000/01/rdf-schema#Resource> )} LIMIT 1} } }")]]
-    <div class='page__header no-thumbnail'>
-      [[> Platform:DefaultResourceHeader]]
+    <div class='page__header'>
+      [[> Template:E39_ActorHeader]]
     </div>
     <div class="page__body">
         [[#if (ask "ASK {SELECT * WHERE {?? (crm:P14i_performed|^crm:P14_carried_out_by)/(lrm:R17_created|^lrm:R17i_was_created_by)/(lrm:R4i_is_embodied_in|^lrm:R4_embodies) ?x2. ?x2 a crmcls:X2_Corpus_Document.} }")]]

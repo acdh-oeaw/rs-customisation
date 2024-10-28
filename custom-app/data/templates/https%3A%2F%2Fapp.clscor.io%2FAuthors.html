@@ -63,8 +63,7 @@
         column-configuration='[
         {"displayName": "Author", "variableName": "author"},
         {"displayName": "Text count", "variableName": "workCount"},
-        {"displayName": "WikidataID", "variableName": "wikidataID"},
-        {"displayName": "Unique WikidataID found?", "variableName": "wikidataUnique"}
+        {"displayName": "WikidataID", "variableName": "wikidataID"}
       ]'
         query='
         PREFIX wd: <http://www.wikidata.org/entity/>
@@ -84,7 +83,6 @@
           distinct ?author 
           (GROUP_CONCAT(distinct ?wikidataItem; separator=", ") AS ?wikidataID) 
           (COUNT (distinct ?expression) as ?workCount) 
-          (IF(COUNT(distinct ?wikidataItem)=1, true, false) as ?wikidataUnique)  
         WHERE {
           ?author a crm:E39_Actor;
                   rdfs:label ?actorName;

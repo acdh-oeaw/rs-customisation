@@ -1,0 +1,17 @@
+
+    <div class="col-2">
+    <div class="page__header-thumbnail">
+      <img class="resource-thumbnail" style="max-height: 100px;" src="[[singleValueFromSelect 'PREFIX wd: <http://www.wikidata.org/entity/>      PREFIX wdt: <http://www.wikidata.org/prop/direct/>      PREFIX p: <http://www.wikidata.org/prop/>      PREFIX ps: <http://www.wikidata.org/prop/statement/>      PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>      PREFIX crmcls: <https://clscor.io/ontologies/CRMcls/>      PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>      PREFIX lrm: <http://iflastandards.info/ns/lrm/lrmoo/>      PREFIX wikibase: <http://wikiba.se/ontology#>      PREFIX bd: <http://www.bigdata.com/rdf#>      PREFIX hint: <http://www.bigdata.com/queryHints#>      PREFIX skos: <http://www.w3.org/2004/02/skos/core#> SELECT ?img WHERE {?? rdfs:label ?actorName. BIND(REPLACE(?actorName, " \\[.*?\\]", "") AS ?nameWithoutTag). BIND(REPLACE(?nameWithoutTag, " ?\\(.*?\\) ?", "") AS ?nameWithoutParentheses). BIND(REPLACE(?nameWithoutParentheses, "^(.*?), (.*?)(,.*)?$", "$2 $1") AS ?transformedName). BIND(STRLANG(STR(?transformedName), "en") AS ?transformedNameWithLanguage). OPTIONAL { SERVICE <https://query.wikidata.org/sparql> { SERVICE wikibase:label {bd:serviceParam wikibase:language "en".} ?wikidataItem rdfs:label|skos:altLabel ?transformedNameWithLanguage. ?wikidataItem p:P31/ps:P31 wd:Q5. ?wikidataItem p:P106/ps:P106 ?occupation. FILTER(?occupation = wd:Q36180 || ?occupation = wd:Q214917). ?wikidataItem wdt:P18 ?img. } } hint:Prior hint:runLast true.}']]" title="Author portrait">
+    </div>
+  </div>
+  <div class='page__header-body'>
+    
+    <h1>
+      <mp-label iri='[[this]]'></mp-label>
+    </h1>
+    <dl>
+    <!--URI -->
+    <div>
+      <dt>URI</dt> <dd><a href='[[this]]' target='_blank'><i>[[this]]</i>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    </div>
+  </div>

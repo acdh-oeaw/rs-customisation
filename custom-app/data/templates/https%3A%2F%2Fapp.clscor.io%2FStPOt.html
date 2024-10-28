@@ -37,6 +37,27 @@
                      options='{"showFilter": false}'
                      >
        </semantic-table> 
+       <div style="height: 500px; width: 100%;">
+        <ontodia  id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats  accept-blank-nodes="true"
+               query='
+                   CONSTRUCT
+                   {
+                     ?st ?p ?ot.
+                   }
+                   WHERE {
+                     {
+                       SELECT DISTINCT ?st ?p ?ot
+                       {
+                         BIND(<[[urlParam "p"]]> as ?p). BIND(<[[urlParam "st"]]> as ?st). BIND(<[[urlParam "ot"]]> as ?ot).
+                         ?s ?p ?o. 
+                         ?s a ?st. 
+                         ?o a ?ot.
+                       }
+                     }
+                   }
+                   
+               '
+               ></ontodia></div>
     <semantic-table query='SELECT ?s ?o 
                     WHERE { BIND(<[[urlParam "st"]]> as ?st).
                      BIND(<[[urlParam "p"]]> as ?p). 
@@ -48,6 +69,7 @@
                      number-of-displayed-rows=50
                    >
        </semantic-table>
+       
     		[[else]]
         <h3><semantic-link iri='[[urlParam "st"]]'></semantic-link> -<semantic-link iri='[[urlParam "p"]]' ></semantic-link>-> *</h3>	  
 
@@ -64,6 +86,27 @@
                      options='{"showFilter": false}'
                      >
        </semantic-table> 
+       <div style="height: 500px; width: 100%;">
+        <ontodia  id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats  accept-blank-nodes="true"
+               query='
+                   CONSTRUCT
+                   {
+                     ?st ?p ?ot.
+                   }
+                   WHERE {
+                     {
+                       SELECT DISTINCT ?st ?p ?ot
+                       {
+                         BIND(<[[urlParam "p"]]> as ?p). BIND(<[[urlParam "st"]]> as ?st).
+                         ?s ?p ?o. 
+                         ?s a ?st. 
+                         ?o a ?ot.
+                       }
+                     }
+                   }
+                   
+               '
+               ></ontodia></div>
     <semantic-table query='SELECT ?s ?o ?ot WHERE { 
 								  BIND(<[[urlParam "p"]]> as ?p). BIND(<[[urlParam "st"]]> as ?st). 
                 			GRAPH ?g {?s ?p ?o. 
@@ -88,6 +131,27 @@
                      options='{"showFilter": false}'
                      >
        </semantic-table> 
+       <div style="height: 500px; width: 100%;">
+        <ontodia  id='ontodia' hide-toolbar=true hide-panels=true hide-scroll-bars=true hide-navigation-confirmation=true auto-zoom=true settings=nostats  accept-blank-nodes="true"
+               query='
+                   CONSTRUCT
+                   {
+                     ?st ?p ?ot.
+                   }
+                   WHERE {
+                     {
+                       SELECT DISTINCT ?st ?p ?ot
+                       {
+                         BIND(<[[urlParam "p"]]> as ?p). BIND(<[[urlParam "ot"]]> as ?ot).
+                         ?s ?p ?o. 
+                         ?s a ?st. 
+                         ?o a ?ot.
+                       }
+                     }
+                   }
+                   
+               '
+               ></ontodia></div>
     <semantic-table query='SELECT ?s ?st ?o WHERE {
   							 BIND(<[[urlParam "p"]]> as ?p). BIND(<[[urlParam "ot"]]> as ?ot).
   										GRAPH ?g {?s ?p ?o. 
@@ -95,6 +159,7 @@
                      number-of-displayed-rows=50
                    >
        </semantic-table>
+       
           [[else]]
              <bs-alert bs-style="warning">Neither subject type (<code>st</code>), nor object type<code>ot</code> parameter set</bs-alert>       
            [[/if]]

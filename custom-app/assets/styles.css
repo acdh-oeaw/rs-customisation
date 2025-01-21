@@ -74,6 +74,8 @@
 
   --color-km-bg: var(--color-neutral-50);
 
+  --color-breadcrumb-bg: var(--color-neutral-50);
+
   --font-family: var(--font-family-body);
   --font-family-navbar-logo: var(--font-family-body);
   --font-size-body: 0.875rem;
@@ -348,6 +350,10 @@ h4 {
 
 .container-width-prose {
   --container-width: 800px;
+}
+
+.page-container {
+  height: unset !important;
 }
 
 .page-breadcrumbs {

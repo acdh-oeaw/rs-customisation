@@ -1,0 +1,178 @@
+  <div class='page__header-body'>
+    <h1>
+      <mp-label iri='[[this]]'></mp-label>
+    </h1>
+    <dl>
+    <!--URI -->
+    <div class="no-grid">
+      <dt>URI</dt> 
+      <dd><a href='[[this]]' target='_blank'><i>[[this]]</i>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
+    
+
+    <!--Link -->
+   
+      <dt>Link</dt> <dd><semantic-query 
+      query="SELECT ?link WHERE {
+        ?? crm:P1_is_identified_by ?link.
+        ?link a crm:E42_Identifier.
+        ?link crm:P2_has_type ?type .
+        ?type skos:inScheme <https://clscor.io/entity/type/link> .
+      }
+      ORDER BY ?link"
+      template="{{> link_template}}">
+      <template id="link_template">
+        <ul>
+          {{#each bindings}}<li style="display: block; list-style: none;"><a href="{{link.value}}" target="_blank">{{link.value}}</a></li>{{/each}}
+        </ul>
+      </template>
+    </semantic-query></dd>
+    
+
+
+    <!--Methods -->    
+   
+      <dt>Methods</dt> 
+      <dd>
+        <semantic-query 
+          query="SELECT ?method ?note WHERE {
+          ?attrAss a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y8_implements ;
+                  crm:P3_has_note ?note;
+                  crm:P141_assigned ?method ;
+                  crm:P140_assigned_attribute_to ?? .  
+          ?method a crmcls:X6_Method .
+          }" 
+          template="{{> type_template}}">
+          <template id="type_template">
+            {{#if bindings}}
+            <ul>
+              {{#each bindings}}
+              <li style="display: block; list-style: none;">
+                <semantic-link uri="{{method.value}}" style="display: inline; text-transform: capitalize;"></semantic-link><br><span class="small">{{note.value}}</span>
+              </li>
+              {{/each}}</ul>
+            {{/if}}
+          </template>
+        </semantic-query>
+      </dd>
+   
+
+    <!--Features -->    
+  
+      <dt>Features</dt> 
+      <dd>
+        <semantic-query 
+          query="SELECT ?feature ?note WHERE {
+          ?attrAss a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
+                  crm:P3_has_note ?note;
+                  crm:P141_assigned ?feature ;
+                  crm:P140_assigned_attribute_to ?? .  
+          ?feature a crmcls:X3_Feature.
+          }" 
+          template="{{> type_template}}">
+          <template id="type_template">
+            {{#if bindings}}
+            <ul>
+              {{#each bindings}}
+              <li style="display: block; list-style: none;">
+                <semantic-link uri="{{feature.value}}" style="display: inline; text-transform: capitalize;"></semantic-link><br><span class="small">{{note.value}}</span>
+              </li>
+              {{/each}}</ul>
+            {{/if}}
+          </template>
+        </semantic-query>
+      </dd>
+    
+
+    <!--Formats -->    
+   
+      <dt>Input format</dt> 
+      <dd>
+        <semantic-query 
+          query="SELECT ?format ?note WHERE {
+          ?attrAss a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y9_expects_input ;
+                  crm:P3_has_note ?note;
+                  crm:P141_assigned ?format ;
+                  crm:P140_assigned_attribute_to ?? .  
+          ?format a crmcls:X7_Format.
+          }" 
+          template="{{> type_template}}">
+          <template id="type_template">
+            {{#if bindings}}
+            <ul>
+              {{#each bindings}}
+              <li style="display: block; list-style: none;">
+                <semantic-link uri="{{format.value}}" style="display: inline; text-transform: capitalize;"></semantic-link><br><span class="small">{{note.value}}</span>
+              </li>
+              {{/each}}</ul>
+            {{/if}}
+          </template>
+        </semantic-query>
+      </dd>
+
+      <dt>Output format</dt> 
+      <dd>
+        <semantic-query 
+          query="SELECT ?format ?note WHERE {
+          ?attrAss a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y10_generates_output ;
+                  crm:P3_has_note ?note;
+                  crm:P141_assigned ?format ;
+                  crm:P140_assigned_attribute_to ?? .  
+          ?format a crmcls:X7_Format.
+          }" 
+          template="{{> type_template}}">
+          <template id="type_template">
+            {{#if bindings}}
+            <ul>
+              {{#each bindings}}
+              <li style="display: block; list-style: none;">
+                <semantic-link uri="{{format.value}}" style="display: inline; text-transform: capitalize;"></semantic-link><br><span class="small">{{note.value}}</span>
+              </li>
+              {{/each}}</ul>
+            {{/if}}
+          </template>
+        </semantic-query>
+      </dd>
+   
+
+    <!-- Typed Notes... -->
+    
+      <semantic-query 
+        query="SELECT ?key (GROUP_CONCAT(DISTINCT ?value; SEPARATOR='\n') AS ?values) WHERE {
+        ?? ^crm:P01_has_domain ?note.
+        ?note crm:P3.1_has_type ?key . 
+        ?note crm:P03_has_range_literal ?value.
+        }
+        GROUP BY ?key
+        ORDER BY ?key" 
+        template="{{> type_template}}">
+        <template id="type_template">
+          {{#if bindings}}
+          
+            {{#each bindings}}
+            <dt><semantic-link uri="{{key.value}}" style="display: inline; text-transform: capitalize; color: inherit;"></semantic-link></dt> <dd style="margin-bottom: 10px;">
+              <span style="white-space: pre-wrap;" class="small">{{values.value}}</span>
+            
+          </dd>
+            {{/each}}</ul>
+          {{/if}}
+        </template>
+      </semantic-query>
+    </div>
+  </dl>
+ 
+  <!--Commentary -->    
+    <div style="column-span: all;">
+      <semantic-query 
+      query="SELECT ?commentary WHERE {
+        ?? crm:P148_has_component ?x11 .
+        ?x9 crm:P135_created_type ?x11 .
+        ?x9 crm:P3_has_note ?commentary }" 
+      style="display: inline;">
+      
+    </semantic-query>
+    </div>
+  </div>

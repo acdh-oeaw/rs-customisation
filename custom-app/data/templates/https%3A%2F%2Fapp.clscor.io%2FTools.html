@@ -1,0 +1,46 @@
+<ol class="page-breadcrumb">
+  <li>
+    <mp-link title="Home" url="/">Home</mp-link>
+  </li>
+  <li class="active">
+    <mp-label iri="[[this]]"></mp-label>
+  </li>
+</ol>
+
+<div class="page container">
+  <div class="page__header-navtabs page-section">
+    <div class="page__header-body" style="width: 100%">
+      <h1>
+        <mp-label iri="[[this]]"></mp-label>
+      </h1>
+
+      <!--Description -->
+      <p>
+        This is a very useful description of our tools. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+        sit amet pellentesque nisl. Vivamus venenatis, magna a elementum venenatis, nunc tortor vestibulum libero, nec
+        ultricies nibh magna ut nibh. Sed ut mattis nunc, id accumsan libero. Integer ultrices arcu elit, id dignissim
+        ligula pulvinar a. Nam venenatis enim in neque dignissim, id convallis sapien dapibus.
+      </p>
+    
+    </div>
+    <!-- Search Corpora -->
+    <!-- <h2 style="margin-top: 24px;">Or search all of them: </h2> -->
+    <bs-panel expanded="true" header="View and search all [[singleValueFromSelect 'SELECT (count(distinct ?tool) as ?toolCount)  WHERE {?tool a crmcls:X12_Tool;}']] tools" collapsible="true">
+      <semantic-table
+        column-configuration='[
+        {"displayName": "Tool", "variableName": "tool"}
+      ]'
+        query='
+        PREFIX crmcls: <https://clscor.io/ontologies/CRMcls/>
+
+      	SELECT 
+          distinct ?tool 
+        WHERE {
+          ?tool a crmcls:X12_Tool.
+        }
+        '
+      ></semantic-table>
+    </bs-panel>
+
+  </div>
+</div>

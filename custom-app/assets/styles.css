@@ -569,10 +569,10 @@ a.page-section__card:focus-visible {
 }
 
 .page__header-body dl {
-  display: grid;
+  column-count: 2;
   align-items: center;
   column-gap: 16px;
-  grid-template-columns: 1fr 1fr;
+  column-fill: balance;
 }
 
 .page__header-body dl div {
@@ -580,6 +580,9 @@ a.page-section__card:focus-visible {
   grid-template-columns: auto 1fr;
   gap: 0px 6px;
   margin-bottom: 6px;
+}
+.page__header-body dl div.no-grid {
+  display: block;
 }
 
 .page__header-body dt {
@@ -779,4 +782,7 @@ a.page-section__card:focus-visible {
   max-height: unset;
   max-width: 100%;
   min-height: 200px;
+}
+.page__header dl ul{
+  padding-left: 0 !important;
 }

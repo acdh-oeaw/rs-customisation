@@ -28,16 +28,39 @@
     <bs-panel expanded="true" header="View and search all [[singleValueFromSelect 'SELECT (count(distinct ?tool) as ?toolCount)  WHERE {?tool a crmcls:X12_Tool;}']] tools" collapsible="true">
       <semantic-table
         column-configuration='[
-        {"displayName": "Tool", "variableName": "tool"}
+        {"displayName": "Tool", "variableName": "tool"},
+        {"displayName": "Method", "variableName": "methodNames"},
+        {"displayName": "Feature", "variableName": "featureNames"}
       ]'
         query='
         PREFIX crmcls: <https://clscor.io/ontologies/CRMcls/>
 
       	SELECT 
           distinct ?tool 
+          (GROUP_CONCAT(distinct ?method; SEPARATOR=", ") AS ?methodNames)
+          (GROUP_CONCAT(distinct ?feature; SEPARATOR=", ") AS ?featureNames)
         WHERE {
           ?tool a crmcls:X12_Tool.
+          OPTIONAL {
+            ?attrAss a crm:E13_Attribute_Assignment ;
+                    crm:P177_assigned_property_of_type crmcls:Y8_implements ;
+                    crm:P141_assigned ?methodEntity ;
+                    crm:P140_assigned_attribute_to ?tool .  
+            ?methodEntity a crmcls:X6_Method ;
+                          rdfs:label ?method .
+          }
+          OPTIONAL {
+            ?attrAss a crm:E13_Attribute_Assignment ;
+                  crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
+                  crm:P141_assigned ?featureEntity ;
+                  crm:P140_assigned_attribute_to ?tool .  
+            ?featureEntity a crmcls:X3_Feature;
+                      rdfs:label ?feature .
+          }
+            
         }
+        GROUP BY ?tool
+        ORDER BY ?tool
         '
       ></semantic-table>
     </bs-panel>

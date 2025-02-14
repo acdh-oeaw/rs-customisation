@@ -34,21 +34,22 @@
       <dt>Methods</dt> 
       <dd>
         <semantic-query 
-          query="SELECT ?method ?note WHERE {
-          ?attrAss a crm:E13_Attribute_Assignment ;
-                  crm:P177_assigned_property_of_type crmcls:Y8_implements ;
-                  crm:P3_has_note ?note;
-                  crm:P141_assigned ?method ;
-                  crm:P140_assigned_attribute_to ?? .  
-          ?method a crmcls:X6_Method .
-          }" 
+          query="SELECT distinct ?method WHERE {
+            ?attrAss a crm:E13_Attribute_Assignment ;
+                    crm:P177_assigned_property_of_type crmcls:Y8_implements ;
+                    crm:P141_assigned ?method ;
+                    crm:P140_assigned_attribute_to ?? .  
+            ?method a crmcls:X6_Method .
+          }
+          ORDER BY ?method
+          " 
           template="{{> type_template}}">
           <template id="type_template">
             {{#if bindings}}
             <ul>
               {{#each bindings}}
               <li style="display: block; list-style: none;">
-                <semantic-link uri="{{method.value}}" style="display: inline; text-transform: capitalize;"></semantic-link><br><span class="small">{{note.value}}</span>
+                <semantic-link uri="{{method.value}}" style="display: inline; text-transform: capitalize;"></semantic-link>
               </li>
               {{/each}}</ul>
             {{/if}}
@@ -62,14 +63,15 @@
       <dt>Features</dt> 
       <dd>
         <semantic-query 
-          query="SELECT ?feature ?note WHERE {
+          query="SELECT distinct ?feature WHERE {
           ?attrAss a crm:E13_Attribute_Assignment ;
                   crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
-                  crm:P3_has_note ?note;
                   crm:P141_assigned ?feature ;
                   crm:P140_assigned_attribute_to ?? .  
           ?feature a crmcls:X3_Feature.
-          }" 
+          }
+          ORDER BY ?feature
+          " 
           template="{{> type_template}}">
           <template id="type_template">
             {{#if bindings}}
@@ -90,10 +92,9 @@
       <dt>Input format</dt> 
       <dd>
         <semantic-query 
-          query="SELECT ?format ?note WHERE {
+          query="SELECT distinct ?format WHERE {
           ?attrAss a crm:E13_Attribute_Assignment ;
                   crm:P177_assigned_property_of_type crmcls:Y9_expects_input ;
-                  crm:P3_has_note ?note;
                   crm:P141_assigned ?format ;
                   crm:P140_assigned_attribute_to ?? .  
           ?format a crmcls:X7_Format.
@@ -104,7 +105,7 @@
             <ul>
               {{#each bindings}}
               <li style="display: block; list-style: none;">
-                <semantic-link uri="{{format.value}}" style="display: inline; text-transform: capitalize;"></semantic-link><br><span class="small">{{note.value}}</span>
+                <semantic-link uri="{{format.value}}" style="display: inline; text-transform: capitalize;"></semantic-link>
               </li>
               {{/each}}</ul>
             {{/if}}
@@ -115,10 +116,9 @@
       <dt>Output format</dt> 
       <dd>
         <semantic-query 
-          query="SELECT ?format ?note WHERE {
+          query="SELECT distinct ?format WHERE {
           ?attrAss a crm:E13_Attribute_Assignment ;
                   crm:P177_assigned_property_of_type crmcls:Y10_generates_output ;
-                  crm:P3_has_note ?note;
                   crm:P141_assigned ?format ;
                   crm:P140_assigned_attribute_to ?? .  
           ?format a crmcls:X7_Format.
@@ -129,7 +129,7 @@
             <ul>
               {{#each bindings}}
               <li style="display: block; list-style: none;">
-                <semantic-link uri="{{format.value}}" style="display: inline; text-transform: capitalize;"></semantic-link><br><span class="small">{{note.value}}</span>
+                <semantic-link uri="{{format.value}}" style="display: inline; text-transform: capitalize;"></semantic-link>
               </li>
               {{/each}}</ul>
             {{/if}}

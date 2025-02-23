@@ -34,17 +34,24 @@
     <!--Link -->
    
       <dt>Link</dt> <dd><semantic-query 
-      query="SELECT ?link WHERE {
+      query="SELECT distinct ?boundLink (GROUP_CONCAT(distinct ?type; SEPARATOR=', ') as ?grouped_type) WHERE {
         ?? crm:P1_is_identified_by ?link.
         ?link a crm:E42_Identifier.
-        ?link crm:P2_has_type ?type .
-        ?type skos:inScheme <https://clscor.io/entity/type/link> .
+        ?link crm:P2_has_type ?typeEntity .
+        ?typeEntity rdfs:label ?type .
+        OPTIONAL {
+          ?link crm:P190_has_symbolic_content ?url .
+        }
+        ?typeEntity skos:inScheme <https://clscor.io/entity/type/link> .
+        BIND (COALESCE(?url, ?link) as ?boundLink)
       }
-      ORDER BY ?link"
+      
+      GROUP BY ?boundLink
+      "
       template="{{> link_template}}">
       <template id="link_template">
         <ul>
-          {{#each bindings}}<li style="display: block; list-style: none;"><a href="{{link.value}}" target="_blank">{{link.value}}</a></li>{{/each}}
+          {{#each bindings}}<li style="display: block; list-style: none;"><a href="{{boundLink.value}}" target="_blank">{{boundLink.value}}</a> ({{grouped_type.value}})</li>{{/each}}
         </ul>
       </template>
     </semantic-query></dd>

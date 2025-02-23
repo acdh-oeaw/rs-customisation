@@ -8,6 +8,28 @@
       <dt>URI</dt> 
       <dd><a href='[[this]]' target='_blank'><i>[[this]]</i>&nbsp;<i class="fa fa-external-link" aria-hidden="true"></i></a></dd>
     
+      <dt>Description</dt>
+      <dd>
+      <semantic-query 
+        query="SELECT distinct ?description WHERE {
+        ?? ^crm:P01_has_domain ?note.
+        ?note crm:P3.1_has_type crmcls:tool_description . 
+        ?note crm:P03_has_range_literal ?description.
+        }" 
+        template="{{> type_template}}">
+        <template id="type_template">
+          {{#if bindings}}
+          
+            {{#each bindings}}
+            
+              <span style="white-space: pre-wrap;margin-bottom: 10px;" class="small">{{description.value}}</span>
+            
+          
+            {{/each}}
+          {{/if}}
+        </template>
+      </semantic-query></dd>
+
 
     <!--Link -->
    
@@ -145,6 +167,7 @@
         ?? ^crm:P01_has_domain ?note.
         ?note crm:P3.1_has_type ?key . 
         ?note crm:P03_has_range_literal ?value.
+        FILTER (?key NOT IN (crmcls:tool_description, crmcls:related_paper, crmcls:statistical_models))
         }
         GROUP BY ?key
         ORDER BY ?key" 
@@ -162,7 +185,32 @@
         </template>
       </semantic-query>
     </div>
+
+    <dt>Related Papers</dt>
+    <dd>
+    <semantic-query 
+      query="SELECT distinct ?paper WHERE {
+      ?? ^crm:P01_has_domain ?note.
+      ?note crm:P3.1_has_type crmcls:related_paper . 
+      ?note crm:P03_has_range_literal ?paper.
+      }" 
+      template="{{> type_template}}">
+      <template id="type_template">
+        {{#if bindings}}
+          <ul>
+          {{#each bindings}}
+          
+          <li style="margin-left: 1rem;" class="small">{{paper.value}}</li>
+          
+        
+          {{/each}}
+        </ul>
+        {{/if}}
+      </template>
+    </semantic-query></dd>
   </dl>
+
+ 
  
   <!--Commentary -->    
     <div style="column-span: all;">

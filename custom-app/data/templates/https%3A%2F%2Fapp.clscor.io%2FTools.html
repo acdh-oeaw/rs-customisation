@@ -29,8 +29,8 @@
       <semantic-table
         column-configuration='[
         {"displayName": "Tool", "variableName": "tool"},
-        {"displayName": "Method", "variableName": "methodNames"},
-        {"displayName": "Feature", "variableName": "featureNames"}
+        {"displayName": "Methods", "variableName": "methodNames"},
+        {"displayName": "Features", "variableName": "featureNames"}
       ]'
         query='
         PREFIX crmcls: <https://clscor.io/ontologies/CRMcls/>
@@ -50,7 +50,7 @@
                           rdfs:label ?method .
           }
           OPTIONAL {
-            ?attrAss a crm:E13_Attribute_Assignment ;
+            ?attrAss2 a crm:E13_Attribute_Assignment ;
                   crm:P177_assigned_property_of_type crmcls:Y1_exhibits_feature ;
                   crm:P141_assigned ?featureEntity ;
                   crm:P140_assigned_attribute_to ?tool .  
